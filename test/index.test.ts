@@ -24,18 +24,18 @@ describe('Generates routes correctly', () => {
     function writeBreadcrumbs(breadcrumbs: Breadcrumb): tscgen.IBodyType {
       if (breadcrumbs.root) {
         return {
-          params: tscgen.literalTupleType(),
-          template: tscgen.literalType(''),
-          dependsOn: tscgen.literalTupleType(''),
+          params: tscgen.stringTuple(),
+          template: tscgen.stringType(''),
+          dependsOn: tscgen.stringTuple(),
         };
       }
 
       return {
-        params: tscgen.literalTupleType(
+        params: tscgen.stringTuple(
           ...(breadcrumbs.dynamic ? breadcrumbs.params : [])
         ),
-        dependsOn: tscgen.literalTupleType(...breadcrumbs.dependsOn),
-        template: tscgen.literalType(
+        dependsOn: tscgen.stringTuple(...breadcrumbs.dependsOn),
+        template: tscgen.stringType(
           breadcrumbs.dynamic ? breadcrumbs.template : breadcrumbs.name
         ),
       };
@@ -43,10 +43,10 @@ describe('Generates routes correctly', () => {
 
     const builders = Object.entries(routes).map(([name, route]) => {
       return tscgen.interfaceBuilder(`I${name}Page`).addBody({
-        name: tscgen.literalType(name),
-        route: tscgen.literalType(route.route),
-        params: route.params
-          ? tscgen.literalTupleType(...route.params)
+        name: tscgen.stringType(name),
+        route: tscgen.stringType(route.route),
+        params: route.params?.length
+          ? tscgen.stringTuple(...route.params)
           : 'undefined',
         query: tscgen.objectType(writeQueryBody(route.query)),
         breadcrumbs: tscgen.objectType(writeBreadcrumbs(route.breadcrumb)),
@@ -55,6 +55,7 @@ describe('Generates routes correctly', () => {
     const routesType = tscgen
       .typeDefBuilder('Routes')
       .addUnion(...builders.map((builder) => tscgen.identifierType(builder)));
+
     const routeType = tscgen
       .typeDefBuilder('Route')
       .addUnion(
@@ -82,11 +83,10 @@ describe('Generates routes correctly', () => {
         })
       )
       .addBody({
-        name: tscgen.literalType('hello'),
+        name: tscgen.stringType('hello'),
       });
 
     const formatted = await tscgen.format(build.toString());
-    console.log(formatted);
     expect(formatted).to.eq(
       `export interface IExtendable extends { name: string } {\n  name: 'hello';\n}\n`
     );
@@ -101,12 +101,42 @@ describe('Generates routes correctly', () => {
       .markExport()
       .extends(tscgen.identifierType(parent))
       .addBody({
-        name: tscgen.literalType('hello'),
+        name: tscgen.stringType('hello'),
       });
 
     const formatted = await tscgen.format(tscgen.combine(parent, build));
     expect(formatted).to.eq(
       `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n}\n`
+    );
+  });
+
+  it('readonly works', async () => {
+    const build = tscgen
+      .typeDefBuilder('TestReadonly')
+      .markExport()
+      .addUnion(
+        tscgen.readonly({
+          name: 'string',
+        })
+      );
+
+    const formatted = await tscgen.format(tscgen.combine(build));
+    expect(formatted).to.eq(
+      `export type TestReadonly = Readonly<{ name: string }>;\n`
+    );
+  });
+
+  it('extract works', async () => {
+    const build = tscgen
+      .typeDefBuilder('TestReadonly')
+      .markExport()
+      .addUnion(
+        tscgen.extract(tscgen.stringType('a', 'b', 'c'), tscgen.stringType('a'))
+      );
+
+    const formatted = await tscgen.format(tscgen.combine(build));
+    expect(formatted).to.eq(
+      `export type TestReadonly = Extract<'a' | 'b' | 'c', 'a'>;\n`
     );
   });
 });

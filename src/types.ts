@@ -18,7 +18,8 @@ export type IType =
   | IStringLiteralType
   | INumberLiteralType
   | IBooleanLiteralType
-  | ITupleType;
+  | ITupleType
+  | IDecorationType;
 
 export interface IRawTypePropertyType {
   type: 'raw_property_type';
@@ -34,6 +35,12 @@ export type ITypePropertyType =
   | IBooleanLiteralType
   | IIdentifierType
   | IRawTypePropertyType;
+
+export interface IDecorationType {
+  type: 'decoration';
+  definition: [...IType[]];
+  decorate: (...value: string[]) => string;
+}
 
 export interface IIdentifierType {
   type: 'identifier';
@@ -74,11 +81,17 @@ export interface IUnionType {
   extract?: ITypePropertyType[];
 }
 
-export interface IObjectType {
-  type: 'object';
-  definition: IBodyType;
-  extract?: ITypePropertyType[];
-}
+export type IObjectType =
+  | {
+      type: 'object';
+      definition: IBodyType;
+      extract?: ITypePropertyType[];
+    }
+  | ({
+      [key in Exclude<string, 'type'>]: IType;
+    } & {
+      type?: undefined;
+    });
 
 export interface IBodyType {
   [key: string]: IType | [IType, boolean];

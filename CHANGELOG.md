@@ -1,5 +1,11 @@
 # typescript-codegen
 
+## 0.0.8
+
+### Patch Changes
+
+- Add new decoration types and update literal API
+
 ## 0.0.7
 
 ### Patch Changes

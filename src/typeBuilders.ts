@@ -3,35 +3,73 @@ import {
   IArrayType,
   IBodyType,
   IIdentifierType,
-  INumberLiteralType,
   IObjectType,
-  IStringLiteralType,
   ITupleType,
   IType,
   IUnionType,
   ITypePropertyType,
   IRawTypePropertyType,
-  IBooleanLiteralType,
+  IDecorationType,
 } from './types';
 
-export function literalType(
-  value: string | number | boolean
-): IStringLiteralType | INumberLiteralType | IBooleanLiteralType {
-  if (typeof value === 'string') {
-    return {
-      type: 'string_literal',
-      definition: value,
-    };
+export function stringType(): 'string';
+export function stringType(...value: [string, ...string[]]): IUnionType;
+export function stringType(...value: string[]): 'string' | IUnionType {
+  if (!value.length) {
+    return 'string';
   }
-  if (typeof value === 'boolean') {
-    return {
-      type: 'boolean_literal',
-      definition: value,
-    };
-  }
+
   return {
-    type: 'number_literal',
-    definition: value,
+    type: 'union',
+    definition:
+      value.length === 1
+        ? [
+            {
+              type: 'string_literal',
+              definition: value[0],
+            },
+          ]
+        : value.map((val) => stringType(val)),
+  };
+}
+export function numberType(): 'number';
+export function numberType(...value: [number, ...number[]]): IUnionType;
+export function numberType(...value: number[]): 'number' | IUnionType {
+  if (!value.length) {
+    return 'number';
+  }
+
+  return {
+    type: 'union',
+    definition:
+      value.length === 1
+        ? [
+            {
+              type: 'number_literal',
+              definition: value[0],
+            },
+          ]
+        : value.map((val) => numberTuple(val)),
+  };
+}
+export function booleanType(): 'boolean';
+export function booleanType(...value: [boolean, ...boolean[]]): IUnionType;
+export function booleanType(...value: boolean[]): 'boolean' | IUnionType {
+  if (!value.length) {
+    return 'boolean';
+  }
+
+  return {
+    type: 'union',
+    definition:
+      value.length === 1
+        ? [
+            {
+              type: 'boolean_literal',
+              definition: value[0],
+            },
+          ]
+        : value.map((val) => booleanType(val)),
   };
 }
 
@@ -68,13 +106,6 @@ export function objectType(
   };
 }
 
-export function literalUnionType(...lit: (string | number)[]): IUnionType {
-  return {
-    type: 'union',
-    definition: lit.map(literalType),
-  };
-}
-
 export function tupleType(
   type: IType[],
   ...extract: ITypePropertyType[]
@@ -83,6 +114,27 @@ export function tupleType(
     type: 'tuple',
     definition: type,
     extract,
+  };
+}
+
+export function stringTuple(...type: string[]): ITupleType {
+  return {
+    type: 'tuple',
+    definition: type.map((val) => stringType(val)),
+  };
+}
+
+export function numberTuple(...type: number[]): ITupleType {
+  return {
+    type: 'tuple',
+    definition: type.map((val) => numberType(val)),
+  };
+}
+
+export function booleanTuple(...type: boolean[]): ITupleType {
+  return {
+    type: 'tuple',
+    definition: type.map((val) => booleanType(val)),
   };
 }
 
@@ -95,7 +147,13 @@ export function literalTupleType(
 ): ITupleType {
   return {
     type: 'tuple',
-    definition: type.map(literalType),
+    definition: type.map((val) =>
+      typeof val === 'string'
+        ? stringType(val)
+        : typeof val === 'number'
+        ? numberType(val)
+        : booleanType(val)
+    ),
   };
 }
 
@@ -112,6 +170,22 @@ export function identifierType(
     type: 'identifier',
     definition: builder.varName,
     extract,
+  };
+}
+
+export function readonly(type: IType): IDecorationType {
+  return {
+    type: 'decoration',
+    definition: [type],
+    decorate: (value) => `Readonly<${value}>`,
+  };
+}
+
+export function extract(type: IType, union: IUnionType): IDecorationType {
+  return {
+    type: 'decoration',
+    definition: [type, union],
+    decorate: (value, unionValue) => `Extract<${value}, ${unionValue}>`,
   };
 }
 

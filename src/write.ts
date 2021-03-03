@@ -20,6 +20,7 @@ import {
   IJsArrayValue,
   IJsObjectValue,
   IJsIdentifierValue,
+  IDecorationType,
 } from './types';
 
 export function writeGeneric(values?: Array<IGenericValue>): string {
@@ -52,9 +53,12 @@ function writeArrayType(type: IArrayType): string {
 }
 
 function writeObjectType(type: IObjectType): string {
-  return `{${writeBodyType(type.definition)}}${writeExtractedProperties(
-    type.extract
-  )}`;
+  if (type.type === 'object') {
+    return `{${writeBodyType(type.definition)}}${writeExtractedProperties(
+      type.extract
+    )}`;
+  }
+  return `{${writeBodyType(type)}}`;
 }
 
 function writeUnionType(type: IUnionType): string {
@@ -106,12 +110,20 @@ function writeRawTypePropertyType(type: IRawTypePropertyType) {
   return type.definition;
 }
 
+function writeDecorationType(type: IDecorationType): string {
+  return type.decorate(...type.definition.map(writeType));
+}
+
 export function writeType(type: IType | undefined): string {
   if (typeof type === 'string') {
     return type;
   }
   if (!type) {
     return 'never';
+  }
+
+  if (typeof type === 'object' && !type.type) {
+    return writeObjectType(type);
   }
 
   switch (type.type) {
@@ -131,6 +143,8 @@ export function writeType(type: IType | undefined): string {
       return writeTupleType(type);
     case 'identifier':
       return writeIdentifierType(type);
+    case 'decoration':
+      return writeDecorationType(type);
     default:
       return 'never';
   }

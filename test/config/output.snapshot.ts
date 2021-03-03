@@ -8,7 +8,7 @@ interface IHomePage {
     card_id?: string;
     transaction_id?: string;
   };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IUsersPage {
@@ -16,7 +16,7 @@ interface IUsersPage {
   route: '/users';
   params: undefined;
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IWaitlistUsersPage {
@@ -24,7 +24,7 @@ interface IWaitlistUsersPage {
   route: '/waitlist-users';
   params: undefined;
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IUserPage {
@@ -40,7 +40,7 @@ interface ITransactionsPage {
   route: '/transactions';
   params: undefined;
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface ITransactionPage {
@@ -60,13 +60,13 @@ interface IUserTransactionPage {
   route: '/user-transactions/{user_transaction_id}';
   params: ['userTransactionId'];
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IApiLoginPage {
   name: 'ApiLogin';
   route: '/api/login';
-  params: [];
+  params: undefined;
   query: {
     toast?: string;
     toast_type?: string;
@@ -74,23 +74,23 @@ interface IApiLoginPage {
     betaInviteCode?: string;
     mpDistinctId: string;
   };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IApiCallbackPage {
   name: 'ApiCallback';
   route: '/api/callback';
-  params: [];
+  params: undefined;
   query: { toast?: string; toast_type?: string; mpDistinctId: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 interface IApiLogoutPage {
   name: 'ApiLogout';
   route: '/api/logout';
-  params: [];
+  params: undefined;
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; template: ''; dependsOn: [''] };
+  breadcrumbs: { params: []; template: ''; dependsOn: [] };
 }
 
 type Routes =

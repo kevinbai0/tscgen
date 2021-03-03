@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "lib",
-    "declaration": true
+    "declaration": true,
+    "target": "ES2018"
   },
   "include": ["src"]
 }
