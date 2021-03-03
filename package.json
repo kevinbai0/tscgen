@@ -1,6 +1,6 @@
 {
-  "name": "typescript-codegen",
-  "version": "1.0.0",
+  "name": "tscgen",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "prepublish": "npm run build",
     "start": "ts-node --transpile-only src/index.ts",
-    "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000"
+    "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000",
+    "changeset:version": "changeset version"
   },
   "keywords": [],
   "author": "Kevin Bai",
