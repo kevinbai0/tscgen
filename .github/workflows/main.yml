@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm install
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build code
         run: npm run build
