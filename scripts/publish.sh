@@ -1,3 +1,5 @@
+#!/bin/bash
+
 REMOTE_VERSION=$(npm info tscgen version)
 LOCAL_VERSION=$(cat package.json \
   | grep version \
