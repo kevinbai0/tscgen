@@ -71,4 +71,42 @@ describe('Generates routes correctly', () => {
     );
     expect(output).equal(sampleOutput);
   });
+
+  it('works with interface extends inline object', async () => {
+    const build = tscgen
+      .interfaceBuilder('IExtendable')
+      .markExport()
+      .extends(
+        tscgen.objectType({
+          name: 'string',
+        })
+      )
+      .addBody({
+        name: tscgen.literalType('hello'),
+      });
+
+    const formatted = await tscgen.format(build.toString());
+    console.log(formatted);
+    expect(formatted).to.eq(
+      `export interface IExtendable extends { name: string } {\n  name: 'hello';\n}\n`
+    );
+  });
+
+  it('works with interface extends identifier', async () => {
+    const parent = tscgen.interfaceBuilder('IParent').addBody({
+      name: 'string',
+    });
+    const build = tscgen
+      .interfaceBuilder('IExtendable')
+      .markExport()
+      .extends(tscgen.identifierType(parent))
+      .addBody({
+        name: tscgen.literalType('hello'),
+      });
+
+    const formatted = await tscgen.format(tscgen.combine(parent, build));
+    expect(formatted).to.eq(
+      `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n}\n`
+    );
+  });
 });

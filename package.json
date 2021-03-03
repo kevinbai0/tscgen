@@ -1,6 +1,6 @@
 {
   "name": "tscgen",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint .",
-    "postversion": "npm run build",
+    "prepublishOnly": "npm run build",
     "start": "ts-node --transpile-only src/index.ts",
     "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000",
     "changeset": "changeset && changeset version",

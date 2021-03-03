@@ -1,5 +1,17 @@
 # typescript-codegen
 
+## 0.0.7
+
+### Patch Changes
+
+- fix build
+
+## 0.0.6
+
+### Patch Changes
+
+- Add interface inherit (with extends)
+
 ## 0.0.5
 
 ### Patch Changes

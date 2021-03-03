@@ -28,7 +28,6 @@ describe('writes javascript object code', () => {
       });
 
     const formatted = await tscgen.format(output.toString());
-    console.log(formatted);
     expect(formatted).to.equal(
       `export const test: { cool: number[] } = { cool: [5, 6, 7, 8] };\n`
     );
