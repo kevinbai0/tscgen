@@ -28,7 +28,7 @@ export type Breadcrumb =
       dependsOn: string[];
     };
 
-export interface Route {
+export interface IRoute {
   route: string;
   params?: Params;
   query?: Query;

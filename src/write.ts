@@ -9,6 +9,9 @@ import {
   IBodyType,
   ITupleType,
   IIdentifierType,
+  ITypePropertyType,
+  IRawTypePropertyType,
+  IBooleanLiteralType,
 } from './types';
 
 export function writeGeneric(values?: Array<IGenericValue>): string {
@@ -30,16 +33,29 @@ export function writeGeneric(values?: Array<IGenericValue>): string {
   return `<${values.map(writeValue)}>`;
 }
 
+function writeExtractedProperties(type: ITypePropertyType[] | undefined) {
+  return type?.map(writeTypePropertyType) ?? '';
+}
+
 function writeArrayType(type: IArrayType): string {
-  return `${writeType(type.definition)}[]`;
+  return `${writeType(type.definition)}[]${writeExtractedProperties(
+    type.extract
+  )}`;
 }
 
 function writeObjectType(type: IObjectType): string {
-  return `{${writeBodyType(type.definition)}}`;
+  return `{${writeBodyType(type.definition)}}${writeExtractedProperties(
+    type.extract
+  )}`;
 }
 
 function writeUnionType(type: IUnionType): string {
-  return type.definition.map(writeType).join(' | ');
+  if (type.extract) {
+    return `(${type.definition
+      .map(writeType)
+      .join('|')})${writeExtractedProperties(type.extract)}`;
+  }
+  return type.definition.map(writeType).join('|');
 }
 
 function writeStringLiteralType(type: IStringLiteralType): string {
@@ -50,11 +66,35 @@ function writeNumberLiteralType(type: INumberLiteralType): string {
   return `${type.definition}`;
 }
 
+function writeBooleanLiteralType(type: IBooleanLiteralType): string {
+  return `${type.definition}`;
+}
+
 function writeTupleType(type: ITupleType): string {
-  return `[${type.definition.map(writeType).join(',')}]`;
+  return `[${type.definition
+    .map(writeType)
+    .join(',')}]${writeExtractedProperties(type.extract)}`;
 }
 
 function writeIdentifierType(type: IIdentifierType) {
+  return `${type.definition}${writeExtractedProperties(type.extract)}`;
+}
+
+function writeTypePropertyType(type: ITypePropertyType) {
+  const wrap = (value: string) => `[${value}]`;
+  if (typeof type === 'string') {
+    return wrap(writeType(type));
+  }
+
+  switch (type.type) {
+    case 'raw_property_type':
+      return wrap(writeRawTypePropertyType(type));
+    default:
+      return wrap(writeType(type));
+  }
+}
+
+function writeRawTypePropertyType(type: IRawTypePropertyType) {
   return type.definition;
 }
 
@@ -77,6 +117,8 @@ export function writeType(type: IType | undefined): string {
       return writeStringLiteralType(type);
     case 'number_literal':
       return writeNumberLiteralType(type);
+    case 'boolean_literal':
+      return writeBooleanLiteralType(type);
     case 'tuple':
       return writeTupleType(type);
     case 'identifier':

@@ -1,24 +1,32 @@
 {
-  "name": "tsc-type-gen",
+  "name": "typescript-codegen",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node --transpile-only src/index.ts",
-    "lint": "eslint ."
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint .",
+    "prepublish": "npm run build",
+    "start": "ts-node --transpile-only src/index.ts",
+    "test": "mocha -r ts-node/register **/*.test.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kevin Bai",
   "license": "ISC",
   "devDependencies": {
     "@tabtabapp/lint-rules": "^1.0.9",
+    "@types/chai": "^4.2.15",
     "@types/eslint": "^7.2.6",
+    "@types/mocha": "^8.2.1",
     "@types/node": "^14.14.31",
+    "chai": "^4.3.1",
     "eslint": "^7.21.0",
-    "ts-node": "^9.1.1"
-  },
-  "dependencies": {
+    "mocha": "^8.3.0",
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.2"
   }
 }

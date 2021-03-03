@@ -4,8 +4,8 @@ import { IBaseBuilder } from './types';
 
 interface ITypeDefBuilder extends IBaseBuilder {
   type: 'type';
-  addUnion(type: IType): ITypeDefBuilder;
-  addIntersection(type: IType): ITypeDefBuilder;
+  addUnion(...type: IType[]): ITypeDefBuilder;
+  addIntersection(...type: IType[]): ITypeDefBuilder;
   addGenerics(...generics: IGenericValue[]): ITypeDefBuilder;
 }
 
@@ -36,15 +36,15 @@ export function typeDefBuilder(
   }
 
   function newBuilder(joinType: 'union' | 'intersection') {
-    return (type: IType) =>
+    return (...types: IType[]) =>
       typeDefBuilder(name, {
         ...defaultOptions,
         types: [
           ...defaultOptions.types,
-          {
+          ...types.map((type) => ({
             type: type,
             joinType: joinType,
-          },
+          })),
         ],
       });
   }

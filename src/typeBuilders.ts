@@ -9,14 +9,23 @@ import {
   ITupleType,
   IType,
   IUnionType,
+  ITypePropertyType,
+  IRawTypePropertyType,
+  IBooleanLiteralType,
 } from './types';
 
-export function buildLiteralType(
-  value: string | number
-): IStringLiteralType | INumberLiteralType {
+export function literalType(
+  value: string | number | boolean
+): IStringLiteralType | INumberLiteralType | IBooleanLiteralType {
   if (typeof value === 'string') {
     return {
       type: 'string_literal',
+      definition: value,
+    };
+  }
+  if (typeof value === 'boolean') {
+    return {
+      type: 'boolean_literal',
       definition: value,
     };
   }
@@ -26,53 +35,93 @@ export function buildLiteralType(
   };
 }
 
-export function buildUnionType(...types: IType[]): IUnionType {
+export function unionType(
+  types: IType[],
+  ...extract: ITypePropertyType[]
+): IUnionType {
   return {
     type: 'union',
     definition: types,
+    extract,
   };
 }
 
-export function buildArrayType(type: IType): IArrayType {
+export function arrayType(
+  type: IType,
+  ...extract: ITypePropertyType[]
+): IArrayType {
   return {
     type: 'array',
     definition: type,
+    extract,
   };
 }
 
-export function buildObjectType(type: IBodyType): IObjectType {
+export function objectType(
+  type: IBodyType,
+  ...extract: ITypePropertyType[]
+): IObjectType {
   return {
     type: 'object',
     definition: type,
+    extract,
   };
 }
 
-export function buildLiteralUnionType(...lit: (string | number)[]): IUnionType {
+export function literalUnionType(...lit: (string | number)[]): IUnionType {
   return {
     type: 'union',
-    definition: lit.map(buildLiteralType),
+    definition: lit.map(literalType),
   };
 }
 
-export function buildTupleType(...type: IType[]): ITupleType {
-  return {
-    type: 'tuple',
-    definition: type,
-  };
-}
-
-export function buildLiteralTupleType(
-  ...type: (string | number)[]
+export function tupleType(
+  type: IType[],
+  ...extract: ITypePropertyType[]
 ): ITupleType {
   return {
     type: 'tuple',
-    definition: type.map(buildLiteralType),
+    definition: type,
+    extract,
   };
 }
 
-export function buildIdentifierType(builder: IBaseBuilder): IIdentifierType {
+/**
+ *
+ * @param type Builds a tuple of number/string
+ */
+export function literalTupleType(
+  ...type: (string | number | boolean)[]
+): ITupleType {
+  return {
+    type: 'tuple',
+    definition: type.map(literalType),
+  };
+}
+
+/**
+ *
+ * @param builder The name of the interace/type
+ * @param extract Properties to extract for the identifier (eg: ITest[number][string])
+ */
+export function identifierType(
+  builder: IBaseBuilder,
+  ...extract: ITypePropertyType[]
+): IIdentifierType {
   return {
     type: 'identifier',
     definition: builder.varName,
+    extract,
+  };
+}
+
+/**
+ * References the keyof property for a type/interface
+ * @param builder The type/interface to reference
+ */
+export function keyOfExtractor(builder: IBaseBuilder): IRawTypePropertyType {
+  return {
+    type: 'raw_property_type',
+    definition: `keyof ${builder.varName}`,
   };
 }

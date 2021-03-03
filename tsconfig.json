@@ -6,6 +6,6 @@
 		"esModuleInterop": true
 	},
 	"include": [
-		"src"
+		"src", "test"
 	]
 }

@@ -17,21 +17,45 @@ export type IType =
   | IUnionType
   | IStringLiteralType
   | INumberLiteralType
+  | IBooleanLiteralType
   | ITupleType;
+
+export interface IRawTypePropertyType {
+  type: 'raw_property_type';
+  definition: string;
+}
+
+export type ITypePropertyType =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | IStringLiteralType
+  | INumberLiteralType
+  | IBooleanLiteralType
+  | IIdentifierType
+  | IRawTypePropertyType;
 
 export interface IIdentifierType {
   type: 'identifier';
   definition: string;
+  extract?: ITypePropertyType[];
 }
 
 export interface IArrayType {
   type: 'array';
   definition: IType;
+  extract?: ITypePropertyType[];
 }
 
 export interface ITupleType {
   type: 'tuple';
   definition: IType[];
+  extract?: ITypePropertyType[];
+}
+
+export interface IBooleanLiteralType {
+  type: 'boolean_literal';
+  definition: boolean;
 }
 
 export interface IStringLiteralType {
@@ -47,11 +71,13 @@ export interface INumberLiteralType {
 export interface IUnionType {
   type: 'union';
   definition: Array<IType>;
+  extract?: ITypePropertyType[];
 }
 
 export interface IObjectType {
   type: 'object';
   definition: IBodyType;
+  extract?: ITypePropertyType[];
 }
 
 export interface IBodyType {

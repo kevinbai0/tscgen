@@ -1,11 +1,11 @@
-import { Query, Route } from './types';
+import { Query, IRoute } from './types';
 
 const baseQuery: Query = {
   toast: 'string',
   toast_type: 'string',
 };
 
-export const routes: Record<string, Route> = {
+export const routes: Record<string, IRoute> = {
   Home: {
     route: '/',
     query: {
