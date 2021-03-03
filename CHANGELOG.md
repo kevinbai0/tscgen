@@ -1,5 +1,11 @@
 # typescript-codegen
 
+## 0.0.5
+
+### Patch Changes
+
+- fix build for project
+
 ## 0.0.4
 
 ### Patch Changes
