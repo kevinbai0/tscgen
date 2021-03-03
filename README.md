@@ -1,3 +1,3 @@
-# typescript-codegen
+# tscgen
 
 Helpers to generate typescript code

@@ -1,17 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
-import * as tscodegen from '../src';
+import * as tscgen from '../src';
 
 import { routes } from './config/sample';
 import { Breadcrumb, Query } from './config/types';
 
 describe('Generates routes correctly', () => {
   it('generates sample test correctly', async () => {
-    function writeQueryBody(query: Query | undefined): tscodegen.IBodyType {
-      return tscodegen.mapObject(query ?? {}, (value) => {
+    function writeQueryBody(query: Query | undefined): tscgen.IBodyType {
+      return tscgen.mapObject(query ?? {}, (value) => {
         const getValue = (val: 'string' | 'array') =>
-          val === 'string' ? 'string' : tscodegen.arrayType('string');
+          val === 'string' ? 'string' : tscgen.arrayType('string');
 
         const required = typeof value === 'string' ? false : !!value.required;
         return [
@@ -21,49 +21,44 @@ describe('Generates routes correctly', () => {
       });
     }
 
-    function writeBreadcrumbs(breadcrumbs: Breadcrumb): tscodegen.IBodyType {
+    function writeBreadcrumbs(breadcrumbs: Breadcrumb): tscgen.IBodyType {
       if (breadcrumbs.root) {
         return {
-          params: tscodegen.literalTupleType(),
-          template: tscodegen.literalType(''),
-          dependsOn: tscodegen.literalTupleType(''),
+          params: tscgen.literalTupleType(),
+          template: tscgen.literalType(''),
+          dependsOn: tscgen.literalTupleType(''),
         };
       }
 
       return {
-        params: tscodegen.literalTupleType(
+        params: tscgen.literalTupleType(
           ...(breadcrumbs.dynamic ? breadcrumbs.params : [])
         ),
-        dependsOn: tscodegen.literalTupleType(...breadcrumbs.dependsOn),
-        template: tscodegen.literalType(
+        dependsOn: tscgen.literalTupleType(...breadcrumbs.dependsOn),
+        template: tscgen.literalType(
           breadcrumbs.dynamic ? breadcrumbs.template : breadcrumbs.name
         ),
       };
     }
 
     const builders = Object.entries(routes).map(([name, route]) => {
-      return tscodegen.interfaceBuilder(`I${name}Page`).addBody({
-        name: tscodegen.literalType(name),
-        route: tscodegen.literalType(route.route),
+      return tscgen.interfaceBuilder(`I${name}Page`).addBody({
+        name: tscgen.literalType(name),
+        route: tscgen.literalType(route.route),
         params: route.params
-          ? tscodegen.literalTupleType(...route.params)
+          ? tscgen.literalTupleType(...route.params)
           : 'undefined',
-        query: tscodegen.objectType(writeQueryBody(route.query)),
-        breadcrumbs: tscodegen.objectType(writeBreadcrumbs(route.breadcrumb)),
+        query: tscgen.objectType(writeQueryBody(route.query)),
+        breadcrumbs: tscgen.objectType(writeBreadcrumbs(route.breadcrumb)),
       });
     });
-    const routesType = tscodegen
+    const routesType = tscgen
       .typeDefBuilder('Routes')
-      .addUnion(
-        ...builders.map((builder) => tscodegen.identifierType(builder))
-      );
-    const routeType = tscodegen
+      .addUnion(...builders.map((builder) => tscgen.identifierType(builder)));
+    const routeType = tscgen
       .typeDefBuilder('Route')
       .addUnion(
-        tscodegen.identifierType(
-          routesType,
-          tscodegen.keyOfExtractor(routesType)
-        )
+        tscgen.identifierType(routesType, tscgen.keyOfExtractor(routesType))
       );
 
     const sampleOutput = await fs.promises.readFile(
@@ -71,8 +66,8 @@ describe('Generates routes correctly', () => {
       'utf-8'
     );
 
-    const output = await tscodegen.format(
-      tscodegen.combine(...builders, routesType, routeType)
+    const output = await tscgen.format(
+      tscgen.combine(...builders, routesType, routeType)
     );
     expect(output).equal(sampleOutput);
   });
