@@ -34,3 +34,6 @@ jobs:
 
       - name: Test code
         run: npm run test
+
+      - name: Publish package
+        run: npm run changeset:publish
