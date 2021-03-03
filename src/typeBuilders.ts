@@ -1,4 +1,4 @@
-import { IBaseBuilder } from './builders/types';
+import { IBaseBuilder, IBaseBuilderTypes } from './builders/types';
 import {
   IArrayType,
   IBodyType,
@@ -10,73 +10,96 @@ import {
   ITypePropertyType,
   IRawTypePropertyType,
   IDecorationType,
+  IBooleanLiteralType,
+  IStringLiteralType,
+  INumberLiteralType,
 } from './types';
 
+type StringLiterals<T extends Readonly<string[]>> = {
+  [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
+};
+type NumberLiterals<T extends Readonly<number[]>> = {
+  [P in keyof T]: T[P] extends number ? INumberLiteralType<T[P]> : never;
+};
+type BooleanLiterals<T extends Readonly<boolean[]>> = {
+  [P in keyof T]: T[P] extends boolean ? IBooleanLiteralType<T[P]> : never;
+};
+
 export function stringType(): 'string';
-export function stringType(...value: [string, ...string[]]): IUnionType;
-export function stringType(...value: string[]): 'string' | IUnionType {
+export function stringType<T extends [string, ...string[]]>(
+  ...value: T
+): IUnionType<StringLiterals<T>>;
+export function stringType<T extends Readonly<string[]>>(
+  ...value: T
+): 'string' | IUnionType<StringLiterals<T>> {
   if (!value.length) {
     return 'string';
   }
 
   return {
     type: 'union',
-    definition:
-      value.length === 1
-        ? [
-            {
-              type: 'string_literal',
-              definition: value[0],
-            },
-          ]
-        : value.map((val) => stringType(val)),
+    definition: ((value.length === 1
+      ? [
+          {
+            type: 'string_literal',
+            definition: value[0],
+          },
+        ]
+      : value.map((val) => stringType(val))) as unknown) as StringLiterals<T>,
   };
 }
+
 export function numberType(): 'number';
-export function numberType(...value: [number, ...number[]]): IUnionType;
-export function numberType(...value: number[]): 'number' | IUnionType {
+export function numberType<T extends [number, ...number[]]>(
+  ...value: T
+): IUnionType<NumberLiterals<T>>;
+export function numberType<T extends Readonly<number[]>>(
+  ...value: T
+): 'number' | IUnionType<NumberLiterals<T>> {
   if (!value.length) {
     return 'number';
   }
 
   return {
     type: 'union',
-    definition:
-      value.length === 1
-        ? [
-            {
-              type: 'number_literal',
-              definition: value[0],
-            },
-          ]
-        : value.map((val) => numberTuple(val)),
+    definition: ((value.length === 1
+      ? ([
+          {
+            type: 'number_literal',
+            definition: value[0],
+          },
+        ] as const)
+      : value.map((val) => numberTuple(val))) as unknown) as NumberLiterals<T>,
   };
 }
 export function booleanType(): 'boolean';
-export function booleanType(...value: [boolean, ...boolean[]]): IUnionType;
-export function booleanType(...value: boolean[]): 'boolean' | IUnionType {
+export function booleanType<T extends [boolean, ...boolean[]]>(
+  ...value: T
+): IUnionType<BooleanLiterals<T>>;
+export function booleanType<T extends Readonly<boolean[]>>(
+  ...value: T
+): 'boolean' | IUnionType<BooleanLiterals<T>> {
   if (!value.length) {
     return 'boolean';
   }
 
   return {
     type: 'union',
-    definition:
-      value.length === 1
-        ? [
-            {
-              type: 'boolean_literal',
-              definition: value[0],
-            },
-          ]
-        : value.map((val) => booleanType(val)),
+    definition: ((value.length === 1
+      ? [
+          {
+            type: 'boolean_literal',
+            definition: value[0],
+          },
+        ]
+      : value.map((val) => booleanType(val))) as unknown) as BooleanLiterals<T>,
   };
 }
 
-export function unionType(
-  types: IType[],
+export function unionType<T extends ReadonlyArray<IType>>(
+  types: T,
   ...extract: ITypePropertyType[]
-): IUnionType {
+): IUnionType<T> {
   return {
     type: 'union',
     definition: types,
@@ -84,10 +107,10 @@ export function unionType(
   };
 }
 
-export function arrayType(
-  type: IType,
+export function arrayType<T extends IType>(
+  type: T,
   ...extract: ITypePropertyType[]
-): IArrayType {
+): IArrayType<T> {
   return {
     type: 'array',
     definition: type,
@@ -95,10 +118,10 @@ export function arrayType(
   };
 }
 
-export function objectType(
-  type: IBodyType,
+export function objectType<T extends IBodyType>(
+  type: T,
   ...extract: ITypePropertyType[]
-): IObjectType {
+): IObjectType<T> {
   return {
     type: 'object',
     definition: type,
@@ -106,10 +129,10 @@ export function objectType(
   };
 }
 
-export function tupleType(
-  type: IType[],
+export function tupleType<T extends readonly IType<unknown>[]>(
+  type: T,
   ...extract: ITypePropertyType[]
-): ITupleType {
+): ITupleType<T> {
   return {
     type: 'tuple',
     definition: type,
@@ -117,43 +140,36 @@ export function tupleType(
   };
 }
 
-export function stringTuple(...type: string[]): ITupleType {
+export function stringTuple<T extends Readonly<string[]>>(
+  ...type: T
+): ITupleType<StringLiterals<T>> {
   return {
     type: 'tuple',
-    definition: type.map((val) => stringType(val)),
+    definition: (type.map((val) =>
+      stringType(val)
+    ) as unknown) as StringLiterals<T>,
   };
 }
 
-export function numberTuple(...type: number[]): ITupleType {
+export function numberTuple<T extends Readonly<number[]>>(
+  ...type: T
+): ITupleType<NumberLiterals<T>> {
   return {
     type: 'tuple',
-    definition: type.map((val) => numberType(val)),
+    definition: ((type.map((val) =>
+      numberType(val)
+    ) as unknown) as unknown) as NumberLiterals<T>,
   };
 }
 
-export function booleanTuple(...type: boolean[]): ITupleType {
+export function booleanTuple<T extends Readonly<boolean[]>>(
+  ...type: T
+): ITupleType<BooleanLiterals<T>> {
   return {
     type: 'tuple',
-    definition: type.map((val) => booleanType(val)),
-  };
-}
-
-/**
- *
- * @param type Builds a tuple of number/string
- */
-export function literalTupleType(
-  ...type: (string | number | boolean)[]
-): ITupleType {
-  return {
-    type: 'tuple',
-    definition: type.map((val) =>
-      typeof val === 'string'
-        ? stringType(val)
-        : typeof val === 'number'
-        ? numberType(val)
-        : booleanType(val)
-    ),
+    definition: (type.map((val) =>
+      booleanType(val)
+    ) as unknown) as BooleanLiterals<T>,
   };
 }
 
@@ -162,8 +178,11 @@ export function literalTupleType(
  * @param builder The name of the interace/type
  * @param extract Properties to extract for the identifier (eg: ITest[number][string])
  */
-export function identifierType(
-  builder: IBaseBuilder,
+export function identifierType<
+  Type extends IBaseBuilderTypes,
+  Name extends string
+>(
+  builder: IBaseBuilder<Type, Name>,
   ...extract: ITypePropertyType[]
 ): IIdentifierType {
   return {
@@ -173,7 +192,7 @@ export function identifierType(
   };
 }
 
-export function readonly(type: IType): IDecorationType {
+export function readonly<T extends IType>(type: T): IDecorationType<[T]> {
   return {
     type: 'decoration',
     definition: [type],
@@ -181,7 +200,11 @@ export function readonly(type: IType): IDecorationType {
   };
 }
 
-export function extract(type: IType, union: IUnionType): IDecorationType {
+export function extract<
+  T extends IType,
+  K extends Readonly<IType[]>,
+  U extends IUnionType<K>
+>(type: T, union: U): IDecorationType<[T, U]> {
   return {
     type: 'decoration',
     definition: [type, union],
@@ -193,7 +216,10 @@ export function extract(type: IType, union: IUnionType): IDecorationType {
  * References the keyof property for a type/interface
  * @param builder The type/interface to reference
  */
-export function keyOfExtractor(builder: IBaseBuilder): IRawTypePropertyType {
+export function keyOfExtractor<
+  Type extends IBaseBuilderTypes,
+  Name extends string
+>(builder: IBaseBuilder<Type, Name>): IRawTypePropertyType {
   return {
     type: 'raw_property_type',
     definition: `keyof ${builder.varName}`,

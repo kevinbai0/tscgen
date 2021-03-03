@@ -4,40 +4,46 @@ import { expect } from 'chai';
 import * as tscgen from '../src';
 
 import { routes } from './config/sample';
-import { Breadcrumb, Query } from './config/types';
+import { Query } from './config/types';
+
+const cleanQuery = (query: Query[keyof Query]) =>
+  typeof query === 'string'
+    ? { type: query, required: false }
+    : {
+        type: query.type,
+        required: !!query.required,
+      };
+
+type CleanBreadcrumbs = {
+  root: boolean;
+  dynamic: boolean;
+  params?: string[];
+  template?: string;
+  name?: string;
+  dependsOn?: string[];
+};
 
 describe('Generates routes correctly', () => {
   it('generates sample test correctly', async () => {
     function writeQueryBody(query: Query | undefined): tscgen.IBodyType {
       return tscgen.mapObject(query ?? {}, (value) => {
-        const getValue = (val: 'string' | 'array') =>
-          val === 'string' ? 'string' : tscgen.arrayType('string');
-
-        const required = typeof value === 'string' ? false : !!value.required;
+        const q = cleanQuery(value);
         return [
-          typeof value === 'string' ? getValue(value) : getValue(value.type),
-          required,
+          q.type === 'string' ? q.type : tscgen.arrayType('string'),
+          q.required,
         ];
       });
     }
 
-    function writeBreadcrumbs(breadcrumbs: Breadcrumb): tscgen.IBodyType {
-      if (breadcrumbs.root) {
-        return {
-          params: tscgen.stringTuple(),
-          template: tscgen.stringType(''),
-          dependsOn: tscgen.stringTuple(),
-        };
-      }
-
+    function writeBreadcrumbs(breadcrumbs: CleanBreadcrumbs): tscgen.IBodyType {
       return {
         params: tscgen.stringTuple(
-          ...(breadcrumbs.dynamic ? breadcrumbs.params : [])
+          ...(breadcrumbs.dynamic ? breadcrumbs.params ?? [] : [])
         ),
-        dependsOn: tscgen.stringTuple(...breadcrumbs.dependsOn),
         template: tscgen.stringType(
-          breadcrumbs.dynamic ? breadcrumbs.template : breadcrumbs.name
+          breadcrumbs.template ?? breadcrumbs.name ?? ''
         ),
+        dependsOn: tscgen.stringTuple(...(breadcrumbs.dependsOn ?? [])),
       };
     }
 
@@ -49,7 +55,9 @@ describe('Generates routes correctly', () => {
           ? tscgen.stringTuple(...route.params)
           : 'undefined',
         query: tscgen.objectType(writeQueryBody(route.query)),
-        breadcrumbs: tscgen.objectType(writeBreadcrumbs(route.breadcrumb)),
+        breadcrumbs: tscgen.objectType(
+          writeBreadcrumbs(route.breadcrumb as CleanBreadcrumbs)
+        ),
       });
     });
     const routesType = tscgen
@@ -102,11 +110,16 @@ describe('Generates routes correctly', () => {
       .extends(tscgen.identifierType(parent))
       .addBody({
         name: tscgen.stringType('hello'),
+        value: tscgen.readonly(
+          tscgen.objectType({
+            name: tscgen.stringType('world'),
+          })
+        ),
       });
 
     const formatted = await tscgen.format(tscgen.combine(parent, build));
     expect(formatted).to.eq(
-      `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n}\n`
+      `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n  value: Readonly<{ name: 'world' }>;\n}\n`
     );
   });
 
@@ -115,9 +128,11 @@ describe('Generates routes correctly', () => {
       .typeDefBuilder('TestReadonly')
       .markExport()
       .addUnion(
-        tscgen.readonly({
-          name: 'string',
-        })
+        tscgen.readonly(
+          tscgen.objectType({
+            name: 'string',
+          })
+        )
       );
 
     const formatted = await tscgen.format(tscgen.combine(build));

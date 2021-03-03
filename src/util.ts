@@ -1,6 +1,8 @@
-import { IBaseBuilder } from './builders/types';
+import { IBaseBuilder, IBaseBuilderTypes } from './builders/types';
 
-export function combine(...builders: IBaseBuilder[]): string {
+export function combine(
+  ...builders: IBaseBuilder<IBaseBuilderTypes, string>[]
+): string {
   return builders.map((builder) => builder.toString()).join('\n\n');
 }
 

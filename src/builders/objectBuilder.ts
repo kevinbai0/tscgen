@@ -2,7 +2,7 @@ import { IJsBodyValue, IJsObjectValue, IJsValue, IType } from '../types';
 import { writeJsObject, writeType } from '../write';
 import { IBaseBuilder } from './types';
 
-interface IVarObjectBuilder extends IBaseBuilder {
+interface IVarObjectBuilder extends IBaseBuilder<'object', string> {
   type: 'object';
   addBody(body: IJsBodyValue): IVarObjectBuilder;
   addTypeDef(typeDefinition: IType): IVarObjectBuilder;

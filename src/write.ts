@@ -21,23 +21,24 @@ import {
   IJsObjectValue,
   IJsIdentifierValue,
   IDecorationType,
+  IGenericOptions,
 } from './types';
 
-export function writeGeneric(values?: Array<IGenericValue>): string {
+export function writeGeneric(
+  values?: Readonly<IGenericValue<string, IGenericOptions>[]>
+): string {
   if (!values?.length) {
     return '';
   }
 
-  function writeValue(generic: IGenericValue): string {
-    const extendsStr =
-      generic.length === 2 && generic[1]?.extendsValue
-        ? ` extends ${generic[1].extendsValue}`
-        : '';
-    const defaultStr =
-      generic.length === 2 && generic[1]?.defaultValue
-        ? ` = ${generic[1].defaultValue}`
-        : '';
-    return `${generic[0]}${extendsStr}${defaultStr}`;
+  function writeValue(generic: IGenericValue<string, IGenericOptions>): string {
+    const extendsStr = generic.options?.extendsValue
+      ? ` extends ${generic.options.extendsValue}`
+      : '';
+    const defaultStr = generic.options?.defaultValue
+      ? ` = ${generic.options.defaultValue}`
+      : '';
+    return `${generic.name}${extendsStr}${defaultStr}`;
   }
   return `<${values.map(writeValue)}>`;
 }
@@ -53,12 +54,9 @@ function writeArrayType(type: IArrayType): string {
 }
 
 function writeObjectType(type: IObjectType): string {
-  if (type.type === 'object') {
-    return `{${writeBodyType(type.definition)}}${writeExtractedProperties(
-      type.extract
-    )}`;
-  }
-  return `{${writeBodyType(type)}}`;
+  return `{${writeBodyType(type.definition)}}${writeExtractedProperties(
+    type.extract
+  )}`;
 }
 
 function writeUnionType(type: IUnionType): string {
@@ -120,10 +118,6 @@ export function writeType(type: IType | undefined): string {
   }
   if (!type) {
     return 'never';
-  }
-
-  if (typeof type === 'object' && !type.type) {
-    return writeObjectType(type);
   }
 
   switch (type.type) {

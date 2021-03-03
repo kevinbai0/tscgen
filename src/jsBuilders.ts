@@ -1,4 +1,4 @@
-import { IBaseBuilder } from './builders/types';
+import { IBaseBuilder, IBaseBuilderTypes } from './builders/types';
 import {
   IJsArrayValue,
   IJsBodyValue,
@@ -50,7 +50,10 @@ export function objectValue(value: IJsBodyValue): IJsObjectValue {
  * @param builder The name of the interace/type
  * @param extract Properties to extract for the identifier (eg: ITest[number][string])
  */
-export function identifierValue(builder: IBaseBuilder): IJsIdentifierValue {
+export function identifierValue<
+  Type extends IBaseBuilderTypes,
+  Name extends string
+>(builder: IBaseBuilder<Type, Name>): IJsIdentifierValue {
   return {
     type: 'identifier',
     value: builder.varName,

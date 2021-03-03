@@ -32,7 +32,7 @@ interface IUserPage {
   route: '/users/{user_id}';
   params: ['user_id'];
   query: { toast?: string; toast_type?: string };
-  breadcrumbs: { params: []; dependsOn: ['Users']; template: '{user_id}' };
+  breadcrumbs: { params: []; template: '{user_id}'; dependsOn: ['Users'] };
 }
 
 interface ITransactionsPage {
@@ -50,8 +50,8 @@ interface ITransactionPage {
   query: { toast?: string; toast_type?: string };
   breadcrumbs: {
     params: [];
-    dependsOn: ['Transactions'];
     template: '{transaction_id}';
+    dependsOn: ['Transactions'];
   };
 }
 

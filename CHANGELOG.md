@@ -1,5 +1,11 @@
 # typescript-codegen
 
+## 0.0.9
+
+### Patch Changes
+
+- Add strong type definitions for all interface/type builders
+
 ## 0.0.8
 
 ### Patch Changes

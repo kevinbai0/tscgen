@@ -1,25 +1,32 @@
-export type IGenericValue = [
-  name: string,
-  options?: {
-    extendsValue?: IType;
-    defaultValue?: IType;
-  }
-];
+export type IGenericOptions =
+  | {
+      extendsValue?: IType;
+      defaultValue?: IType;
+    }
+  | undefined;
+export type IGenericValue<
+  Name extends string = string,
+  Options extends IGenericOptions = undefined
+> = {
+  name: Name;
+  options: Options;
+};
 
-export type IType =
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IType<T extends any = any> =
   | 'string'
   | 'number'
   | 'boolean'
   | 'undefined'
   | IIdentifierType
-  | IArrayType
-  | IObjectType
-  | IUnionType
-  | IStringLiteralType
-  | INumberLiteralType
-  | IBooleanLiteralType
-  | ITupleType
-  | IDecorationType;
+  | IArrayType<T extends IType ? T : IType>
+  | IObjectType<T extends IBodyType ? T : IBodyType>
+  | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
+  | IStringLiteralType<T extends string ? T : string>
+  | INumberLiteralType<T extends number ? T : number>
+  | IBooleanLiteralType<T extends boolean ? T : boolean>
+  | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
+  | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>;
 
 export interface IRawTypePropertyType {
   type: 'raw_property_type';
@@ -36,9 +43,11 @@ export type ITypePropertyType =
   | IIdentifierType
   | IRawTypePropertyType;
 
-export interface IDecorationType {
+export interface IDecorationType<
+  T extends Readonly<IType[]> = Readonly<IType[]>
+> {
   type: 'decoration';
-  definition: [...IType[]];
+  definition: T;
   decorate: (...value: string[]) => string;
 }
 
@@ -48,50 +57,46 @@ export interface IIdentifierType {
   extract?: ITypePropertyType[];
 }
 
-export interface IArrayType {
+export interface IArrayType<T extends IType = IType> {
   type: 'array';
-  definition: IType;
+  definition: T;
   extract?: ITypePropertyType[];
 }
 
-export interface ITupleType {
+export interface ITupleType<
+  T extends ReadonlyArray<IType> = ReadonlyArray<IType>
+> {
   type: 'tuple';
-  definition: IType[];
+  definition: T;
   extract?: ITypePropertyType[];
 }
 
-export interface IBooleanLiteralType {
+export interface IBooleanLiteralType<T extends boolean = boolean> {
   type: 'boolean_literal';
-  definition: boolean;
+  definition: T;
 }
 
-export interface IStringLiteralType {
+export interface IStringLiteralType<T extends string = string> {
   type: 'string_literal';
-  definition: string;
+  definition: T;
 }
 
-export interface INumberLiteralType {
+export interface INumberLiteralType<T extends number = number> {
   type: 'number_literal';
-  definition: number;
+  definition: T;
 }
 
-export interface IUnionType {
+export interface IUnionType<T extends Readonly<IType[]> = []> {
   type: 'union';
-  definition: Array<IType>;
+  definition: T;
   extract?: ITypePropertyType[];
 }
 
-export type IObjectType =
-  | {
-      type: 'object';
-      definition: IBodyType;
-      extract?: ITypePropertyType[];
-    }
-  | ({
-      [key in Exclude<string, 'type'>]: IType;
-    } & {
-      type?: undefined;
-    });
+export type IObjectType<T extends IBodyType = IBodyType> = {
+  type: 'object';
+  definition: T;
+  extract?: ITypePropertyType[];
+};
 
 export interface IBodyType {
   [key: string]: IType | [IType, boolean];
