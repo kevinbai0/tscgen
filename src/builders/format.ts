@@ -10,11 +10,10 @@ const linter: eslint.ESLint = new eslint.ESLint({
 
 const dir: string = path.join(__dirname, 'tmp');
 
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir);
-}
-
 export const format = async (text: string): Promise<string> => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
   const randomFile = `${randomBytes(8).toString('hex')}.ts`;
   const filePath = path.join(dir, randomFile);
   await fs.promises.writeFile(filePath, text);

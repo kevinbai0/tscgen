@@ -2,6 +2,8 @@ export * from './builders/interface';
 export * from './builders/typeDef';
 export * from './builders/types';
 export * from './builders/format';
+export * from './builders/objectBuilder';
 export * from './typeBuilders';
+export * from './jsBuilders';
 export * from './util';
 export * from './types';

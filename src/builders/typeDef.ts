@@ -7,18 +7,21 @@ interface ITypeDefBuilder extends IBaseBuilder {
   addUnion(...type: IType[]): ITypeDefBuilder;
   addIntersection(...type: IType[]): ITypeDefBuilder;
   addGenerics(...generics: IGenericValue[]): ITypeDefBuilder;
+  markExport(): ITypeDefBuilder;
 }
 
 export function typeDefBuilder(
   name: string,
   defaultOptions: {
     generics: IGenericValue[];
+    export: boolean;
     types: {
       type: IType;
       joinType: 'union' | 'intersection';
     }[];
   } = {
     generics: [],
+    export: false,
     types: [],
   }
 ): ITypeDefBuilder {
@@ -32,7 +35,9 @@ export function typeDefBuilder(
         pair.type
       )}`;
     }, '');
-    return `type ${name}${genericsStr} = ${types};`;
+    return `${
+      defaultOptions.export ? 'export ' : ''
+    }type ${name}${genericsStr} = ${types};`;
   }
 
   function newBuilder(joinType: 'union' | 'intersection') {
@@ -64,5 +69,10 @@ export function typeDefBuilder(
     get varName() {
       return name;
     },
+    markExport: () =>
+      typeDefBuilder(name, {
+        ...defaultOptions,
+        export: true,
+      }),
   };
 }

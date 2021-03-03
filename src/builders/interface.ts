@@ -6,6 +6,7 @@ interface IInterfaceBuilder extends IBaseBuilder {
   type: 'interface';
   addGenerics: (...generics: IGenericValue[]) => IInterfaceBuilder;
   addBody(body: IBodyType): IInterfaceBuilder;
+  markExport(): IInterfaceBuilder;
 }
 
 export function interfaceBuilder(
@@ -13,13 +14,17 @@ export function interfaceBuilder(
   defaultOptions: {
     generics: Array<IGenericValue>;
     body: IBodyType;
+    export: boolean;
   } = {
     generics: [],
     body: {},
+    export: false,
   }
 ): IInterfaceBuilder {
   function build(): string {
-    return `interface ${interfaceName}${writeGeneric(
+    return `${
+      defaultOptions.export ? 'export ' : ''
+    }interface ${interfaceName}${writeGeneric(
       defaultOptions.generics
     )} {${writeBodyType(defaultOptions.body)}}`;
   }
@@ -46,5 +51,10 @@ export function interfaceBuilder(
     get varName() {
       return interfaceName;
     },
+    markExport: () =>
+      interfaceBuilder(interfaceName, {
+        ...defaultOptions,
+        export: true,
+      }),
   };
 }
