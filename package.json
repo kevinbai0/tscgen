@@ -1,6 +1,6 @@
 {
-  "name": "typescript-codegen",
-  "version": "1.0.0",
+  "name": "tscgen",
+  "version": "0.0.3",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,12 +12,15 @@
     "lint": "eslint .",
     "prepublish": "npm run build",
     "start": "ts-node --transpile-only src/index.ts",
-    "test": "mocha -r ts-node/register **/*.test.ts"
+    "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000",
+    "changeset:version": "changeset version",
+    "changeset:publish": "./scripts/publish.sh"
   },
   "keywords": [],
   "author": "Kevin Bai",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.14.1",
     "@tabtabapp/lint-rules": "^1.0.9",
     "@types/chai": "^4.2.15",
     "@types/eslint": "^7.2.6",
