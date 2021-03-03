@@ -22,7 +22,9 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Install dependencies
-        run: npm i
+        run: npm install
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Build code
         run: npm run build
