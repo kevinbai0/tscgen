@@ -1,0 +1,30 @@
+name: Super-Linter
+
+on: push
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  build:
+    # Name the Job
+    name: Build, lint, and publish
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Runs the Super-Linter action
+      - name: Install dependencies
+        run: npm i
+
+      - name: Build code
+        run: npm run build
+      
+      - name: Lint code
+        run: npm run lint
+
+      - name: Test code
+        run: npm run test
