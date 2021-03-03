@@ -12,12 +12,13 @@
     "lint": "eslint .",
     "prepublish": "npm run build",
     "start": "ts-node --transpile-only src/index.ts",
-    "test": "mocha -r ts-node/register **/*.test.ts"
+    "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000"
   },
   "keywords": [],
   "author": "Kevin Bai",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.14.1",
     "@tabtabapp/lint-rules": "^1.0.9",
     "@types/chai": "^4.2.15",
     "@types/eslint": "^7.2.6",
