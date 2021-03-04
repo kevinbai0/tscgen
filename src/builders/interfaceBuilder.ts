@@ -2,7 +2,7 @@ import { IBodyType, IGenericOptions, IGenericValue, IType } from '../types';
 import { writeBodyType, writeGeneric, writeType } from '../write';
 import { IBaseBuilder } from './baseBuilder';
 
-interface IInterfaceBuilder<
+export interface IInterfaceBuilder<
   Name extends string,
   Generics extends Readonly<
     IGenericValue<string, IGenericOptions | undefined>[]

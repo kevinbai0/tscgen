@@ -13,6 +13,11 @@ import {
   IBooleanLiteralType,
   IStringLiteralType,
   INumberLiteralType,
+  IStringType,
+  INumberType,
+  IBooleanType,
+  IUndefinedType,
+  INullType,
 } from '../types';
 
 type StringLiterals<T extends Readonly<string[]>> = {
@@ -25,15 +30,17 @@ type BooleanLiterals<T extends Readonly<boolean[]>> = {
   [P in keyof T]: T[P] extends boolean ? IBooleanLiteralType<T[P]> : never;
 };
 
-export function stringType(): 'string';
+export function stringType(): IStringType;
 export function stringType<T extends string[]>(
   ...value: T
 ): IUnionType<StringLiterals<T>>;
 export function stringType<T extends Readonly<string[]>>(
   ...value: T
-): 'string' | IUnionType<StringLiterals<T>> {
+): IStringType | IUnionType<StringLiterals<T>> {
   if (!value.length) {
-    return 'string';
+    return {
+      type: 'string',
+    };
   }
 
   return {
@@ -49,15 +56,17 @@ export function stringType<T extends Readonly<string[]>>(
   };
 }
 
-export function numberType(): 'number';
+export function numberType(): INumberType;
 export function numberType<T extends number[]>(
   ...value: T
 ): IUnionType<NumberLiterals<T>>;
 export function numberType<T extends Readonly<number[]>>(
   ...value: T
-): 'number' | IUnionType<NumberLiterals<T>> {
+): INumberType | IUnionType<NumberLiterals<T>> {
   if (!value.length) {
-    return 'number';
+    return {
+      type: 'number',
+    };
   }
 
   return {
@@ -72,15 +81,17 @@ export function numberType<T extends Readonly<number[]>>(
       : value.map((val) => numberTuple(val))) as unknown) as NumberLiterals<T>,
   };
 }
-export function booleanType(): 'boolean';
+export function booleanType(): IBooleanType;
 export function booleanType<T extends boolean[]>(
   ...value: T
 ): IUnionType<BooleanLiterals<T>>;
 export function booleanType<T extends Readonly<boolean[]>>(
   ...value: T
-): 'boolean' | IUnionType<BooleanLiterals<T>> {
+): IBooleanType | IUnionType<BooleanLiterals<T>> {
   if (!value.length) {
-    return 'boolean';
+    return {
+      type: 'boolean',
+    };
   }
 
   return {
@@ -93,6 +104,16 @@ export function booleanType<T extends Readonly<boolean[]>>(
           },
         ]
       : value.map((val) => booleanType(val))) as unknown) as BooleanLiterals<T>,
+  };
+}
+export function undefinedType(): IUndefinedType {
+  return {
+    type: 'undefined',
+  };
+}
+export function nullType(): INullType {
+  return {
+    type: 'null',
   };
 }
 

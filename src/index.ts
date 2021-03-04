@@ -7,3 +7,4 @@ export * from './definition/jsDefinitions';
 export * from './utils/format';
 export * from './utils/util';
 export * from './types';
+export * from './project/config';

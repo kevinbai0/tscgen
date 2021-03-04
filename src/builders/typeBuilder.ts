@@ -8,7 +8,7 @@ type JoinType<K extends 'union' | 'intersection', T> = {
     type: T[Key];
   };
 };
-interface ITypeDefBuilder<
+export interface ITypeDefBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue<string, IGenericOptions>[]>,
   JoinedTypes extends ReadonlyArray<{

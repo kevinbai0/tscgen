@@ -14,10 +14,11 @@ export type IGenericValue<
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IType<T extends any = any> =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'undefined'
+  | IStringType
+  | INumberType
+  | IBooleanType
+  | IUndefinedType
+  | INullType
   | IIdentifierType
   | IArrayType<T extends IType ? T : IType>
   | IObjectType<T extends IBodyType ? T : IBodyType>
@@ -34,9 +35,9 @@ export interface IRawTypePropertyType {
 }
 
 export type ITypePropertyType =
-  | 'string'
-  | 'number'
-  | 'boolean'
+  | IStringType
+  | INumberType
+  | IBooleanType
   | IStringLiteralType
   | INumberLiteralType
   | IBooleanLiteralType
@@ -49,6 +50,22 @@ export interface IDecorationType<
   type: 'decoration';
   definition: T;
   decorate: (...value: string[]) => string;
+}
+
+export interface IStringType {
+  type: 'string';
+}
+export interface INumberType {
+  type: 'number';
+}
+export interface IBooleanType {
+  type: 'boolean';
+}
+export interface IUndefinedType {
+  type: 'undefined';
+}
+export interface INullType {
+  type: 'null';
 }
 
 export interface IIdentifierType {

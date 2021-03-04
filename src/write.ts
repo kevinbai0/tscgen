@@ -94,9 +94,6 @@ function writeIdentifierType(type: IIdentifierType) {
 
 function writeTypePropertyType(type: ITypePropertyType) {
   const wrap = (value: string) => `[${value}]`;
-  if (typeof type === 'string') {
-    return wrap(writeType(type));
-  }
 
   switch (type.type) {
     case 'raw_property_type':
@@ -123,6 +120,16 @@ export function writeType(type: IType | undefined): string {
   }
 
   switch (type.type) {
+    case 'string':
+      return type.type;
+    case 'number':
+      return type.type;
+    case 'boolean':
+      return type.type;
+    case 'undefined':
+      return type.type;
+    case 'null':
+      return type.type;
     case 'array':
       return writeArrayType(type);
     case 'object':
