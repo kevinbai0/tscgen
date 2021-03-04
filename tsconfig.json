@@ -3,7 +3,8 @@
 		"strict": true,
 		"target": "ESNext",
 		"module": "CommonJS",
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"lib": ["ES2020"]
 	},
 	"include": [
 		"src", "test"

@@ -22,6 +22,8 @@ import {
   IJsIdentifierValue,
   IDecorationType,
   IGenericOptions,
+  IRawIdentifierType,
+  IGenericIdentifierType,
 } from './types';
 
 export function writeGeneric(
@@ -89,7 +91,15 @@ function writeTupleType(type: ITupleType): string {
 }
 
 function writeIdentifierType(type: IIdentifierType) {
-  return `${type.definition}${writeExtractedProperties(type.extract)}`;
+  return `${type.definition.varName}${writeExtractedProperties(type.extract)}`;
+}
+
+function writeRawType(type: IRawIdentifierType) {
+  return type.definition;
+}
+
+function writeGenericIdentifierType(type: IGenericIdentifierType) {
+  return type.definition;
 }
 
 function writeTypePropertyType(type: ITypePropertyType) {
@@ -146,6 +156,10 @@ export function writeType(type: IType | undefined): string {
       return writeTupleType(type);
     case 'identifier':
       return writeIdentifierType(type);
+    case 'raw_identifier':
+      return writeRawType(type);
+    case 'generic_identifier':
+      return writeGenericIdentifierType(type);
     case 'decoration':
       return writeDecorationType(type);
     default:

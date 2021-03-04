@@ -1,14 +1,15 @@
+import { IBaseBuilder } from '../generators/core/builders/baseBuilder';
 import {
   IInterfaceBuilder,
   interfaceBuilder,
-} from '../builders/interfaceBuilder';
+} from '../generators/core/builders/interfaceBuilder';
 import {
   arrayType,
   numberType,
   objectType,
   stringTuple,
   stringType,
-} from '../definition/typeDefinitions';
+} from '../generators/typescript/definitions';
 import {
   IBodyType,
   IGenericOptions,
@@ -26,7 +27,8 @@ import {
   INumberType,
   IUndefinedType,
   INullType,
-} from '../types';
+  IIdentifierType,
+} from '../generators/typescript/types';
 
 export type Interface<
   T extends IInterfaceBuilder<
@@ -34,7 +36,7 @@ export type Interface<
     Readonly<IGenericValue<string, IGenericOptions | undefined>[]>,
     IBodyType,
     boolean,
-    IType | undefined
+    IIdentifierType<IBaseBuilder<'interface', string>> | undefined
   >
 > = ExtractBody<T['body']>;
 
@@ -131,21 +133,23 @@ type ExtractType<T extends IType> = T extends IStringType
   ? ExtractTupleType<T>
   : never;
 
-const unionTest = stringType('Harry Potter');
-type U = ExtractType<typeof unionTest>;
-
-const test = interfaceBuilder('Name').addBody({
+const base = interfaceBuilder('Base').addBody({
   name: stringType(),
-  cool: [stringType(), false],
-  books: [(() => stringType('Harry Potter'))(), false],
-  next: (() => numberType(1, 2, 3, 4, 5))(),
-  nested: (() =>
-    objectType({
-      a: numberType(),
-    }))(),
-  array: arrayType(stringType()),
-  tuple: (() => stringTuple('hello', 'world'))(),
 });
+const test = interfaceBuilder('Name')
+  .addBody({
+    name: stringType('test'),
+    cool: [stringType(), false],
+    books: [(() => stringType('Harry Potter'))(), false],
+    next: (() => numberType(1, 2, 3, 4, 5))(),
+    nested: (() =>
+      objectType({
+        a: numberType(),
+      }))(),
+    array: arrayType(stringType()),
+    tuple: (() => stringTuple('hello', 'world'))(),
+  })
+  .extends(base);
 
 type L = WriteRequired<typeof test['body']>;
 

@@ -1,7 +1,10 @@
 import fs, { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import { ProjectConfig } from '../project/config';
-import { createFormatter } from '../utils/format';
+import { OutputModule } from '../project/getReference';
+import { createFormatter } from '../generators/core/format';
+import { combine } from '../generators/core/util';
+import { InputData } from '../project/getReference';
 import { apply, recursiveDir } from './helpers';
 import { IDir } from './types';
 
@@ -27,59 +30,80 @@ async function main() {
     files: await recursiveDir(projectDir),
   };
 
-  const res = await apply(project, async (file) => {
+  await apply(project, async (file) => {
     if (file.filename.split('.').slice(-2).join('.') === 'out.ts') {
       return {
-        out: await writeGroup(
-          path.join(file.path, file.filename),
+        out: await writeGroup(path.join(file.path, file.filename), {
           projectDir,
-          outDir
-        ),
+          outDir,
+        }),
       };
     }
     return {};
   });
 }
 
+async function writeFile(
+  data: InputData,
+  filePath: string,
+  fileData: string,
+  context: {
+    outDir: string;
+    projectDir: string;
+  }
+) {
+  const newRoute = Object.keys(data.params ?? {}).reduce(
+    (acc, param) => acc.replace(`[${param}]`, data.params![param]),
+    filePath
+  );
+  const outPath = path.join(
+    context.outDir,
+    path.relative(context.projectDir, newRoute.replace('.out.ts', '.ts'))
+  );
+
+  const pathDir = outPath.split('/').slice(0, -1).join('/');
+  if (!(await exists(pathDir))) {
+    await fs.promises.mkdir(pathDir, {
+      recursive: true,
+    });
+  }
+  await fs.promises.writeFile(outPath, fileData);
+}
+
 async function writeGroup(
   filePath: string,
-  projectDir: string,
-  outDir: string
+  context: {
+    projectDir: string;
+    outDir: string;
+  }
 ) {
-  // extract out file
+  const res: OutputModule = await import(filePath);
 
-  // assume file exists
-  const res = await import(filePath);
-  const inputs = await res.inputs;
+  if (res.getInputs && res.getMappedExports) {
+    const inputs = await res.getInputs();
 
-  const newData = await Promise.all(
-    inputs.map(async (val: any) => ({
-      params: val.params,
-      out: await format(res.tscgen(val.data).toString()),
-    }))
-  );
+    await Promise.all(
+      inputs.map(async (inputData) => {
+        const fileData = await format(
+          combine(...(await res.getMappedExports!(inputData.data)))
+        );
+        await writeFile(inputData, filePath, fileData, context);
+      })
+    );
 
-  await Promise.all(
-    newData.map(async (data: any) => {
-      const newRoute = Object.keys(data.params ?? {}).reduce(
-        (acc, param) => acc.replace(`[${param}]`, data.params![param]),
-        filePath
-      );
-      const outPath = path.join(
-        outDir,
-        path.relative(projectDir, newRoute.replace('.out.ts', '.ts'))
-      );
-
-      const pathDir = outPath.split('/').slice(0, -1).join('/');
-      if (!(await exists(pathDir))) {
-        await fs.promises.mkdir(pathDir, {
-          recursive: true,
-        });
-      }
-      await fs.promises.writeFile(outPath, data.out);
-    })
-  );
-  return true;
+    return true;
+  }
+  if (res.getStaticExports) {
+    const fileData = await format(combine(...(await res.getStaticExports())));
+    await writeFile(
+      { params: {}, data: undefined },
+      filePath,
+      fileData,
+      context
+    );
+  }
+  console.log(res);
+  return false;
 }
 
 async function exists(dir: string) {
@@ -90,3 +114,5 @@ async function exists(dir: string) {
     return false;
   }
 }
+
+export {};

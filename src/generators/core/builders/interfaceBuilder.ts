@@ -1,5 +1,11 @@
-import { IBodyType, IGenericOptions, IGenericValue, IType } from '../types';
-import { writeBodyType, writeGeneric, writeType } from '../write';
+import { writeBodyType, writeGeneric, writeType } from '../../typescript/write';
+import {
+  IBodyType,
+  IGenericOptions,
+  IGenericValue,
+  IIdentifierType,
+} from '../../typescript/types';
+import { identifierType } from '../../typescript/definitions';
 import { IBaseBuilder } from './baseBuilder';
 
 export interface IInterfaceBuilder<
@@ -9,7 +15,7 @@ export interface IInterfaceBuilder<
   >,
   Body extends IBodyType,
   Exported extends boolean,
-  Extend extends IType | undefined
+  Extend extends IIdentifierType<IBaseBuilder<'interface', string>> | undefined
 > extends IBaseBuilder<'interface', Name> {
   type: 'interface';
   addGeneric<
@@ -25,9 +31,9 @@ export interface IInterfaceBuilder<
   addBody<T extends IBodyType>(
     body: T
   ): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend>;
-  extends<T extends IType>(
-    type: IType
-  ): IInterfaceBuilder<Name, Generics, Body, Exported, T>;
+  extends<T extends IBaseBuilder<'interface', string>>(
+    type: T
+  ): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
   markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
   body: Body;
   generics: Generics;
@@ -46,7 +52,9 @@ export function interfaceBuilder<
   Generics extends Readonly<IGenericValue[]> = [],
   Body extends IBodyType = {},
   Exported extends boolean = false,
-  Extend extends IType | undefined = undefined
+  Extend extends
+    | IIdentifierType<IBaseBuilder<'interface', string>>
+    | undefined = undefined
 >(
   interfaceName: Name,
   defaultOptions: {
@@ -94,10 +102,10 @@ export function interfaceBuilder<
         } as Combine<Body, T>,
       });
     },
-    extends<T extends IType>(type: T) {
+    extends<T extends IBaseBuilder<'interface', string>>(type: T) {
       return interfaceBuilder(interfaceName, {
         ...defaultOptions,
-        extends: type,
+        extends: identifierType(type) as IIdentifierType<T>,
       });
     },
     toString() {

@@ -1,4 +1,4 @@
-import { IBaseBuilder, IBaseBuilderTypes } from '../builders/baseBuilder';
+import { IBaseBuilder, IBaseBuilderTypes } from '../core/builders/baseBuilder';
 import {
   IJsArrayValue,
   IJsBodyValue,
@@ -8,7 +8,7 @@ import {
   IJsStringValue,
   IJsBooleanValue,
   IJsValue,
-} from '../types';
+} from './types';
 
 export function primitiveValue(
   value: string | number | boolean

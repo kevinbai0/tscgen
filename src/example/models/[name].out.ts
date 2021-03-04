@@ -1,8 +1,22 @@
-import { interfaceBuilder } from '../../builders/interfaceBuilder';
-import { stringType } from '../../definition/typeDefinitions';
+import { interfaceBuilder } from '../../generators/core/builders/interfaceBuilder';
+import { stringType } from '../../generators/typescript/definitions';
+import {
+  createMappedExports,
+  createInputsExport,
+  createPathExport,
+} from '../../project/getReference';
 import { data } from '../index.data';
 
-export const tscgen = (data: { name: string; route: string }) => {
+export const getInputs = createInputsExport(() =>
+  data.map((data) => ({
+    data,
+    params: {
+      name: data.name,
+    },
+  }))
+);
+
+export const getMappedExports = createMappedExports(getInputs, (data) => {
   return [
     interfaceBuilder(data.name)
       .markExport()
@@ -10,12 +24,7 @@ export const tscgen = (data: { name: string; route: string }) => {
         name: stringType(data.name),
         route: stringType(data.route),
       }),
-  ] as const;
-};
+  ];
+});
 
-export const inputs = data.map((data) => ({
-  data,
-  params: {
-    name: data.name,
-  },
-}));
+export const getPath = createPathExport(__dirname, '[name].out.ts');

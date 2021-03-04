@@ -1,5 +1,5 @@
-import { IBaseBuilder, IBaseBuilderTypes } from '../builders/baseBuilder';
-import { IBodyType, IObjectType } from '../types';
+import { IBodyType, IObjectType } from '../typescript/types';
+import { IBaseBuilder, IBaseBuilderTypes } from './builders/baseBuilder';
 
 export function combine(
   ...builders: IBaseBuilder<IBaseBuilderTypes, string>[]

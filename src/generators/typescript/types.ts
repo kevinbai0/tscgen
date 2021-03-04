@@ -1,3 +1,5 @@
+import { IBaseBuilder } from '../core/builders/baseBuilder';
+
 export type IGenericOptions =
   | {
       extendsValue?: IType;
@@ -19,7 +21,11 @@ export type IType<T extends any = any> =
   | IBooleanType
   | IUndefinedType
   | INullType
-  | IIdentifierType
+  | IIdentifierType<
+      T extends IBaseBuilder<'type' | 'interface', string>
+        ? T
+        : IBaseBuilder<'type' | 'interface', string>
+    >
   | IArrayType<T extends IType ? T : IType>
   | IObjectType<T extends IBodyType ? T : IBodyType>
   | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
@@ -27,7 +33,9 @@ export type IType<T extends any = any> =
   | INumberLiteralType<T extends number ? T : number>
   | IBooleanLiteralType<T extends boolean ? T : boolean>
   | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
-  | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>;
+  | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
+  | IGenericIdentifierType<T extends string ? T : string>
+  | IRawIdentifierType;
 
 export interface IRawTypePropertyType {
   type: 'raw_property_type';
@@ -68,9 +76,14 @@ export interface INullType {
   type: 'null';
 }
 
-export interface IIdentifierType {
+export interface IIdentifierType<
+  T extends IBaseBuilder<'type' | 'interface', string> = IBaseBuilder<
+    'type' | 'interface',
+    string
+  >
+> {
   type: 'identifier';
-  definition: string;
+  definition: T;
   extract?: ITypePropertyType[];
 }
 
@@ -113,6 +126,16 @@ export type IObjectType<T extends IBodyType = IBodyType> = {
   type: 'object';
   definition: T;
   extract?: ITypePropertyType[];
+};
+
+export type IRawIdentifierType = {
+  type: 'raw_identifier';
+  definition: string;
+};
+
+export type IGenericIdentifierType<T extends string = string> = {
+  type: 'generic_identifier';
+  definition: T;
 };
 
 export interface IBodyType {

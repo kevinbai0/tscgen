@@ -1,6 +1,6 @@
-import { IGenericOptions, IGenericValue, IType } from '../types';
+import { IBaseBuilder } from '../../core/builders/baseBuilder';
 import { writeGeneric, writeType } from '../write';
-import { IBaseBuilder } from './baseBuilder';
+import { IGenericOptions, IGenericValue, IType } from '../types';
 
 type JoinType<K extends 'union' | 'intersection', T> = {
   [Key in keyof T]: {

@@ -1,4 +1,4 @@
-import { IBaseBuilder, IBaseBuilderTypes } from '../builders/baseBuilder';
+import { IBaseBuilder, IBaseBuilderTypes } from '../core/builders/baseBuilder';
 import {
   IArrayType,
   IBodyType,
@@ -18,7 +18,9 @@ import {
   IBooleanType,
   IUndefinedType,
   INullType,
-} from '../types';
+  IRawIdentifierType,
+  IGenericIdentifierType,
+} from './types';
 
 type StringLiterals<T extends Readonly<string[]>> = {
   [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
@@ -200,16 +202,27 @@ export function booleanTuple<T extends Readonly<boolean[]>>(
  * @param extract Properties to extract for the identifier (eg: ITest[number][string])
  */
 export function identifierType<
-  Type extends IBaseBuilderTypes,
-  Name extends string
->(
-  builder: IBaseBuilder<Type, Name>,
-  ...extract: ITypePropertyType[]
-): IIdentifierType {
+  T extends IBaseBuilder<'type' | 'interface', string>
+>(builder: T, ...extract: ITypePropertyType[]): IIdentifierType {
   return {
     type: 'identifier',
-    definition: builder.varName,
+    definition: builder,
     extract,
+  };
+}
+export function rawType(value: string): IRawIdentifierType {
+  return {
+    type: 'raw_identifier',
+    definition: value,
+  };
+}
+
+export function genericType<T extends string>(
+  value: T
+): IGenericIdentifierType<T> {
+  return {
+    type: 'generic_identifier',
+    definition: value,
   };
 }
 
