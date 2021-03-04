@@ -1,5 +1,4 @@
-import { interfaceBuilder } from '../../generators/core/builders/interfaceBuilder';
-import { stringType } from '../../generators/typescript/definitions';
+import * as tscgen from '../../index';
 import {
   createMappedExports,
   createInputsExport,
@@ -18,11 +17,12 @@ export const getInputs = createInputsExport(() =>
 
 export const getMappedExports = createMappedExports(getInputs, (data) => {
   return [
-    interfaceBuilder(data.name)
+    tscgen
+      .interfaceBuilder(data.name)
       .markExport()
       .addBody({
-        name: stringType(data.name),
-        route: stringType(data.route),
+        name: tscgen.stringType(data.name),
+        route: tscgen.stringType(data.route),
       }),
   ];
 });

@@ -102,7 +102,6 @@ async function writeGroup(
       context
     );
   }
-  console.log(res);
   return false;
 }
 

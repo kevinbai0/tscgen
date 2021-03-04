@@ -2,13 +2,13 @@ import { IImportModuleType } from '../../common/types';
 import { writeImport } from '../../common/write';
 import { IBaseBuilder, IBaseBuilderTypes } from './baseBuilder';
 
-type TransformImport<T> = {
+export type BuildersToImport<T> = {
   [Key in keyof T]: T[Key] extends IBaseBuilder<IBaseBuilderTypes, string>
     ? IImportModuleType<T[Key]>
     : never;
 };
 
-interface IImportBuilder<
+export interface IImportBuilder<
   Module extends ReadonlyArray<IImportModuleType>,
   AllModules extends string | undefined,
   DefaultImport extends string | undefined,
@@ -20,7 +20,7 @@ interface IImportBuilder<
   >(
     ...builder: T
   ) => IImportBuilder<
-    [...Module, ...TransformImport<T>],
+    [...Module, ...BuildersToImport<T>],
     AllModules,
     DefaultImport,
     Location
@@ -111,10 +111,10 @@ export function importBuilder<
           ...((modules.map((module) => ({
             type: 'import_module',
             value: module,
-          })) as unknown) as TransformImport<T>),
+          })) as unknown) as BuildersToImport<T>),
         ],
       }) as IImportBuilder<
-        [...Module, ...TransformImport<T>],
+        [...Module, ...BuildersToImport<T>],
         AllModules,
         DefaultImport,
         Location
