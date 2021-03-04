@@ -1,4 +1,4 @@
-export type IBaseBuilderTypes = 'type' | 'interface' | 'object';
+export type IBaseBuilderTypes = 'type' | 'interface' | 'object' | 'import';
 export interface IBaseBuilder<
   Type extends IBaseBuilderTypes,
   Name extends string

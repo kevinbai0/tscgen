@@ -205,4 +205,30 @@ describe('Generates routes correctly', () => {
       `type ResponseMessage<T> =\n  | { success: true; status: number; data: T }\n  | { success: false; status: number; error: string };\n`
     );
   });
+  it('imports work', () => {
+    const other = tscgen.interfaceBuilder('Other').addBody({});
+    const i1 = tscgen.importBuilder().addImportLocation('./value').toString();
+    const i2 = tscgen
+      .importBuilder()
+      .addModules(other)
+      .addModules()
+      .addImportLocation('./value')
+      .toString();
+    const i3 = tscgen
+      .importBuilder()
+      .addAllModuleImports('test')
+      .addImportLocation('./value')
+      .toString();
+    const i4 = tscgen
+      .importBuilder()
+      .addDefaultImport('deee')
+      .addAllModuleImports('test')
+      .addImportLocation('./value')
+      .toString();
+
+    expect(i1).to.equal(`import './value';`);
+    expect(i2).to.equal(`import {Other} from './value';`);
+    expect(i3).to.equal(`import * as test from './value';`);
+    expect(i4).to.equal(`import deee, * as test from './value';`);
+  });
 });

@@ -1,10 +1,6 @@
-import {
-  IJsBodyValue,
-  IJsObjectValue,
-  IJsValue,
-  IType,
-} from '../../typescript/types';
+import { IJsBodyValue, IJsObjectValue, IJsValue } from '../../javascript/types';
 import { writeJsObject } from '../../javascript/write';
+import { IType } from '../../typescript/types';
 import { writeType } from '../../typescript/write';
 import { IBaseBuilder } from './baseBuilder';
 
