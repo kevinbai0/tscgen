@@ -1,5 +1,41 @@
 # typescript-codegen
 
+## 0.0.15
+
+### Patch Changes
+
+- Write better formatter and update file dir
+
+## 0.0.14
+
+### Patch Changes
+
+- Fix writes for generic types
+
+## 0.0.13
+
+### Patch Changes
+
+- Output never if nothing is passed into union type, fix typedef for mapToObject
+
+## 0.0.12
+
+### Patch Changes
+
+- Add mapToObject helper and fix writing union types
+
+## 0.0.11
+
+### Patch Changes
+
+- update literal types to include regular arrays
+
+## 0.0.10
+
+### Patch Changes
+
+- Add key to mapObject
+
 ## 0.0.9
 
 ### Patch Changes

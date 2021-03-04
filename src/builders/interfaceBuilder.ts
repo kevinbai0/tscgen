@@ -1,6 +1,6 @@
 import { IBodyType, IGenericOptions, IGenericValue, IType } from '../types';
 import { writeBodyType, writeGeneric, writeType } from '../write';
-import { IBaseBuilder } from './types';
+import { IBaseBuilder } from './baseBuilder';
 
 interface IInterfaceBuilder<
   Name extends string,
@@ -80,7 +80,7 @@ export function interfaceBuilder<
       return interfaceBuilder(interfaceName, {
         ...defaultOptions,
         generics: [
-          defaultOptions.generics ?? [],
+          ...(defaultOptions.generics ?? []),
           { name, options },
         ] as readonly IGenericValue[],
       }) as IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend>;

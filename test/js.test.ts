@@ -1,5 +1,9 @@
+import path from 'path';
 import { expect } from 'chai';
 import * as tscgen from '../src';
+const format = tscgen.createFormatter(
+  path.resolve(__dirname, '../src/index.ts')
+);
 
 describe('writes javascript object code', () => {
   it('works', async () => {
@@ -10,7 +14,7 @@ describe('writes javascript object code', () => {
       .addBody({
         name: tscgen.primitiveValue('Hello'),
       });
-    const formatted = await tscgen.format(output.toString());
+    const formatted = await format(output.toString());
     expect(formatted).to.equal(`export const test = { name: 'Hello' };\n`);
   });
   it('works with type definitions', async () => {
@@ -27,7 +31,7 @@ describe('writes javascript object code', () => {
         cool: tscgen.arrayValue(...[5, 6, 7, 8].map(tscgen.primitiveValue)),
       });
 
-    const formatted = await tscgen.format(output.toString());
+    const formatted = await format(output.toString());
     expect(formatted).to.equal(
       `export const test: { cool: number[] } = { cool: [5, 6, 7, 8] };\n`
     );

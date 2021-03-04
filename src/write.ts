@@ -60,12 +60,14 @@ function writeObjectType(type: IObjectType): string {
 }
 
 function writeUnionType(type: IUnionType): string {
-  if (type.extract) {
+  if (type.extract?.length) {
     return `(${type.definition
       .map(writeType)
       .join('|')})${writeExtractedProperties(type.extract)}`;
   }
-  return type.definition.map(writeType).join('|');
+  return type.definition.length === 0
+    ? 'never'
+    : type.definition.map(writeType).join('|');
 }
 
 function writeStringLiteralType(type: IStringLiteralType): string {

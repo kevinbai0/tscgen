@@ -23,6 +23,10 @@ type CleanBreadcrumbs = {
   dependsOn?: string[];
 };
 
+const format = tscgen.createFormatter(
+  path.resolve(__dirname, '../src/index.ts')
+);
+
 describe('Generates routes correctly', () => {
   it('generates sample test correctly', async () => {
     function writeQueryBody(query: Query | undefined): tscgen.IBodyType {
@@ -75,7 +79,7 @@ describe('Generates routes correctly', () => {
       'utf-8'
     );
 
-    const output = await tscgen.format(
+    const output = await format(
       tscgen.combine(...builders, routesType, routeType)
     );
     expect(output).equal(sampleOutput);
@@ -85,18 +89,17 @@ describe('Generates routes correctly', () => {
     const build = tscgen
       .interfaceBuilder('IExtendable')
       .markExport()
-      .extends(
-        tscgen.objectType({
-          name: 'string',
-        })
-      )
+      .extends({
+        type: 'identifier',
+        definition: 'object',
+      })
       .addBody({
         name: tscgen.stringType('hello'),
       });
 
-    const formatted = await tscgen.format(build.toString());
+    const formatted = await format(build.toString());
     expect(formatted).to.eq(
-      `export interface IExtendable extends { name: string } {\n  name: 'hello';\n}\n`
+      `export interface IExtendable extends object {\n  name: 'hello';\n}\n`
     );
   });
 
@@ -117,7 +120,7 @@ describe('Generates routes correctly', () => {
         ),
       });
 
-    const formatted = await tscgen.format(tscgen.combine(parent, build));
+    const formatted = await format(tscgen.combine(parent, build));
     expect(formatted).to.eq(
       `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n  value: Readonly<{ name: 'world' }>;\n}\n`
     );
@@ -135,7 +138,7 @@ describe('Generates routes correctly', () => {
         )
       );
 
-    const formatted = await tscgen.format(tscgen.combine(build));
+    const formatted = await format(tscgen.combine(build));
     expect(formatted).to.eq(
       `export type TestReadonly = Readonly<{ name: string }>;\n`
     );
@@ -149,9 +152,58 @@ describe('Generates routes correctly', () => {
         tscgen.extract(tscgen.stringType('a', 'b', 'c'), tscgen.stringType('a'))
       );
 
-    const formatted = await tscgen.format(tscgen.combine(build));
+    const formatted = await format(tscgen.combine(build));
     expect(formatted).to.eq(
       `export type TestReadonly = Extract<'a' | 'b' | 'c', 'a'>;\n`
+    );
+  });
+
+  it('union types', async () => {
+    const union = tscgen.unionType([
+      tscgen.objectType({
+        name: 'string',
+      }),
+      tscgen.objectType({
+        name: 'boolean',
+      }),
+    ]);
+
+    const res = await format(
+      tscgen.combine(
+        tscgen.typeDefBuilder('Test').addUnion(union),
+        tscgen.typeDefBuilder('Empty').addUnion(tscgen.unionType([]))
+      )
+    );
+    expect(res).to.equal(
+      `type Test = { name: string } | { name: boolean };\n\ntype Empty = never;\n`
+    );
+  });
+
+  it('generics types', async () => {
+    const ResponseMessage = tscgen
+      .typeDefBuilder('ResponseMessage')
+      .addGeneric('T')
+      .addUnion(
+        tscgen.objectType({
+          success: tscgen.booleanType(true),
+          status: tscgen.numberType(),
+          data: {
+            type: 'identifier',
+            definition: 'T',
+          },
+        })
+      )
+      .addUnion(
+        tscgen.objectType({
+          success: tscgen.booleanType(false),
+          status: tscgen.numberType(),
+          error: tscgen.stringType(),
+        })
+      );
+
+    const res = await format(tscgen.combine(ResponseMessage));
+    expect(res).to.equal(
+      `type ResponseMessage<T> =\n  | { success: true; status: number; data: T }\n  | { success: false; status: number; error: string };\n`
     );
   });
 });

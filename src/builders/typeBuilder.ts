@@ -1,6 +1,6 @@
 import { IGenericOptions, IGenericValue, IType } from '../types';
 import { writeGeneric, writeType } from '../write';
-import { IBaseBuilder } from './types';
+import { IBaseBuilder } from './baseBuilder';
 
 type JoinType<K extends 'union' | 'intersection', T> = {
   [Key in keyof T]: {
@@ -105,7 +105,7 @@ export function typeDefBuilder<
       return typeDefBuilder(name, {
         ...defaultOptions,
         generics: [
-          defaultOptions.generics ?? [],
+          ...(defaultOptions.generics ?? []),
           { name: genericName, options },
         ] as ReadonlyArray<IGenericValue<N, Options>>,
       }) as ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported>;

@@ -1,4 +1,4 @@
-import { IBaseBuilder, IBaseBuilderTypes } from './builders/types';
+import { IBaseBuilder, IBaseBuilderTypes } from '../builders/baseBuilder';
 import {
   IArrayType,
   IBodyType,
@@ -13,7 +13,7 @@ import {
   IBooleanLiteralType,
   IStringLiteralType,
   INumberLiteralType,
-} from './types';
+} from '../types';
 
 type StringLiterals<T extends Readonly<string[]>> = {
   [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
@@ -26,7 +26,7 @@ type BooleanLiterals<T extends Readonly<boolean[]>> = {
 };
 
 export function stringType(): 'string';
-export function stringType<T extends [string, ...string[]]>(
+export function stringType<T extends string[]>(
   ...value: T
 ): IUnionType<StringLiterals<T>>;
 export function stringType<T extends Readonly<string[]>>(
@@ -50,7 +50,7 @@ export function stringType<T extends Readonly<string[]>>(
 }
 
 export function numberType(): 'number';
-export function numberType<T extends [number, ...number[]]>(
+export function numberType<T extends number[]>(
   ...value: T
 ): IUnionType<NumberLiterals<T>>;
 export function numberType<T extends Readonly<number[]>>(
@@ -73,7 +73,7 @@ export function numberType<T extends Readonly<number[]>>(
   };
 }
 export function booleanType(): 'boolean';
-export function booleanType<T extends [boolean, ...boolean[]]>(
+export function booleanType<T extends boolean[]>(
   ...value: T
 ): IUnionType<BooleanLiterals<T>>;
 export function booleanType<T extends Readonly<boolean[]>>(
