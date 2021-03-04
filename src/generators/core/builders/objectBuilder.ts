@@ -1,5 +1,7 @@
-import { IJsBodyValue, IJsObjectValue, IJsValue, IType } from '../types';
-import { writeJsObject, writeType } from '../write';
+import { IJsBodyValue, IJsObjectValue, IJsValue } from '../../javascript/types';
+import { writeJsObject } from '../../javascript/write';
+import { IType } from '../../typescript/types';
+import { writeType } from '../../typescript/write';
 import { IBaseBuilder } from './baseBuilder';
 
 interface IVarObjectBuilder extends IBaseBuilder<'object', string> {

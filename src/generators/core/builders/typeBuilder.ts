@@ -1,5 +1,5 @@
-import { IGenericOptions, IGenericValue, IType } from '../types';
-import { writeGeneric, writeType } from '../write';
+import { writeGeneric, writeType } from '../../typescript/write';
+import { IGenericOptions, IGenericValue, IType } from '../../typescript/types';
 import { IBaseBuilder } from './baseBuilder';
 
 type JoinType<K extends 'union' | 'intersection', T> = {
@@ -8,7 +8,7 @@ type JoinType<K extends 'union' | 'intersection', T> = {
     type: T[Key];
   };
 };
-interface ITypeDefBuilder<
+export interface ITypeDefBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue<string, IGenericOptions>[]>,
   JoinedTypes extends ReadonlyArray<{

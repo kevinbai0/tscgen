@@ -24,7 +24,7 @@ describe('writes javascript object code', () => {
       .markExport()
       .addTypeDef(
         tscgen.objectType({
-          cool: tscgen.arrayType('number'),
+          cool: tscgen.arrayType(tscgen.numberType()),
         })
       )
       .addBody({

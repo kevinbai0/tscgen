@@ -1,8 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
-import * as tscgen from '../src';
+import * as tscgen from '../src/index';
 
+import {
+  booleanType,
+  genericType,
+  stringType,
+  undefinedType,
+} from '../src/index';
 import { routes } from './config/sample';
 import { Query } from './config/types';
 
@@ -33,7 +39,7 @@ describe('Generates routes correctly', () => {
       return tscgen.mapObject(query ?? {}, (value) => {
         const q = cleanQuery(value);
         return [
-          q.type === 'string' ? q.type : tscgen.arrayType('string'),
+          q.type === 'string' ? stringType() : tscgen.arrayType(stringType()),
           q.required,
         ];
       });
@@ -57,7 +63,7 @@ describe('Generates routes correctly', () => {
         route: tscgen.stringType(route.route),
         params: route.params?.length
           ? tscgen.stringTuple(...route.params)
-          : 'undefined',
+          : undefinedType(),
         query: tscgen.objectType(writeQueryBody(route.query)),
         breadcrumbs: tscgen.objectType(
           writeBreadcrumbs(route.breadcrumb as CleanBreadcrumbs)
@@ -85,32 +91,28 @@ describe('Generates routes correctly', () => {
     expect(output).equal(sampleOutput);
   });
 
-  it('works with interface extends inline object', async () => {
+  it('works with interfaces', async () => {
     const build = tscgen
       .interfaceBuilder('IExtendable')
       .markExport()
-      .extends({
-        type: 'identifier',
-        definition: 'object',
-      })
       .addBody({
         name: tscgen.stringType('hello'),
       });
 
     const formatted = await format(build.toString());
     expect(formatted).to.eq(
-      `export interface IExtendable extends object {\n  name: 'hello';\n}\n`
+      `export interface IExtendable {\n  name: 'hello';\n}\n`
     );
   });
 
   it('works with interface extends identifier', async () => {
     const parent = tscgen.interfaceBuilder('IParent').addBody({
-      name: 'string',
+      name: stringType(),
     });
     const build = tscgen
       .interfaceBuilder('IExtendable')
       .markExport()
-      .extends(tscgen.identifierType(parent))
+      .extends(parent)
       .addBody({
         name: tscgen.stringType('hello'),
         value: tscgen.readonly(
@@ -133,7 +135,7 @@ describe('Generates routes correctly', () => {
       .addUnion(
         tscgen.readonly(
           tscgen.objectType({
-            name: 'string',
+            name: stringType(),
           })
         )
       );
@@ -161,10 +163,10 @@ describe('Generates routes correctly', () => {
   it('union types', async () => {
     const union = tscgen.unionType([
       tscgen.objectType({
-        name: 'string',
+        name: stringType(),
       }),
       tscgen.objectType({
-        name: 'boolean',
+        name: booleanType(),
       }),
     ]);
 
@@ -179,7 +181,7 @@ describe('Generates routes correctly', () => {
     );
   });
 
-  it('generics types', async () => {
+  it('generic types', async () => {
     const ResponseMessage = tscgen
       .typeDefBuilder('ResponseMessage')
       .addGeneric('T')
@@ -187,10 +189,7 @@ describe('Generates routes correctly', () => {
         tscgen.objectType({
           success: tscgen.booleanType(true),
           status: tscgen.numberType(),
-          data: {
-            type: 'identifier',
-            definition: 'T',
-          },
+          data: genericType('T'),
         })
       )
       .addUnion(
@@ -205,5 +204,31 @@ describe('Generates routes correctly', () => {
     expect(res).to.equal(
       `type ResponseMessage<T> =\n  | { success: true; status: number; data: T }\n  | { success: false; status: number; error: string };\n`
     );
+  });
+  it('imports work', () => {
+    const other = tscgen.interfaceBuilder('Other').addBody({});
+    const i1 = tscgen.importBuilder().addImportLocation('./value').toString();
+    const i2 = tscgen
+      .importBuilder()
+      .addModules(other)
+      .addModules()
+      .addImportLocation('./value')
+      .toString();
+    const i3 = tscgen
+      .importBuilder()
+      .addAllModuleImports('test')
+      .addImportLocation('./value')
+      .toString();
+    const i4 = tscgen
+      .importBuilder()
+      .addDefaultImport('deee')
+      .addAllModuleImports('test')
+      .addImportLocation('./value')
+      .toString();
+
+    expect(i1).to.equal(`import './value';`);
+    expect(i2).to.equal(`import {Other} from './value';`);
+    expect(i3).to.equal(`import * as test from './value';`);
+    expect(i4).to.equal(`import deee, * as test from './value';`);
   });
 });
