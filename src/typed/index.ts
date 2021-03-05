@@ -1,15 +1,6 @@
-import { IBaseBuilder } from '../generators/core/builders/baseBuilder';
-import {
-  IInterfaceBuilder,
-  interfaceBuilder,
-} from '../generators/core/builders/interfaceBuilder';
-import {
-  arrayType,
-  numberType,
-  objectType,
-  stringTuple,
-  stringType,
-} from '../generators/typescript/definitions';
+import { IBaseBuilder } from '../lib/core/builders/baseBuilder';
+import { IInterfaceBuilder } from '../lib/core/builders/interfaceBuilder';
+
 import {
   IBodyType,
   IGenericOptions,
@@ -28,16 +19,17 @@ import {
   IUndefinedType,
   INullType,
   IIdentifierType,
-} from '../generators/typescript/types';
+} from '../lib/typescript/types';
 
-export type Interface<
+export type UseInterface<
   T extends IInterfaceBuilder<
     string,
     Readonly<IGenericValue<string, IGenericOptions | undefined>[]>,
     IBodyType,
     boolean,
     IIdentifierType<IBaseBuilder<'interface', string>> | undefined
-  >
+  >,
+  Generics extends [...IGenericValue[]] = []
 > = ExtractBody<T['body']>;
 
 type KnownKeys<T> = {
@@ -94,7 +86,7 @@ type ExtractBody<T extends IBodyType> = Merge<
   Clean<WriteRequired<T>>
 >;
 
-type ExtractUnionType<T extends IUnionType> = ExtractType<
+type ExtractUnionType<T extends IUnionType<ReadonlyArray<IType>>> = ExtractType<
   T['definition'][number]
 >;
 type ExtractObjectType<T extends IObjectType> = ExtractBody<T['definition']>;
@@ -132,25 +124,3 @@ type ExtractType<T extends IType> = T extends IStringType
   T extends ITupleType<any>
   ? ExtractTupleType<T>
   : never;
-
-const base = interfaceBuilder('Base').addBody({
-  name: stringType(),
-});
-const test = interfaceBuilder('Name')
-  .addBody({
-    name: stringType('test'),
-    cool: [stringType(), false],
-    books: [(() => stringType('Harry Potter'))(), false],
-    next: (() => numberType(1, 2, 3, 4, 5))(),
-    nested: (() =>
-      objectType({
-        a: numberType(),
-      }))(),
-    array: arrayType(stringType()),
-    tuple: (() => stringTuple('hello', 'world'))(),
-  })
-  .extends(base);
-
-type L = WriteRequired<typeof test['body']>;
-
-type A = Interface<typeof test>;

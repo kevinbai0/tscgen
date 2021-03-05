@@ -16,7 +16,7 @@ export const createFormatter = (pathToFile: string) => {
     const res = await linter.lintText(text, {
       filePath: path.resolve(pathToFile),
     });
-    if (res[0].errorCount || !res[0].output) {
+    if (!res.length || res[0].errorCount || !res[0].output) {
       const formatter = await linter.loadFormatter();
       throw new Error(formatter.format(res));
     }

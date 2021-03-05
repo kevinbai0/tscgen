@@ -7,6 +7,6 @@
 		"lib": ["ES2020"]
 	},
 	"include": [
-		"src", "test"
+		"src", "test", "example"
 	]
 }

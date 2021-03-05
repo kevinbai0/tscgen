@@ -1,23 +1,30 @@
 import fs, { existsSync, mkdirSync } from 'fs';
 import path from 'path';
-import { ProjectConfig } from '../project/config';
-import { OutputModule } from '../project/getReference';
-import { createFormatter } from '../generators/core/format';
-import { combine } from '../generators/core/util';
-import { InputData } from '../project/getReference';
+import { ProjectConfig } from '../framework/config';
+import { OutputModule } from '../framework/types';
+import { createFormatter } from '../lib/core/format';
+import { combine } from '../lib/core/util';
+import { InputData } from '../framework/types';
 import { apply, recursiveDir } from './helpers';
 import { IDir } from './types';
+
+const hiddenExtensions = new Set(['config', 'helper']);
 
 const format = createFormatter(path.resolve(__dirname, 'cli.ts'));
 
 main().catch(console.error);
 async function main() {
-  const projectDir = path.resolve(__dirname, '../example');
-
+  const entryDir = path.resolve(__dirname, '../../example');
   const config: ProjectConfig = (
-    await import(path.join(projectDir, 'tscgen.config.ts'))
+    await import(
+      path.join(path.resolve(__dirname, '../../example'), 'tscgen.config.ts')
+    )
   ).default;
   const outDir = config.outDir ?? './dist';
+  const projectDir = path.resolve(
+    entryDir,
+    config.projectDir ?? '../../example'
+  );
 
   if (!existsSync(outDir)) {
     mkdirSync(outDir);
@@ -31,7 +38,13 @@ async function main() {
   };
 
   await apply(project, async (file) => {
-    if (file.filename.split('.').slice(-2).join('.') === 'out.ts') {
+    const fileComponents = file.filename.split('.');
+    const isTypescript = fileComponents.slice(-1)[0] === 'ts';
+    const isConfigFile =
+      fileComponents.length > 2 &&
+      hiddenExtensions.has(fileComponents.slice(-2, -1)[0]);
+
+    if (isTypescript && !isConfigFile) {
       return {
         out: await writeGroup(path.join(file.path, file.filename), {
           projectDir,
@@ -58,7 +71,7 @@ async function writeFile(
   );
   const outPath = path.join(
     context.outDir,
-    path.relative(context.projectDir, newRoute.replace('.out.ts', '.ts'))
+    path.relative(context.projectDir, newRoute)
   );
 
   const pathDir = outPath.split('/').slice(0, -1).join('/');

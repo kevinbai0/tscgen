@@ -4,7 +4,11 @@ import { IBaseBuilder, IBaseBuilderTypes } from './builders/baseBuilder';
 export function combine(
   ...builders: IBaseBuilder<IBaseBuilderTypes, string>[]
 ): string {
-  return builders.map((builder) => builder.toString()).join('\n\n');
+  return builders
+    .map((builder) =>
+      builder.type === 'import' ? builder.toString() : `\n${builder.toString()}`
+    )
+    .join('\n');
 }
 
 export function mapObject<T, K>(

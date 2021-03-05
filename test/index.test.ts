@@ -1,14 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
-import * as tscgen from '../src/index';
+import * as tscgen from '../src/lib/index';
 
 import {
   booleanType,
   genericType,
   stringType,
   undefinedType,
-} from '../src/index';
+} from '../src/lib/index';
 import { routes } from './config/sample';
 import { Query } from './config/types';
 
@@ -30,7 +30,7 @@ type CleanBreadcrumbs = {
 };
 
 const format = tscgen.createFormatter(
-  path.resolve(__dirname, '../src/index.ts')
+  path.resolve(__dirname, '../src/lib/index.ts')
 );
 
 describe('Generates routes correctly', () => {

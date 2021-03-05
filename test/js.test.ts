@@ -1,8 +1,8 @@
 import path from 'path';
 import { expect } from 'chai';
-import * as tscgen from '../src';
+import * as tscgen from '../src/lib';
 const format = tscgen.createFormatter(
-  path.resolve(__dirname, '../src/index.ts')
+  path.resolve(__dirname, '../src/lib/index.ts')
 );
 
 describe('writes javascript object code', () => {
