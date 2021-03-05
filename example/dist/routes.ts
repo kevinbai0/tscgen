@@ -1,6 +1,11 @@
-import { Route1 } from './models/Route1';
-import { Route2 } from './models/Route2';
+import { IPetModel } from './models/Pet';
+import { INewPetModel } from './models/NewPet';
+import { IErrorModel } from './models/Error';
 
-export type Route = Route1 | Route2;
+export type Route = IPetModel | INewPetModel | IErrorModel;
 
-export type Routes = { Route1: Route1; Route2: Route2 };
+export type Routes = {
+  IPetModel: IPetModel;
+  INewPetModel: INewPetModel;
+  IErrorModel: IErrorModel;
+};

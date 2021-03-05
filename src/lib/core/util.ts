@@ -1,9 +1,7 @@
 import { IBodyType, IObjectType } from '../typescript/types';
-import { IBaseBuilder, IBaseBuilderTypes } from './builders/baseBuilder';
+import { IBaseBuilder } from './builders/entityBuilder';
 
-export function combine(
-  ...builders: IBaseBuilder<IBaseBuilderTypes, string>[]
-): string {
+export function combine(...builders: IBaseBuilder[]): string {
   return builders
     .map((builder) =>
       builder.type === 'import' ? builder.toString() : `\n${builder.toString()}`

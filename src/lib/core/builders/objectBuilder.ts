@@ -2,9 +2,9 @@ import { IJsBodyValue, IJsObjectValue, IJsValue } from '../../javascript/types';
 import { writeJsObject } from '../../javascript/write';
 import { IType } from '../../typescript/types';
 import { writeType } from '../../typescript/write';
-import { IBaseBuilder } from './baseBuilder';
+import { IEntityBuilder } from './entityBuilder';
 
-interface IVarObjectBuilder extends IBaseBuilder<'object', string> {
+interface IVarObjectBuilder extends IEntityBuilder<'object', string> {
   type: 'object';
   addBody(body: IJsBodyValue): IVarObjectBuilder;
   addTypeDef(typeDefinition: IType): IVarObjectBuilder;

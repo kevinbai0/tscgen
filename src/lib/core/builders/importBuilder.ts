@@ -1,22 +1,26 @@
-import { IImportModuleType } from '../../common/types';
+import { IImportLazyType, IImportModuleType } from '../../common/types';
 import { writeImport } from '../../common/write';
-import { IBaseBuilder, IBaseBuilderTypes } from './baseBuilder';
+import {
+  IBaseBuilder,
+  IEntityBuilder,
+  IEntityBuilderTypes,
+} from './entityBuilder';
 
 export type BuildersToImport<T> = {
-  [Key in keyof T]: T[Key] extends IBaseBuilder<IBaseBuilderTypes, string>
+  [Key in keyof T]: T[Key] extends IEntityBuilder<IEntityBuilderTypes, string>
     ? IImportModuleType<T[Key]>
     : never;
 };
 
 export interface IImportBuilder<
-  Module extends ReadonlyArray<IImportModuleType>,
-  AllModules extends string | undefined,
-  DefaultImport extends string | undefined,
-  Location extends string | undefined
-> extends IBaseBuilder<'import', string> {
+  Module extends ReadonlyArray<IImportModuleType> = ReadonlyArray<IImportModuleType>,
+  AllModules extends string | undefined = string | undefined,
+  DefaultImport extends string | undefined = string | undefined,
+  Location extends string | undefined = string | undefined
+> extends IBaseBuilder<'import'> {
   type: 'import';
   addModules: <
-    T extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>
+    T extends ReadonlyArray<IEntityBuilder | IImportLazyType<IImportModuleType>>
   >(
     ...builder: T
   ) => IImportBuilder<
@@ -92,15 +96,13 @@ export function importBuilder<
 
   return {
     type: 'import',
-    varName: '',
     toString() {
       return build();
     },
-    markExport() {
-      return this;
-    },
     addModules: <
-      T extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>
+      T extends ReadonlyArray<
+        IEntityBuilder | IImportLazyType<IImportModuleType>
+      >
     >(
       ...modules: T
     ) =>
@@ -108,10 +110,14 @@ export function importBuilder<
         ...defaultOptions,
         modules: [
           ...defaultOptions.modules,
-          ...((modules.map((module) => ({
-            type: 'import_module',
-            value: module,
-          })) as unknown) as BuildersToImport<T>),
+          ...((modules.map((module) =>
+            module.type === 'import_lazy'
+              ? module
+              : {
+                  type: 'import_module',
+                  value: module,
+                }
+          ) as unknown) as BuildersToImport<T>),
         ],
       }) as IImportBuilder<
         [...Module, ...BuildersToImport<T>],

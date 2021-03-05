@@ -1,8 +1,8 @@
 import * as tscgen from '../../../src/framework';
-import { data } from '../data.helper';
+import { getSchemas } from '../data.helper';
 
 export const getInputs = tscgen.createInputsExport(() =>
-  data.map((data) => ({
+  getSchemas().map((data) => ({
     data,
     params: {
       name: data.name,
@@ -12,16 +12,29 @@ export const getInputs = tscgen.createInputsExport(() =>
 
 export const getMappedExports = tscgen.createMappedExports(
   getInputs,
-  (data) => {
-    return [
-      tscgen
-        .interfaceBuilder(data.name)
-        .markExport()
-        .addBody({
-          name: tscgen.stringType(data.name),
-          route: tscgen.stringType(data.route),
-        }),
-    ];
+  ({ data, context }) => {
+    const modelName = `I${data.name}Model`;
+
+    const ref =
+      data.name === 'Pet'
+        ? context.referenceIdentifier({
+            findOne: ({ params }) => params.name === 'NewPet',
+            pick: (builders) => builders[0],
+          })
+        : undefined;
+
+    return {
+      imports: ref?.importValue ? [ref.importValue] : [],
+      exports: [
+        tscgen
+          .interfaceBuilder(modelName)
+          .markExport()
+          .addBody({
+            name: tscgen.stringType(data.name),
+            ...(ref?.typeIdentifier ? { reference: ref.typeIdentifier } : {}),
+          }),
+      ],
+    };
   }
 );
 

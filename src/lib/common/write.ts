@@ -4,6 +4,7 @@ import {
   IImportModuleType,
   IImportLocationType,
   IImportType,
+  IImportLazyType,
 } from './types';
 
 export function writeImport(type: IImportType): string {
@@ -16,6 +17,8 @@ export function writeImport(type: IImportType): string {
       return writeImportDefaultModule(type);
     case 'import_location':
       return writeImportLocation(type);
+    case 'import_lazy':
+      return writeImportLazy(type);
   }
 }
 
@@ -33,4 +36,8 @@ export function writeImportDefaultModule(value: IImportDefaultType): string {
 
 export function writeImportLocation(value: IImportLocationType): string {
   return `'${value.value}'`;
+}
+
+export function writeImportLazy(value: IImportLazyType): string {
+  return writeImport(value.value());
 }

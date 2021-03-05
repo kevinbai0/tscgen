@@ -1,4 +1,4 @@
-import { IBaseBuilder } from '../lib/core/builders/baseBuilder';
+import { IEntityBuilder } from '../lib/core/builders/entityBuilder';
 import { IInterfaceBuilder } from '../lib/core/builders/interfaceBuilder';
 
 import {
@@ -27,7 +27,7 @@ export type UseInterface<
     Readonly<IGenericValue<string, IGenericOptions | undefined>[]>,
     IBodyType,
     boolean,
-    IIdentifierType<IBaseBuilder<'interface', string>> | undefined
+    IIdentifierType<IEntityBuilder<'interface', string>> | undefined
   >,
   Generics extends [...IGenericValue[]] = []
 > = ExtractBody<T['body']>;

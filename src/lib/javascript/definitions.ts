@@ -1,4 +1,7 @@
-import { IBaseBuilder, IBaseBuilderTypes } from '../core/builders/baseBuilder';
+import {
+  IEntityBuilder,
+  IEntityBuilderTypes,
+} from '../core/builders/entityBuilder';
 import {
   IJsArrayValue,
   IJsBodyValue,
@@ -51,9 +54,9 @@ export function objectValue(value: IJsBodyValue): IJsObjectValue {
  * @param extract Properties to extract for the identifier (eg: ITest[number][string])
  */
 export function identifierValue<
-  Type extends IBaseBuilderTypes,
+  Type extends IEntityBuilderTypes,
   Name extends string
->(builder: IBaseBuilder<Type, Name>): IJsIdentifierValue {
+>(builder: IEntityBuilder<Type, Name>): IJsIdentifierValue {
   return {
     type: 'identifier',
     value: builder.varName,

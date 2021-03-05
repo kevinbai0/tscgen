@@ -1,27 +1,25 @@
-import {
-  IBaseBuilder,
-  IBaseBuilderTypes,
-} from '../lib/core/builders/baseBuilder';
-import { GetInputs, GetMappedExports, GetStaticExports } from './types';
+import { IEntityBuilder } from '../lib/core/builders/entityBuilder';
+import { BuilderExports, GetInputs, GetMappedExports } from './types';
 
-export const createInputsExport = <T>(method: GetInputs<T>): GetInputs<T> =>
-  method;
+export const createInputsExport = <T, Params extends Record<string, string>>(
+  method: GetInputs<T, Params>
+): GetInputs<T, Params> => method;
 
 export const createMappedExports = <
   Inputs extends GetInputs,
-  Builders extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>
+  Exports extends [...IEntityBuilder[]],
+  Builders extends BuilderExports<Exports>
 >(
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   _inputs: Inputs,
-  getBuilders: GetMappedExports<Inputs, Builders>
-): GetMappedExports<Inputs, Builders> => {
-  return getBuilders;
-};
+  getBuilders: GetMappedExports<Inputs, Exports, Builders>
+) => getBuilders;
+
 export const createPathExport = (...path: [dir: string, filename: string]) =>
   path;
 export const createStaticExports = <
-  Builders extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>
+  Exports extends [...IEntityBuilder[]],
+  Builders extends BuilderExports<Exports>
 >(
-  getBuilders: () => Promise<[...Builders]>
-): GetStaticExports<Builders> => {
-  return getBuilders;
-};
+  getBuilders: () => Promise<Builders>
+) => getBuilders;

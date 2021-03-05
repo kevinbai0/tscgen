@@ -16,6 +16,7 @@ import {
   IGenericOptions,
   IRawIdentifierType,
   IGenericIdentifierType,
+  ILazyType,
 } from './types';
 
 export function writeGeneric(
@@ -109,6 +110,10 @@ function writeRawTypePropertyType(type: IRawTypePropertyType) {
   return type.definition;
 }
 
+function writeLazyType<T extends IType>(type: ILazyType<T>) {
+  return writeType(type.definition());
+}
+
 function writeDecorationType(type: IDecorationType): string {
   return type.decorate(...type.definition.map(writeType));
 }
@@ -154,6 +159,8 @@ export function writeType(type: IType | undefined): string {
       return writeGenericIdentifierType(type);
     case 'decoration':
       return writeDecorationType(type);
+    case 'lazy_type':
+      return writeLazyType(type);
     default:
       return 'never';
   }

@@ -6,8 +6,15 @@ import {
   IIdentifierType,
 } from '../../typescript/types';
 import { identifierType } from '../../typescript/definitions';
-import { IBaseBuilder } from './baseBuilder';
+import { IEntityBuilder } from './entityBuilder';
 
+export type IGenericInterfaceBuilder = IInterfaceBuilder<
+  string,
+  ReadonlyArray<IGenericValue<string, IGenericOptions | undefined>>,
+  IBodyType,
+  boolean,
+  IIdentifierType<IEntityBuilder<'interface', string>> | undefined
+>;
 export interface IInterfaceBuilder<
   Name extends string,
   Generics extends Readonly<
@@ -15,8 +22,10 @@ export interface IInterfaceBuilder<
   >,
   Body extends IBodyType,
   Exported extends boolean,
-  Extend extends IIdentifierType<IBaseBuilder<'interface', string>> | undefined
-> extends IBaseBuilder<'interface', Name> {
+  Extend extends
+    | IIdentifierType<IEntityBuilder<'interface', string>>
+    | undefined
+> extends IEntityBuilder<'interface', Name> {
   type: 'interface';
   addGeneric<
     N extends string,
@@ -31,7 +40,7 @@ export interface IInterfaceBuilder<
   addBody<T extends IBodyType>(
     body: T
   ): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend>;
-  extends<T extends IBaseBuilder<'interface', string>>(
+  extends<T extends IEntityBuilder<'interface', string>>(
     type: T
   ): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
   markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
@@ -53,7 +62,7 @@ export function interfaceBuilder<
   Body extends IBodyType = {},
   Exported extends boolean = false,
   Extend extends
-    | IIdentifierType<IBaseBuilder<'interface', string>>
+    | IIdentifierType<IEntityBuilder<'interface', string>>
     | undefined = undefined
 >(
   interfaceName: Name,
@@ -102,7 +111,7 @@ export function interfaceBuilder<
         } as Combine<Body, T>,
       });
     },
-    extends<T extends IBaseBuilder<'interface', string>>(type: T) {
+    extends<T extends IEntityBuilder<'interface', string>>(type: T) {
       return interfaceBuilder(interfaceName, {
         ...defaultOptions,
         extends: identifierType(type) as IIdentifierType<T>,

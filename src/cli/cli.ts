@@ -5,6 +5,7 @@ import { OutputModule } from '../framework/types';
 import { createFormatter } from '../lib/core/format';
 import { combine } from '../lib/core/util';
 import { InputData } from '../framework/types';
+import { createContext } from '../framework/context';
 import { apply, recursiveDir } from './helpers';
 import { IDir } from './types';
 
@@ -93,21 +94,22 @@ async function writeGroup(
   const res: OutputModule = await import(filePath);
 
   if (res.getInputs && res.getMappedExports) {
-    const inputs = await res.getInputs();
+    const ctx = (
+      await createContext(res.getInputs!, res.getMappedExports!, res.getPath!)
+    ).map(async ({ imports, exports, inputData }) => {
+      const fileData = await format(combine(...(imports ?? []), ...exports));
+      await writeFile(inputData, filePath, fileData, context);
+    });
 
-    await Promise.all(
-      inputs.map(async (inputData) => {
-        const fileData = await format(
-          combine(...(await res.getMappedExports!(inputData.data)))
-        );
-        await writeFile(inputData, filePath, fileData, context);
-      })
-    );
+    await Promise.all(ctx);
 
     return true;
   }
   if (res.getStaticExports) {
-    const fileData = await format(combine(...(await res.getStaticExports())));
+    const outputData = await res.getStaticExports();
+    const fileData = await format(
+      combine(...(outputData.imports ?? []), ...outputData.exports)
+    );
     await writeFile(
       { params: {}, data: undefined },
       filePath,

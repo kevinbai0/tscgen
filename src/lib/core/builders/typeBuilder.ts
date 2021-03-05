@@ -1,6 +1,6 @@
 import { writeGeneric, writeType } from '../../typescript/write';
 import { IGenericOptions, IGenericValue, IType } from '../../typescript/types';
-import { IBaseBuilder } from './baseBuilder';
+import { IEntityBuilder } from './entityBuilder';
 
 type JoinType<K extends 'union' | 'intersection', T> = {
   [Key in keyof T]: {
@@ -8,6 +8,17 @@ type JoinType<K extends 'union' | 'intersection', T> = {
     type: T[Key];
   };
 };
+
+export type IGenericTypeDefBuilder = ITypeDefBuilder<
+  string,
+  ReadonlyArray<IGenericValue<string, IGenericOptions | undefined>>,
+  ReadonlyArray<{
+    type: IType;
+    joinType: 'union' | 'intersection';
+  }>,
+  boolean
+>;
+
 export interface ITypeDefBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue<string, IGenericOptions>[]>,
@@ -16,7 +27,7 @@ export interface ITypeDefBuilder<
     joinType: 'union' | 'intersection';
   }>,
   Exported extends boolean
-> extends IBaseBuilder<'type', Name> {
+> extends IEntityBuilder<'type', Name> {
   type: 'type';
   addUnion<T extends ReadonlyArray<IType>>(
     ...type: T

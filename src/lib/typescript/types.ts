@@ -1,4 +1,7 @@
-import { IBaseBuilder } from '../core/builders/baseBuilder';
+import {
+  IEntityBuilder,
+  IEntityBuilderTypes,
+} from '../core/builders/entityBuilder';
 
 export type IGenericOptions =
   | {
@@ -22,9 +25,9 @@ export type IType<T extends any = any> =
   | IUndefinedType
   | INullType
   | IIdentifierType<
-      T extends IBaseBuilder<'type' | 'interface', string>
+      T extends IEntityBuilder<'type' | 'interface', string>
         ? T
-        : IBaseBuilder<'type' | 'interface', string>
+        : IEntityBuilder<'type' | 'interface', string>
     >
   | IArrayType<T extends IType ? T : IType>
   | IObjectType<T extends IBodyType ? T : IBodyType>
@@ -35,7 +38,8 @@ export type IType<T extends any = any> =
   | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
   | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
   | IGenericIdentifierType<T extends string ? T : string>
-  | IRawIdentifierType;
+  | IRawIdentifierType
+  | ILazyType<T extends IType ? T : IType>;
 
 export interface IRawTypePropertyType {
   type: 'raw_property_type';
@@ -76,9 +80,14 @@ export interface INullType {
   type: 'null';
 }
 
+export interface ILazyType<T extends IType> {
+  type: 'lazy_type';
+  definition: () => T;
+}
+
 export interface IIdentifierType<
-  T extends IBaseBuilder<'type' | 'interface', string> = IBaseBuilder<
-    'type' | 'interface',
+  T extends IEntityBuilder<IEntityBuilderTypes, string> = IEntityBuilder<
+    IEntityBuilderTypes,
     string
   >
 > {

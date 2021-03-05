@@ -1,4 +1,7 @@
-import { IBaseBuilder, IBaseBuilderTypes } from '../core/builders/baseBuilder';
+import {
+  IEntityBuilder,
+  IEntityBuilderTypes,
+} from '../core/builders/entityBuilder';
 import {
   IArrayType,
   IBodyType,
@@ -20,6 +23,7 @@ import {
   INullType,
   IRawIdentifierType,
   IGenericIdentifierType,
+  ILazyType,
 } from './types';
 
 type StringLiterals<T extends Readonly<string[]>> = {
@@ -174,6 +178,13 @@ export function stringTuple<T extends Readonly<string[]>>(
   };
 }
 
+export function lazyType<T extends IType>(value: () => T): ILazyType<T> {
+  return {
+    type: 'lazy_type',
+    definition: value,
+  };
+}
+
 export function numberTuple<T extends Readonly<number[]>>(
   ...type: T
 ): ITupleType<NumberLiterals<T>> {
@@ -202,7 +213,7 @@ export function booleanTuple<T extends Readonly<boolean[]>>(
  * @param extract Properties to extract for the identifier (eg: ITest[number][string])
  */
 export function identifierType<
-  T extends IBaseBuilder<'type' | 'interface', string>
+  T extends IEntityBuilder<IEntityBuilderTypes, string>
 >(builder: T, ...extract: ITypePropertyType[]): IIdentifierType {
   return {
     type: 'identifier',
@@ -251,9 +262,9 @@ export function extract<
  * @param builder The type/interface to reference
  */
 export function keyOfExtractor<
-  Type extends IBaseBuilderTypes,
+  Type extends IEntityBuilderTypes,
   Name extends string
->(builder: IBaseBuilder<Type, Name>): IRawTypePropertyType {
+>(builder: IEntityBuilder<Type, Name>): IRawTypePropertyType {
   return {
     type: 'raw_property_type',
     definition: `keyof ${builder.varName}`,

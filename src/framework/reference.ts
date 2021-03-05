@@ -1,24 +1,39 @@
-import path from 'path';
-import { IBaseBuilder } from '../lib/core/builders/baseBuilder';
+import { IEntityBuilder } from '../lib/core/builders/entityBuilder';
 import {
   importBuilder,
   IImportBuilder,
   BuildersToImport,
 } from '../lib/core/builders/importBuilder';
-import { GetInputs, OutputModule } from './types';
+import { createContext } from './context';
+import { getFilename } from './getFilename';
+import { BuilderExports, GetInputs, OutputModule, TSCGenInputs } from './types';
 
 export async function getReference<
   Inputs extends GetInputs,
-  MappedBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  >,
-  StaticBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  >
+  MappedExports extends [...IEntityBuilder[]],
+  StaticExports extends [...IEntityBuilder[]],
+  MappedBuilders extends BuilderExports<MappedExports>,
+  StaticBuilders extends BuilderExports<StaticExports>
 >(
-  importFile: Promise<OutputModule<Inputs, MappedBuilders, StaticBuilders>>,
+  importFile: Promise<
+    OutputModule<
+      Inputs,
+      MappedExports,
+      StaticExports,
+      MappedBuilders,
+      StaticBuilders
+    >
+  >,
   callerPath: string
-): Promise<IReference<Inputs, MappedBuilders, StaticBuilders>> {
+): Promise<
+  IReference<
+    Inputs,
+    MappedExports,
+    StaticExports,
+    MappedBuilders,
+    StaticBuilders
+  >
+> {
   const res = await importFile;
   if (!res.getPath) {
     throw new Error(
@@ -32,36 +47,22 @@ export async function getReference<
       if (!res.getPath) {
         throw new Error("File doesn't reference a path");
       }
-      const inputs = await Promise.resolve(res.getInputs!());
-      // add search filter later
 
-      const exports = await Promise.all(
-        inputs.map(async (val) => ({
-          data: pick(await res.getMappedExports!(val.data)),
-          params: val.params,
-        }))
-      );
-      const callerComponents = callerPath.split('/');
-      const referenceComponents = res.getPath.split('/');
-      const relativePath = path.relative(
-        callerComponents.slice(0, -1).join('/'),
-        referenceComponents.slice(0, -1).join('/')
-      );
-      const dir = relativePath.startsWith('..')
-        ? relativePath
-        : `./${relativePath}`;
+      const ctx = (
+        await createContext(res.getInputs!, res.getMappedExports!, res.getPath)
+      ).map((val) => ({
+        ...val,
+        data: pick(val.exports),
+      }));
 
       return {
-        exports: exports.map((val) => val.data),
-        imports: exports.map((val) => {
-          const outFile = Object.entries(val.params).reduce(
-            (acc, [key, value]) => acc.replace(`[${key}]`, value),
-            referenceComponents.slice(-1)[0].split('.').slice(0, -1).join('.')
-          );
-
+        exports: ctx.map((val) => val.data),
+        imports: ctx.map(({ data, inputData }) => {
           return importBuilder()
-            .addModules(val.data)
-            .addImportLocation(`${dir}/${outFile}`);
+            .addModules(data)
+            .addImportLocation(
+              getFilename(res.getPath, callerPath, inputData.params)
+            );
         }),
       };
     },
@@ -70,38 +71,23 @@ export async function getReference<
 
 interface IReference<
   Inputs extends GetInputs,
-  MappedBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  >,
-  StaticBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  >
+  MappedExports extends [...IEntityBuilder[]],
+  StaticExports extends [...IEntityBuilder[]],
+  MappedBuilders extends BuilderExports<MappedExports>,
+  StaticBuilders extends BuilderExports<StaticExports>
 > {
-  raw: OutputModule<Inputs, MappedBuilders, StaticBuilders>;
-  referenceMappedExports<
-    K extends ReturnType<
-      NonNullable<
-        OutputModule<
-          Inputs,
-          MappedBuilders,
-          StaticBuilders,
-          true
-        >['getMappedExports']
-      >
-    >[number]
-  >(
-    pick: (
-      value: ReturnType<
-        NonNullable<
-          OutputModule<
-            Inputs,
-            MappedBuilders,
-            StaticBuilders,
-            true
-          >['getMappedExports']
-        >
-      >
-    ) => K
+  raw: OutputModule<
+    Inputs,
+    MappedExports,
+    StaticExports,
+    MappedBuilders,
+    StaticBuilders
+  >;
+  referenceMappedExports<K extends MappedBuilders['exports'][number]>(
+    pick: (value: MappedBuilders['exports']) => K,
+    options?: {
+      filter?: () => TSCGenInputs<Inputs>;
+    }
   ): Promise<{
     exports: Array<K>;
     imports: Array<

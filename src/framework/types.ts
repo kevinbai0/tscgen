@@ -1,54 +1,80 @@
+import { IIdentifierType, IImportBuilder, ILazyType } from '../lib';
 import {
   IBaseBuilder,
-  IBaseBuilderTypes,
-} from '../lib/core/builders/baseBuilder';
+  IEntityBuilder,
+  IEntityBuilderTypes,
+} from '../lib/core/builders/entityBuilder';
+import { Promiseable, Unpromise } from '../lib/helpers/promise';
 
-type Promiseable<T> = T | Promise<T>;
-type Unpromise<T> = T extends Promise<infer U> ? U : never;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type InputData<T = any> = {
-  params: Record<string, string>;
+export type InputData<
+  T = unknown,
+  Params extends Record<string, string> = Record<string, string>
+> = {
+  params: Params;
   data: T;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GetInputs<T = any> = () => Promiseable<Array<InputData<T>>>;
+export type BuilderExports<Exports extends [...IEntityBuilder[]]> = {
+  imports?: ReadonlyArray<IBaseBuilder<'import'>>;
+  exports: Exports;
+};
+
+export type Context<
+  Inputs extends GetInputs,
+  Builders extends ReadonlyArray<IEntityBuilder<IEntityBuilderTypes, string>>
+> = {
+  referenceIdentifier<Name extends string, K extends Builders[number]>(data: {
+    findOne: (inputs: TSCGenInputs<Inputs>) => unknown;
+    pick: (value: Builders) => K;
+  }): {
+    importValue: IImportBuilder;
+    typeIdentifier: ILazyType<IIdentifierType<Builders[number]>>;
+  };
+};
+
+export type GetInputs<
+  T = unknown,
+  Params extends Record<string, string> = Record<string, string>
+> = () => Promiseable<Array<InputData<T, Params>>>;
 export type GetMappedExports<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Inputs extends GetInputs<any>,
-  Builders extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>,
+  Inputs extends GetInputs = GetInputs,
+  Exports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
+  Builders extends BuilderExports<Exports> = BuilderExports<Exports>,
   Unpromise = false
 > = (
-  inputs: TSCGenInputs<Inputs>
-) => Unpromise extends true ? [...Builders] : Promiseable<[...Builders]>;
+  options: {
+    context: Context<Inputs, Builders['exports']>;
+  } & TSCGenInputs<Inputs>
+) => Unpromise extends true ? Builders : Promiseable<Builders>;
+
 export type GetStaticExports<
-  Builders extends ReadonlyArray<IBaseBuilder<IBaseBuilderTypes, string>>
+  Exports extends [...IEntityBuilder[]],
+  Builders extends BuilderExports<Exports>
 > = () => Promiseable<Builders>;
 
-export type TSCGenBuilders<
-  T extends (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any
-  ) => ReadonlyArray<IBaseBuilder<'type' | 'interface', string>>
-> = ReturnType<T>;
+export type TSCGenBuilders<T extends GetMappedExports> = Unpromise<
+  ReturnType<T>
+>;
 
 export type TSCGenInputs<T extends GetInputs> = Unpromise<
   ReturnType<T>
->[number]['data'];
+>[number];
 
 export type OutputModule<
   Inputs extends GetInputs = GetInputs,
-  MappedBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  > = ReadonlyArray<IBaseBuilder<'interface' | 'type', string>>,
-  StaticBuilders extends ReadonlyArray<
-    IBaseBuilder<'interface' | 'type', string>
-  > = ReadonlyArray<IBaseBuilder<'interface' | 'type', string>>,
+  MappedExports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
+  StaticExports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
+  MappedBuilders extends BuilderExports<MappedExports> = BuilderExports<MappedExports>,
+  StaticBuilders extends BuilderExports<StaticExports> = BuilderExports<StaticExports>,
   Unpromise extends boolean = false
 > = {
-  getStaticExports?: GetStaticExports<StaticBuilders>;
-  getPath?: string;
-  getMappedExports?: GetMappedExports<Inputs, MappedBuilders, Unpromise>;
+  getStaticExports?: GetStaticExports<StaticExports, StaticBuilders>;
+  getPath: string;
+  getMappedExports?: GetMappedExports<
+    Inputs,
+    MappedExports,
+    MappedBuilders,
+    Unpromise
+  >;
   getInputs?: Inputs;
 };
