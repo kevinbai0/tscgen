@@ -10,15 +10,15 @@ import {
 } from './types';
 
 export function writeJsNumber(value: IJsNumberValue): string {
-  return `${value.value}`;
+  return `${value}`;
 }
 
 export function writeJsString(value: IJsStringValue): string {
-  return `'${value.value}'`;
+  return `'${value}'`;
 }
 
 export function writeJsBoolean(value: IJsBooleanValue): string {
-  return `${value.value}`;
+  return `${value}`;
 }
 
 export function writeJsObject(value: IJsObjectValue): string {
@@ -26,7 +26,7 @@ export function writeJsObject(value: IJsObjectValue): string {
 }
 
 export function writeJsArray(value: IJsArrayValue): string {
-  return `[${value.value.map(writeJsValue).join(',')}]`;
+  return `[${value.map(writeJsValue).join(',')}]`;
 }
 
 export function writeJsIdentifier(value: IJsIdentifierValue): string {
@@ -40,18 +40,27 @@ export function writeJsBody(body: IJsBodyValue): string {
 }
 
 export function writeJsValue(value: IJsValue): string {
-  switch (value.type) {
+  function handleObject(value: Exclude<IJsValue, string | number | boolean>) {
+    if (Array.isArray(value)) {
+      return writeJsArray(value);
+    }
+    if (value.type === 'identifier') {
+      return writeJsIdentifier(value);
+    }
+    if (value.type === 'object') {
+      return writeJsObject(value);
+    }
+
+    throw new Error(`Unexpected type ${value}`);
+  }
+  switch (typeof value) {
     case 'string':
       return writeJsString(value);
     case 'number':
       return writeJsNumber(value);
     case 'boolean':
       return writeJsBoolean(value);
-    case 'object':
-      return writeJsObject(value);
-    case 'array':
-      return writeJsArray(value);
-    case 'identifier':
-      return writeJsIdentifier(value);
+    default:
+      return handleObject(value);
   }
 }

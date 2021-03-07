@@ -32,6 +32,7 @@ export type IType<T extends any = any> =
   | IArrayType<T extends IType ? T : IType>
   | IObjectType<T extends IBodyType ? T : IBodyType>
   | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
+  | IIntersectionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
   | IStringLiteralType<T extends string ? T : string>
   | INumberLiteralType<T extends number ? T : number>
   | IBooleanLiteralType<T extends boolean ? T : boolean>
@@ -127,6 +128,12 @@ export interface INumberLiteralType<T extends number = number> {
 
 export interface IUnionType<T extends Readonly<IType[]> = []> {
   type: 'union';
+  definition: T;
+  extract?: ITypePropertyType[];
+}
+
+export interface IIntersectionType<T extends Readonly<IType[]> = []> {
+  type: 'intersection';
   definition: T;
   extract?: ITypePropertyType[];
 }

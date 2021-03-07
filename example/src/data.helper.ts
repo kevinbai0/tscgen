@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { OpenAPIV3 } from 'openapi-types';
+import { OpenAPI, OpenAPIV3 } from 'openapi-types';
 
 let openApiData: OpenAPIV3.Document | undefined;
 
@@ -25,3 +25,38 @@ export const getSchemas = () => {
     };
   });
 };
+
+const operators = [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'patch',
+  'head',
+  'options',
+  'trace',
+] as const;
+
+export const getPaths = () => {
+  const data = getData();
+  const paths = Object.entries(data.paths).flatMap(([route, pathInfo]) =>
+    parsePathInfo(pathInfo!).map((info) => ({
+      route,
+      pathInfo: info,
+    }))
+  );
+  return paths;
+};
+
+function parsePathInfo(
+  pathInfo: OpenAPIV3.PathItemObject
+): (OpenAPIV3.OperationObject & { method: typeof operators[number] })[] {
+  const params = pathInfo.parameters ?? [];
+  return operators
+    .filter((op) => pathInfo[op])
+    .map((op) => ({
+      ...pathInfo[op]!,
+      parameters: [...(pathInfo[op]?.parameters ?? []), ...params],
+      method: op,
+    }));
+}

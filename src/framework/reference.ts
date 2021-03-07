@@ -43,16 +43,21 @@ export async function getReference<
   return {
     raw: res,
     // eslint-disable-next-line @typescript-eslint/typedef
-    async referenceMappedExports(pick) {
+    async referenceMappedExports(options) {
       if (!res.getPath) {
         throw new Error("File doesn't reference a path");
       }
 
       const ctx = (
-        await createContext(res.getInputs!, res.getMappedExports!, res.getPath)
+        await createContext(
+          res.getInputs!,
+          res.getMappedExports!,
+          res.getPath,
+          options
+        )
       ).map((val) => ({
         ...val,
-        data: pick(val.exports),
+        data: options.pick(val.exports),
       }));
 
       return {
@@ -83,12 +88,17 @@ interface IReference<
     MappedBuilders,
     StaticBuilders
   >;
-  referenceMappedExports<K extends MappedBuilders['exports'][number]>(
-    pick: (value: MappedBuilders['exports']) => K,
-    options?: {
-      filter?: () => TSCGenInputs<Inputs>;
-    }
-  ): Promise<{
+  /**
+   *
+   * @param options filter and pick
+   */
+  referenceMappedExports<K extends MappedBuilders['exports'][number]>(options: {
+    filter?: (data: TSCGenInputs<Inputs>) => boolean;
+    /**
+     * Pick the specific entity builder from the list of exported entities of that file
+     */
+    pick: (value: MappedBuilders['exports']) => K;
+  }): Promise<{
     exports: Array<K>;
     imports: Array<
       IImportBuilder<BuildersToImport<[K]>, undefined, undefined, string>

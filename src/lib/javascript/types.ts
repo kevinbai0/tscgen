@@ -11,25 +11,10 @@ export interface IJsIdentifierValue {
   value: string;
 }
 
-export interface IJsStringValue {
-  type: 'string';
-  value: string;
-}
-
-export interface IJsNumberValue {
-  type: 'number';
-  value: number;
-}
-
-export interface IJsBooleanValue {
-  type: 'boolean';
-  value: boolean;
-}
-
-export interface IJsArrayValue {
-  type: 'array';
-  value: IJsValue[];
-}
+export type IJsStringValue = string;
+export type IJsNumberValue = number;
+export type IJsBooleanValue = boolean;
+export type IJsArrayValue = IJsValue[];
 
 export interface IJsObjectValue {
   type: 'object';

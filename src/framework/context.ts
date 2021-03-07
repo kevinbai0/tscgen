@@ -21,21 +21,25 @@ export async function createContext<
 >(
   getInputs: Inputs,
   mappedExports: GetMappedExports<Inputs, Exports, Builders>,
-  getPath: string
+  getPath: string,
+  options?: {
+    filter?: (data: TSCGenInputs<Inputs>) => boolean;
+  }
 ) {
   const inputs = await Promise.resolve(getInputs());
 
   const state: [
-    TSCGenInputs<Inputs>,
-    Exports | undefined
+    inputData: TSCGenInputs<Inputs>,
+    exportsValue: Exports | undefined
   ][] = inputs.map((val) => [val, undefined]);
 
   const context: Context<Inputs, Exports> = {
     referenceIdentifier: ({ findOne, pick }) => {
-      const found = state.find(([inputData]) => findOne(inputData));
-      if (!found) {
+      const foundIndex = state.findIndex(([inputData]) => findOne(inputData));
+      if (foundIndex === -1) {
         throw new Error(`No reference found`);
       }
+      const found = state[foundIndex];
 
       return {
         importValue: importBuilder()
@@ -64,5 +68,6 @@ export async function createContext<
       };
     })
   );
-  return res;
+
+  return res.filter((val) => options?.filter?.(val.inputData) ?? true);
 }

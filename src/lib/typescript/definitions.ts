@@ -24,6 +24,7 @@ import {
   IRawIdentifierType,
   IGenericIdentifierType,
   ILazyType,
+  IIntersectionType,
 } from './types';
 
 type StringLiterals<T extends Readonly<string[]>> = {
@@ -129,6 +130,17 @@ export function unionType<T extends ReadonlyArray<IType>>(
 ): IUnionType<T> {
   return {
     type: 'union',
+    definition: types,
+    extract,
+  };
+}
+
+export function intersectionType<T extends ReadonlyArray<IType>>(
+  types: T,
+  ...extract: ITypePropertyType[]
+): IIntersectionType<T> {
+  return {
+    type: 'intersection',
     definition: types,
     extract,
   };

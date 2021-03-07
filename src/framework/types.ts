@@ -2,7 +2,6 @@ import { IIdentifierType, IImportBuilder, ILazyType } from '../lib';
 import {
   IBaseBuilder,
   IEntityBuilder,
-  IEntityBuilderTypes,
 } from '../lib/core/builders/entityBuilder';
 import { Promiseable, Unpromise } from '../lib/helpers/promise';
 
@@ -20,10 +19,10 @@ export type BuilderExports<Exports extends [...IEntityBuilder[]]> = {
 };
 
 export type Context<
-  Inputs extends GetInputs,
-  Builders extends ReadonlyArray<IEntityBuilder<IEntityBuilderTypes, string>>
+  Inputs extends GetInputs = GetInputs,
+  Builders extends ReadonlyArray<IEntityBuilder> = ReadonlyArray<IEntityBuilder>
 > = {
-  referenceIdentifier<Name extends string, K extends Builders[number]>(data: {
+  referenceIdentifier<K extends Builders[number]>(data: {
     findOne: (inputs: TSCGenInputs<Inputs>) => unknown;
     pick: (value: Builders) => K;
   }): {

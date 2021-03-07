@@ -1,3 +1,4 @@
+import { Promiseable } from '../helpers/promise';
 import { IBodyType, IObjectType } from '../typescript/types';
 import { IBaseBuilder } from './builders/entityBuilder';
 
@@ -7,6 +8,26 @@ export function combine(...builders: IBaseBuilder[]): string {
       builder.type === 'import' ? builder.toString() : `\n${builder.toString()}`
     )
     .join('\n');
+}
+
+export async function mapObjectPromise<T, K>(
+  obj: Record<string, T>,
+  transform: (value: T, key: string) => Promiseable<K>
+): Promise<Record<string, K>> {
+  return (
+    await Promise.all(
+      Object.entries(obj).map(
+        async ([key, value]) =>
+          [key, await Promise.resolve(transform(value, key))] as const
+      )
+    )
+  ).reduce<Record<string, K>>(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: value,
+    }),
+    {}
+  );
 }
 
 export function mapObject<T, K>(
@@ -27,7 +48,7 @@ export function toObjectType<T extends any[]>(
   arr: T | undefined,
   transform: (
     value: T[number]
-  ) => { key: string; value: IBodyType[keyof IBodyType] }
+  ) => { key: string; value: IBodyType[keyof IBodyType] } | undefined
 ): IObjectType {
   if (!arr) {
     return {
@@ -37,6 +58,9 @@ export function toObjectType<T extends any[]>(
   }
   const body = arr.reduce<IBodyType>((acc, value) => {
     const res = transform(value);
+    if (!res) {
+      return acc;
+    }
     return { ...acc, [res.key]: res.value };
   }, {});
 

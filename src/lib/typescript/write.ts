@@ -17,6 +17,7 @@ import {
   IRawIdentifierType,
   IGenericIdentifierType,
   ILazyType,
+  IIntersectionType,
 } from './types';
 
 export function writeGeneric(
@@ -63,6 +64,17 @@ function writeUnionType(type: IUnionType): string {
   return type.definition.length === 0
     ? 'never'
     : type.definition.map(writeType).join('|');
+}
+
+function writeIntersectionType(type: IIntersectionType): string {
+  if (type.extract?.length) {
+    return `(${type.definition
+      .map(writeType)
+      .join('&')})${writeExtractedProperties(type.extract)}`;
+  }
+  return type.definition.length === 0
+    ? 'never'
+    : type.definition.map(writeType).join('&');
 }
 
 function writeStringLiteralType(type: IStringLiteralType): string {
@@ -143,6 +155,8 @@ export function writeType(type: IType | undefined): string {
       return writeObjectType(type);
     case 'union':
       return writeUnionType(type);
+    case 'intersection':
+      return writeIntersectionType(type);
     case 'string_literal':
       return writeStringLiteralType(type);
     case 'number_literal':

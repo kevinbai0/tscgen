@@ -1,38 +1,32 @@
 import * as tscgen from '../../../src/framework';
 import { getSchemas } from '../data.helper';
+import { writeSchema } from '../writeSchema.helper';
 
 export const getInputs = tscgen.createInputsExport(() =>
   getSchemas().map((data) => ({
     data,
     params: {
-      name: data.name,
+      name: `I${data.name}Model`,
     },
   }))
 );
 
 export const getMappedExports = tscgen.createMappedExports(
   getInputs,
-  ({ data, context }) => {
-    const modelName = `I${data.name}Model`;
-
-    const ref =
-      data.name === 'Pet'
-        ? context.referenceIdentifier({
-            findOne: ({ params }) => params.name === 'NewPet',
-            pick: (builders) => builders[0],
-          })
-        : undefined;
+  async ({ data, params, context }) => {
+    const body = await writeSchema(data.schema, {
+      resolveReference: (importName) => {
+        return context.referenceIdentifier({
+          findOne: (value) => value.data.name === importName,
+          pick: ([builder]) => builder,
+        });
+      },
+    });
 
     return {
-      imports: ref?.importValue ? [ref.importValue] : [],
+      imports: body.imports,
       exports: [
-        tscgen
-          .interfaceBuilder(modelName)
-          .markExport()
-          .addBody({
-            name: tscgen.stringType(data.name),
-            ...(ref?.typeIdentifier ? { reference: ref.typeIdentifier } : {}),
-          }),
+        tscgen.typeDefBuilder(params.name).markExport().addUnion(body.type),
       ],
     };
   }

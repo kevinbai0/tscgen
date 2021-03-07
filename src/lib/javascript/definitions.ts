@@ -2,44 +2,7 @@ import {
   IEntityBuilder,
   IEntityBuilderTypes,
 } from '../core/builders/entityBuilder';
-import {
-  IJsArrayValue,
-  IJsBodyValue,
-  IJsIdentifierValue,
-  IJsNumberValue,
-  IJsObjectValue,
-  IJsStringValue,
-  IJsBooleanValue,
-  IJsValue,
-} from './types';
-
-export function primitiveValue(
-  value: string | number | boolean
-): IJsStringValue | IJsNumberValue | IJsBooleanValue {
-  if (typeof value === 'string') {
-    return {
-      type: 'string',
-      value,
-    };
-  }
-  if (typeof value === 'boolean') {
-    return {
-      type: 'boolean',
-      value,
-    };
-  }
-  return {
-    type: 'number',
-    value,
-  };
-}
-
-export function arrayValue(...values: IJsValue[]): IJsArrayValue {
-  return {
-    type: 'array',
-    value: values,
-  };
-}
+import { IJsBodyValue, IJsIdentifierValue, IJsObjectValue } from './types';
 
 export function objectValue(value: IJsBodyValue): IJsObjectValue {
   return {

@@ -1,11 +1,29 @@
-import { IPetModel } from './models/Pet';
-import { INewPetModel } from './models/NewPet';
-import { IErrorModel } from './models/Error';
+import { FindPetsRoute } from './routes/FindPetsRoute';
+import { AddPetRoute } from './routes/AddPetRoute';
+import { FindByPetIdRoute } from './routes/FindByPetIdRoute';
+import { DeletePetRoute } from './routes/DeletePetRoute';
 
-export type Route = IPetModel | INewPetModel | IErrorModel;
+export type Route =
+  | FindPetsRoute
+  | AddPetRoute
+  | FindByPetIdRoute
+  | DeletePetRoute;
 
 export type Routes = {
-  IPetModel: IPetModel;
-  INewPetModel: INewPetModel;
-  IErrorModel: IErrorModel;
+  FindPetsRoute: FindPetsRoute;
+  AddPetRoute: AddPetRoute;
+  FindByPetIdRoute: FindByPetIdRoute;
+  DeletePetRoute: DeletePetRoute;
+};
+
+export const routesData: {
+  [Key in keyof Routes]: {
+    route: Routes[Key]['path'];
+    method: Routes[Key]['method'];
+  };
+} = {
+  FindPetsRoute: { route: '/pets', method: 'get' },
+  AddPetRoute: { route: '/pets', method: 'post' },
+  FindByPetIdRoute: { route: '/pets/{id}', method: 'get' },
+  DeletePetRoute: { route: '/pets/{id}', method: 'delete' },
 };
