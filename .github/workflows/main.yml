@@ -25,20 +25,20 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Install dependencies
-        run: npm install
+        run: node common/scripts/install-run-rush.js install
         env:
           GITHUB_NPM_TOKEN: ${{ secrets.PAT }}
 
       - name: Build code
-        run: npm run build
+        run: node common/scripts/install-run-rush.js build
       
       - name: Lint code
-        run: npm run lint
+        run: cd packages/tscgen && npm run lint
 
       - name: Test code
-        run: npm run test
+        run: cd packages/tscgen && npm run test
 
       - name: Publish package
-        run: npm run changeset:publish
+        run: cd packages/tscgen && npm run changeset:publish
         env:
           GITHUB_NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
