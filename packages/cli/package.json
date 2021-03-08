@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@tabtabapp/lint-rules": "^1.0.9",
+    "@kevinbai/lint-rules": "^1.0.0",
     "@types/node": "^14.14.32",
     "eslint": "^7.21.0",
     "tscgen": "workspace:*",
