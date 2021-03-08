@@ -1,14 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
-import * as tscgen from '../src/lib/index';
+import * as tscgen from '../src/index';
 
 import {
   booleanType,
   genericType,
   stringType,
   undefinedType,
-} from '../src/lib/index';
+} from '../src/index';
 import { routes } from './config/sample';
 import { Query } from './config/types';
 
@@ -30,7 +30,7 @@ type CleanBreadcrumbs = {
 };
 
 const format = tscgen.createFormatter(
-  path.resolve(__dirname, '../src/lib/index.ts')
+  path.resolve(__dirname, '../src/index.ts')
 );
 
 describe('Generates routes correctly', () => {
@@ -99,9 +99,8 @@ describe('Generates routes correctly', () => {
         name: tscgen.stringType('hello'),
       });
 
-    const formatted = await format(build.toString());
-    expect(formatted).to.eq(
-      `export interface IExtendable {\n  name: 'hello';\n}\n`
+    expect(build.toString()).to.eq(
+      `export interface IExtendable {name: 'hello'}`
     );
   });
 
@@ -122,9 +121,9 @@ describe('Generates routes correctly', () => {
         ),
       });
 
-    const formatted = await format(tscgen.combine(parent, build));
-    expect(formatted).to.eq(
-      `interface IParent {\n  name: string;\n}\n\nexport interface IExtendable extends IParent {\n  name: 'hello';\n  value: Readonly<{ name: 'world' }>;\n}\n`
+    const output = tscgen.combine(parent, build);
+    expect(output).to.eq(
+      "\ninterface IParent {name: string}\n\nexport interface IExtendable extends IParent {name: 'hello';value: Readonly<{name: 'world'}>}"
     );
   });
 
@@ -140,9 +139,9 @@ describe('Generates routes correctly', () => {
         )
       );
 
-    const formatted = await format(tscgen.combine(build));
-    expect(formatted).to.eq(
-      `export type TestReadonly = Readonly<{ name: string }>;\n`
+    const output = tscgen.combine(build);
+    expect(output).to.eq(
+      '\nexport type TestReadonly = Readonly<{name: string}>;'
     );
   });
 
@@ -154,9 +153,9 @@ describe('Generates routes correctly', () => {
         tscgen.extract(tscgen.stringType('a', 'b', 'c'), tscgen.stringType('a'))
       );
 
-    const formatted = await format(tscgen.combine(build));
-    expect(formatted).to.eq(
-      `export type TestReadonly = Extract<'a' | 'b' | 'c', 'a'>;\n`
+    const output = tscgen.combine(build);
+    expect(output).to.eq(
+      "\nexport type TestReadonly = Extract<'a'|'b'|'c', 'a'>;"
     );
   });
 
@@ -170,14 +169,12 @@ describe('Generates routes correctly', () => {
       }),
     ]);
 
-    const res = await format(
-      tscgen.combine(
-        tscgen.typeDefBuilder('Test').addUnion(union),
-        tscgen.typeDefBuilder('Empty').addUnion(tscgen.unionType([]))
-      )
+    const output = tscgen.combine(
+      tscgen.typeDefBuilder('Test').addUnion(union),
+      tscgen.typeDefBuilder('Empty').addUnion(tscgen.unionType([]))
     );
-    expect(res).to.equal(
-      `type Test = { name: string } | { name: boolean };\n\ntype Empty = never;\n`
+    expect(output).to.equal(
+      '\ntype Test = {name: string}|{name: boolean};\n\ntype Empty = never;'
     );
   });
 
@@ -200,9 +197,9 @@ describe('Generates routes correctly', () => {
         })
       );
 
-    const res = await format(tscgen.combine(ResponseMessage));
-    expect(res).to.equal(
-      `type ResponseMessage<T> =\n  | { success: true; status: number; data: T }\n  | { success: false; status: number; error: string };\n`
+    const output = tscgen.combine(ResponseMessage);
+    expect(output).to.equal(
+      '\ntype ResponseMessage<T> = {success: true;status: number;data: T} | {success: false;status: number;error: string};'
     );
   });
   it('imports work', () => {
