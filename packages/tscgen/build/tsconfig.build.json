@@ -1,9 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../lib",
+    "outDir": "../dist",
     "declaration": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "noEmit": false
   },
   "include": ["../src"]
 }
