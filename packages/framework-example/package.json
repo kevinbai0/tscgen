@@ -6,7 +6,7 @@
     "build": "tscgen && eslint out --fix"
   },
   "devDependencies": {
-    "@kevinbai/lint-rules": "^1.0.1",
+    "@kevinbai/lint-rules": "^1.0.2",
     "@types/node": "^14.14.32",
     "eslint": "^7.21.0",
     "tscgen": "workspace:*",
