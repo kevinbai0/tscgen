@@ -1,5 +1,5 @@
-import { writeGeneric, writeType } from '../../typescript/write';
 import { IGenericOptions, IGenericValue, IType } from '../../typescript/types';
+import { writeGeneric, writeType } from '../../typescript/write';
 import { IEntityBuilder } from './entityBuilder';
 
 type JoinType<K extends 'union' | 'intersection', T> = {

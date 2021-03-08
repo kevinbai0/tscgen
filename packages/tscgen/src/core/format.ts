@@ -1,8 +1,6 @@
 import path from 'path';
 import eslint from 'eslint';
 
-export type Formatter = ReturnType<typeof createFormatter>;
-
 export const createFormatter = (pathToFile: string) => {
   const linter: eslint.ESLint = new eslint.ESLint({
     useEslintrc: true,
@@ -26,3 +24,5 @@ export const createFormatter = (pathToFile: string) => {
     return res[0].output!;
   };
 };
+
+export type Formatter = ReturnType<typeof createFormatter>;

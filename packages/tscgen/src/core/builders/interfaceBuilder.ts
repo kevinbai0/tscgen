@@ -1,11 +1,11 @@
-import { writeBodyType, writeGeneric, writeType } from '../../typescript/write';
+import { identifierType } from '../../typescript/definitions';
 import {
   IBodyType,
   IGenericOptions,
   IGenericValue,
   IIdentifierType,
 } from '../../typescript/types';
-import { identifierType } from '../../typescript/definitions';
+import { writeBodyType, writeGeneric, writeType } from '../../typescript/write';
 import { IEntityBuilder } from './entityBuilder';
 
 export type IGenericInterfaceBuilder = IInterfaceBuilder<

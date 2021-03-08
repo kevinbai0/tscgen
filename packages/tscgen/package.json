@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.14.1",
-    "@kevinbai/lint-rules": "^1.0.0",
+    "@kevinbai/lint-rules": "^1.0.1",
     "@types/chai": "^4.2.15",
     "@types/eslint": "^7.2.6",
     "@types/mocha": "^8.2.1",
