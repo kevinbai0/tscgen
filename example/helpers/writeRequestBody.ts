@@ -1,7 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import * as tscgen from '../../src/lib';
-import { mapObject } from '../../src/lib';
-import { handleRef, SchemaHandlers, writeSchema } from './writeSchema.helper';
+import { handleRef, SchemaHandlers, writeSchema } from './writeSchema';
 
 export const writeRequestBody = (
   requestBody: OpenAPIV3.OperationObject['requestBody'],

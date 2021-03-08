@@ -1,6 +1,8 @@
 import * as tscgen from '../../../src/framework';
-import { getSchemas } from '../data.helper';
-import { writeSchema } from '../writeSchema.helper';
+import { getSchemas } from '../../helpers/data';
+import { writeSchema } from '../../helpers/writeSchema';
+
+export const getPath = __filename;
 
 export const getInputs = tscgen.createInputsExport(() =>
   getSchemas().map((data) => ({
@@ -11,25 +13,27 @@ export const getInputs = tscgen.createInputsExport(() =>
   }))
 );
 
-export const getMappedExports = tscgen.createMappedExports(
+export const getMappedExports = tscgen.createMappedExports('routes')(
   getInputs,
   async ({ data, params, context }) => {
     const body = await writeSchema(data.schema, {
       resolveReference: (importName) => {
-        return context.referenceIdentifier({
-          findOne: (value) => value.data.name === importName,
-          pick: ([builder]) => builder,
-        });
+        return context
+          .referenceIdentifier('routes')
+          .findOne((value) => value.data.name === importName);
       },
     });
 
     return {
       imports: body.imports,
-      exports: [
-        tscgen.typeDefBuilder(params.name).markExport().addUnion(body.type),
-      ],
+      exports: {
+        get routes() {
+          return tscgen
+            .typeDefBuilder(params.name)
+            .markExport()
+            .addUnion(body.type);
+        },
+      },
     };
   }
 );
-
-export const getPath = __filename;

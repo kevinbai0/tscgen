@@ -10,17 +10,16 @@ import {
   Context,
   GetInputs,
   GetMappedExports,
-  BuilderExports,
   TSCGenInputs,
+  BuilderExports,
 } from './types';
 
 export async function createContext<
   Inputs extends GetInputs,
-  Exports extends [...IEntityBuilder[]],
-  Builders extends BuilderExports<Exports>
+  Exports extends ReadonlyArray<string>
 >(
   getInputs: Inputs,
-  mappedExports: GetMappedExports<Inputs, Exports, Builders>,
+  mappedExports: GetMappedExports<Inputs, Exports>,
   getPath: string,
   options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
@@ -30,24 +29,35 @@ export async function createContext<
 
   const state: [
     inputData: TSCGenInputs<Inputs>,
-    exportsValue: Exports | undefined
+    exportsValue:
+      | BuilderExports<Exports, false>['exports']['values']
+      | undefined
   ][] = inputs.map((val) => [val, undefined]);
 
   const context: Context<Inputs, Exports> = {
-    referenceIdentifier: ({ findOne, pick }) => {
-      const foundIndex = state.findIndex(([inputData]) => findOne(inputData));
-      if (foundIndex === -1) {
-        throw new Error(`No reference found`);
-      }
-      const found = state[foundIndex];
-
+    referenceIdentifier: (pick) => {
       return {
-        importValue: importBuilder()
-          .addModules(lazyImportType(() => importModuleType(pick(found[1]!))))
-          .addImportLocation(getFilename(getPath, getPath, found[0].params)),
-        typeIdentifier: lazyType(() => {
-          return identifierType(pick(found[1]!));
-        }),
+        findOne: (method) => {
+          const foundIndex = state.findIndex(([inputData]) =>
+            method(inputData)
+          );
+          if (foundIndex === -1) {
+            throw new Error(`No reference found`);
+          }
+          const found = state[foundIndex];
+          return {
+            importValue: importBuilder()
+              .addModules(
+                lazyImportType(() => importModuleType(found[1]![pick]))
+              )
+              .addImportLocation(
+                getFilename(getPath, getPath, found[0].params)
+              ),
+            typeIdentifier: lazyType(() => {
+              return identifierType(found[1]![pick]);
+            }),
+          };
+        },
       };
     },
   };
@@ -60,7 +70,7 @@ export async function createContext<
       });
 
       // update context
-      state[index][1] = outputData.exports;
+      state[index][1] = outputData.exports.values;
 
       return {
         inputData,
@@ -71,3 +81,12 @@ export async function createContext<
 
   return res.filter((val) => options?.filter?.(val.inputData) ?? true);
 }
+
+type ExportsWithEntity<T> = {
+  [Key in keyof T]: T[Key] extends string
+    ? {
+        key: T[Key];
+        entity: IEntityBuilder;
+      }
+    : never;
+};

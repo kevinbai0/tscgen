@@ -16,7 +16,8 @@ export type IGenericTypeDefBuilder = ITypeDefBuilder<
     type: IType;
     joinType: 'union' | 'intersection';
   }>,
-  boolean
+  boolean,
+  string
 >;
 
 export interface ITypeDefBuilder<
@@ -26,8 +27,9 @@ export interface ITypeDefBuilder<
     type: IType;
     joinType: 'union' | 'intersection';
   }>,
-  Exported extends boolean
-> extends IEntityBuilder<'type', Name> {
+  Exported extends boolean,
+  Key extends string
+> extends IEntityBuilder<'type', Name, Key> {
   type: 'type';
   addUnion<T extends ReadonlyArray<IType>>(
     ...type: T
@@ -35,7 +37,8 @@ export interface ITypeDefBuilder<
     Name,
     Generics,
     [...JoinedTypes, ...JoinType<'union', T>],
-    Exported
+    Exported,
+    Key
   >;
   addIntersection<T extends ReadonlyArray<IType>>(
     ...type: IType[]
@@ -43,7 +46,8 @@ export interface ITypeDefBuilder<
     Name,
     Generics,
     [...JoinedTypes, ...JoinType<'intersection', T>],
-    Exported
+    Exported,
+    Key
   >;
   addGeneric<
     N extends string,
@@ -54,8 +58,11 @@ export interface ITypeDefBuilder<
   >(
     name: N,
     options?: Options
-  ): ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
-  markExport(): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported>;
+  ): ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported, Key>;
+  setKey<NewKey extends string>(
+    key: NewKey
+  ): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported, NewKey>;
+  markExport(): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported, Key>;
 }
 
 export function typeDefBuilder<
@@ -65,17 +72,19 @@ export function typeDefBuilder<
     type: IType;
     joinType: 'union' | 'intersection';
   }> = [],
-  Exported extends boolean = false
+  Exported extends boolean = false,
+  Key extends string = string
 >(
   name: Name,
   defaultOptions: {
     generics?: Generics;
     export: boolean;
     types?: JoinedTypes;
+    key?: Key;
   } = {
     export: false,
   }
-): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported> {
+): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported, Key> {
   function build(): string {
     const genericsStr = writeGeneric(defaultOptions.generics);
     const types =
@@ -119,7 +128,7 @@ export function typeDefBuilder<
           ...(defaultOptions.generics ?? []),
           { name: genericName, options },
         ] as ReadonlyArray<IGenericValue<N, Options>>,
-      }) as ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
+      }) as ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported, Key>;
     },
     addUnion: newBuilder('union'),
     addIntersection: newBuilder('intersection'),
@@ -128,6 +137,15 @@ export function typeDefBuilder<
     },
     get varName() {
       return name as Name;
+    },
+    get key() {
+      return defaultOptions.key;
+    },
+    setKey<NewKey extends string>(key: NewKey) {
+      return typeDefBuilder(name, {
+        ...defaultOptions,
+        key,
+      });
     },
     markExport: () =>
       typeDefBuilder(name, {

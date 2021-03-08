@@ -13,21 +13,36 @@ export type InputData<
   data: T;
 };
 
-export type BuilderExports<Exports extends [...IEntityBuilder[]]> = {
+export type BuilderExports<
+  Exports extends ReadonlyArray<string>,
+  OmitOrder extends boolean = false
+> = {
   imports?: ReadonlyArray<IBaseBuilder<'import'>>;
-  exports: Exports;
+  exports: OmitOrder extends true
+    ? {
+        [Key in Exports[number]]: IEntityBuilder;
+      }
+    : {
+        values: {
+          [Key in Exports[number]]: IEntityBuilder;
+        };
+        order: Exports;
+      };
 };
 
 export type Context<
-  Inputs extends GetInputs = GetInputs,
-  Builders extends ReadonlyArray<IEntityBuilder> = ReadonlyArray<IEntityBuilder>
+  Inputs extends GetInputs,
+  Order extends ReadonlyArray<string>
 > = {
-  referenceIdentifier<K extends Builders[number]>(data: {
-    findOne: (inputs: TSCGenInputs<Inputs>) => unknown;
-    pick: (value: Builders) => K;
-  }): {
-    importValue: IImportBuilder;
-    typeIdentifier: ILazyType<IIdentifierType<Builders[number]>>;
+  referenceIdentifier<K extends Order[number]>(
+    pick: K
+  ): {
+    findOne: (
+      data: (inputs: TSCGenInputs<Inputs>) => unknown
+    ) => {
+      importValue: IImportBuilder;
+      typeIdentifier: ILazyType<IIdentifierType>;
+    };
   };
 };
 
@@ -35,25 +50,39 @@ export type GetInputs<
   T = unknown,
   Params extends Record<string, string> = Record<string, string>
 > = () => Promiseable<Array<InputData<T, Params>>>;
-export type GetMappedExports<
-  Inputs extends GetInputs = GetInputs,
-  Exports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
-  Builders extends BuilderExports<Exports> = BuilderExports<Exports>,
-  Unpromise = false
+
+export type GetMappedExportsBase<
+  Inputs extends GetInputs,
+  Keys extends ReadonlyArray<string>,
+  Unpromise extends boolean = false
 > = (
-  options: {
-    context: Context<Inputs, Builders['exports']>;
-  } & TSCGenInputs<Inputs>
-) => Unpromise extends true ? Builders : Promiseable<Builders>;
+  options: TSCGenInputs<Inputs> & {
+    context: Context<Inputs, Keys>;
+  }
+) => Unpromise extends true
+  ? BuilderExports<Keys, true>
+  : Promiseable<BuilderExports<Keys, true>>;
+
+export type GetMappedExports<
+  Inputs extends GetInputs,
+  Keys extends ReadonlyArray<string>,
+  Unpromise extends boolean = false
+> = (
+  options: TSCGenInputs<Inputs> & {
+    context: Context<Inputs, Keys>;
+  }
+) => Unpromise extends true
+  ? BuilderExports<Keys>
+  : Promiseable<BuilderExports<Keys>>;
 
 export type GetStaticExports<
-  Exports extends [...IEntityBuilder[]],
+  Exports extends ReadonlyArray<string>,
   Builders extends BuilderExports<Exports>
 > = () => Promiseable<Builders>;
 
-export type TSCGenBuilders<T extends GetMappedExports> = Unpromise<
-  ReturnType<T>
->;
+export type TSCGenBuilders<
+  T extends GetMappedExports<GetInputs, ReadonlyArray<string>>
+> = Unpromise<ReturnType<T>>;
 
 export type TSCGenInputs<T extends GetInputs> = Unpromise<
   ReturnType<T>
@@ -61,19 +90,13 @@ export type TSCGenInputs<T extends GetInputs> = Unpromise<
 
 export type OutputModule<
   Inputs extends GetInputs = GetInputs,
-  MappedExports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
-  StaticExports extends [...IEntityBuilder[]] = [...IEntityBuilder[]],
-  MappedBuilders extends BuilderExports<MappedExports> = BuilderExports<MappedExports>,
+  MappedExports extends ReadonlyArray<string> = ReadonlyArray<string>,
+  StaticExports extends ReadonlyArray<string> = ReadonlyArray<string>,
   StaticBuilders extends BuilderExports<StaticExports> = BuilderExports<StaticExports>,
   Unpromise extends boolean = false
 > = {
   getStaticExports?: GetStaticExports<StaticExports, StaticBuilders>;
   getPath: string;
-  getMappedExports?: GetMappedExports<
-    Inputs,
-    MappedExports,
-    MappedBuilders,
-    Unpromise
-  >;
+  getMappedExports?: GetMappedExports<Inputs, MappedExports, Unpromise>;
   getInputs?: Inputs;
 };

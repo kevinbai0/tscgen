@@ -1,61 +1,71 @@
+import { objectValue } from '../../javascript/definitions';
 import { IJsBodyValue, IJsObjectValue, IJsValue } from '../../javascript/types';
 import { writeJsObject } from '../../javascript/write';
 import { IType } from '../../typescript/types';
 import { writeType } from '../../typescript/write';
 import { IEntityBuilder } from './entityBuilder';
 
-interface IVarObjectBuilder extends IEntityBuilder<'object', string> {
+interface IVarObjectBuilder<Key extends string>
+  extends IEntityBuilder<'object', string, Key> {
   type: 'object';
-  addBody(body: IJsBodyValue): IVarObjectBuilder;
-  addTypeDef(typeDefinition: IType): IVarObjectBuilder;
-  setLevel(level: 'const' | 'let' | 'var'): IVarObjectBuilder;
-  markExport(): IVarObjectBuilder;
+  addBody(body: IJsBodyValue): IVarObjectBuilder<Key>;
+  addTypeDef(typeDefinition: IType): IVarObjectBuilder<Key>;
+  setLevel(level: 'const' | 'let' | 'var'): IVarObjectBuilder<Key>;
+  markExport(): IVarObjectBuilder<Key>;
+  setKey<NewKey extends string>(key: NewKey): IVarObjectBuilder<NewKey>;
 }
 
 const deepMerge = <T extends IJsValue>(body: T, body2: T): T => {
-  if (body.type === 'object' && body2.type === 'object') {
+  if (
+    (body as IJsObjectValue).type === 'object' &&
+    (body2 as IJsObjectValue).type === 'object'
+  ) {
     return {
       type: 'object',
       value: {
-        ...(body.value as IJsBodyValue),
-        ...Object.entries(body2.value).reduce((acc, [key, value]) => {
-          if ((body.value as IJsBodyValue)[key]) {
+        ...(body as IJsObjectValue).value,
+        ...Object.entries((body2 as IJsObjectValue).value).reduce(
+          (acc, [key, value]) => {
+            if (((body as IJsObjectValue).value as IJsBodyValue)[key]) {
+              return {
+                ...acc,
+                [key]: deepMerge(
+                  ((body as IJsObjectValue).value as IJsBodyValue)[key],
+                  value
+                ),
+              };
+            }
             return {
               ...acc,
-              [key]: deepMerge((body.value as IJsBodyValue)[key], value),
+              [key]: value,
             };
-          }
-          return {
-            ...acc,
-            [key]: value,
-          };
-        }, {}),
+          },
+          {}
+        ),
       },
     } as T;
   }
-  if (body.type === 'array' && body2.type === 'array') {
-    return {
-      type: 'array',
-      value: [...(body.value as IJsValue[]), ...(body2.value as IJsValue[])],
-    } as T;
+  if (Array.isArray(body) && Array.isArray(body2)) {
+    return [...(body as IJsValue[]), ...(body2 as IJsValue[])] as T;
   }
 
   return body2;
 };
 
-export const varObjectBuilder = (
+export const varObjectBuilder = <Key extends string>(
   name: string,
   defaultValue: {
     body: IJsBodyValue;
     decorate: 'const' | 'let' | 'var';
     export: boolean;
     type?: IType;
+    key?: Key;
   } = {
     body: {},
     decorate: 'const',
     export: false,
   }
-): IVarObjectBuilder => {
+): IVarObjectBuilder<Key> => {
   function build() {
     const typeStr = defaultValue.type
       ? `: ${writeType(defaultValue.type)}`
@@ -75,8 +85,8 @@ export const varObjectBuilder = (
       varObjectBuilder(name, {
         ...defaultValue,
         body: deepMerge<IJsObjectValue>(
-          { type: 'object', value: defaultValue.body },
-          { type: 'object', value: body }
+          objectValue(defaultValue.body),
+          objectValue(body)
         ).value,
       }),
     markExport: () =>
@@ -96,6 +106,15 @@ export const varObjectBuilder = (
       }),
     toString() {
       return build();
+    },
+    get key() {
+      return defaultValue.key;
+    },
+    setKey<NewKey extends string>(key: NewKey) {
+      return varObjectBuilder(name, {
+        ...defaultValue,
+        key,
+      });
     },
   };
 };

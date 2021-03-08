@@ -13,7 +13,8 @@ export type IGenericInterfaceBuilder = IInterfaceBuilder<
   ReadonlyArray<IGenericValue<string, IGenericOptions | undefined>>,
   IBodyType,
   boolean,
-  IIdentifierType<IEntityBuilder<'interface', string>> | undefined
+  IIdentifierType<IEntityBuilder<'interface', string>> | undefined,
+  string
 >;
 export interface IInterfaceBuilder<
   Name extends string,
@@ -24,8 +25,9 @@ export interface IInterfaceBuilder<
   Exported extends boolean,
   Extend extends
     | IIdentifierType<IEntityBuilder<'interface', string>>
-    | undefined
-> extends IEntityBuilder<'interface', Name> {
+    | undefined,
+  Key extends string
+> extends IEntityBuilder<'interface', Name, Key> {
   type: 'interface';
   addGeneric<
     N extends string,
@@ -36,16 +38,19 @@ export interface IInterfaceBuilder<
   >(
     name: N,
     options?: Options
-  ): IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend>;
+  ): IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend, Key>;
   addBody<T extends IBodyType>(
     body: T
-  ): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend>;
+  ): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend, Key>;
   extends<T extends IEntityBuilder<'interface', string>>(
     type: T
-  ): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
-  markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
+  ): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>, Key>;
+  markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend, Key>;
   body: Body;
   generics: Generics;
+  setKey<NewKey extends string>(
+    key: NewKey
+  ): IInterfaceBuilder<Name, Generics, Body, Exported, Extend, NewKey>;
 }
 
 type Combine<T, K> = {
@@ -63,7 +68,8 @@ export function interfaceBuilder<
   Exported extends boolean = false,
   Extend extends
     | IIdentifierType<IEntityBuilder<'interface', string>>
-    | undefined = undefined
+    | undefined = undefined,
+  Key extends string = string
 >(
   interfaceName: Name,
   defaultOptions: {
@@ -71,11 +77,12 @@ export function interfaceBuilder<
     extends?: Extend;
     body: Body;
     export: boolean;
+    key?: Key;
   } = {
     body: {} as Body,
     export: false,
   }
-): IInterfaceBuilder<Name, Generics, Body, Exported, Extend> {
+): IInterfaceBuilder<Name, Generics, Body, Exported, Extend, Key> {
   function build(): string {
     const extendsStr = defaultOptions.extends
       ? ` extends ${writeType(defaultOptions.extends)}`
@@ -100,7 +107,14 @@ export function interfaceBuilder<
           ...(defaultOptions.generics ?? []),
           { name, options },
         ] as readonly IGenericValue[],
-      }) as IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend>;
+      }) as IInterfaceBuilder<
+        Name,
+        [...Generics, T],
+        Body,
+        Exported,
+        Extend,
+        Key
+      >;
     },
     addBody<T extends IBodyType>(body: T) {
       return interfaceBuilder(interfaceName, {
@@ -131,8 +145,17 @@ export function interfaceBuilder<
     get body() {
       return defaultOptions.body;
     },
+    get key() {
+      return defaultOptions.key;
+    },
     get generics() {
       return (defaultOptions.generics ?? []) as Generics;
+    },
+    setKey<NewKey extends string>(key: NewKey) {
+      return interfaceBuilder(interfaceName, {
+        ...defaultOptions,
+        key,
+      });
     },
   };
 }

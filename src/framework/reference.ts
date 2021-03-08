@@ -10,30 +10,15 @@ import { BuilderExports, GetInputs, OutputModule, TSCGenInputs } from './types';
 
 export async function getReference<
   Inputs extends GetInputs,
-  MappedExports extends [...IEntityBuilder[]],
-  StaticExports extends [...IEntityBuilder[]],
-  MappedBuilders extends BuilderExports<MappedExports>,
+  MappedExports extends ReadonlyArray<string>,
+  StaticExports extends ReadonlyArray<string>,
   StaticBuilders extends BuilderExports<StaticExports>
 >(
   importFile: Promise<
-    OutputModule<
-      Inputs,
-      MappedExports,
-      StaticExports,
-      MappedBuilders,
-      StaticBuilders
-    >
+    OutputModule<Inputs, MappedExports, StaticExports, StaticBuilders>
   >,
   callerPath: string
-): Promise<
-  IReference<
-    Inputs,
-    MappedExports,
-    StaticExports,
-    MappedBuilders,
-    StaticBuilders
-  >
-> {
+): Promise<IReference<Inputs, MappedExports, StaticExports, StaticBuilders>> {
   const res = await importFile;
   if (!res.getPath) {
     throw new Error(
@@ -43,32 +28,48 @@ export async function getReference<
   return {
     raw: res,
     // eslint-disable-next-line @typescript-eslint/typedef
-    async referenceMappedExports(options) {
+    referenceMappedExports<K extends ReadonlyArray<MappedExports[number]>>(
+      ...picks: K
+    ) {
       if (!res.getPath) {
         throw new Error("File doesn't reference a path");
       }
-
-      const ctx = (
-        await createContext(
-          res.getInputs!,
-          res.getMappedExports!,
-          res.getPath,
-          options
-        )
-      ).map((val) => ({
-        ...val,
-        data: options.pick(val.exports),
-      }));
+      const set = new Set(picks);
 
       return {
-        exports: ctx.map((val) => val.data),
-        imports: ctx.map(({ data, inputData }) => {
-          return importBuilder()
-            .addModules(data)
-            .addImportLocation(
-              getFilename(res.getPath, callerPath, inputData.params)
-            );
-        }),
+        filter: async (method) => {
+          const ctx = (
+            await createContext(
+              res.getInputs!,
+              res.getMappedExports!,
+              res.getPath,
+              { filter: method }
+            )
+          ).map((val) => ({
+            ...val,
+            data: val.exports,
+          }));
+
+          return {
+            exports: ctx.flatMap(
+              (val) =>
+                (Object.entries(val.data.values)
+                  .filter(([key]) => set.has(key))
+                  .map(([, value]) => value) as unknown) as KeyOfEntity<K>
+            ),
+            imports: ctx.map(({ data: { values }, inputData }) => {
+              return importBuilder()
+                .addModules(
+                  ...Object.entries(values)
+                    .filter(([key]) => set.has(key))
+                    .map(([, value]) => value as IEntityBuilder)
+                )
+                .addImportLocation(
+                  getFilename(res.getPath, callerPath, inputData.params)
+                );
+            }),
+          };
+        },
       };
     },
   };
@@ -76,32 +77,29 @@ export async function getReference<
 
 interface IReference<
   Inputs extends GetInputs,
-  MappedExports extends [...IEntityBuilder[]],
-  StaticExports extends [...IEntityBuilder[]],
-  MappedBuilders extends BuilderExports<MappedExports>,
+  MappedExports extends ReadonlyArray<string>,
+  StaticExports extends ReadonlyArray<string>,
   StaticBuilders extends BuilderExports<StaticExports>
 > {
-  raw: OutputModule<
-    Inputs,
-    MappedExports,
-    StaticExports,
-    MappedBuilders,
-    StaticBuilders
-  >;
+  raw: OutputModule<Inputs, MappedExports, StaticExports, StaticBuilders>;
   /**
    *
    * @param options filter and pick
    */
-  referenceMappedExports<K extends MappedBuilders['exports'][number]>(options: {
-    filter?: (data: TSCGenInputs<Inputs>) => boolean;
-    /**
-     * Pick the specific entity builder from the list of exported entities of that file
-     */
-    pick: (value: MappedBuilders['exports']) => K;
-  }): Promise<{
-    exports: Array<K>;
-    imports: Array<
-      IImportBuilder<BuildersToImport<[K]>, undefined, undefined, string>
-    >;
-  }>;
+  referenceMappedExports<K extends ReadonlyArray<MappedExports[number]>>(
+    ...pick: K
+  ): {
+    filter: (
+      query: (input: TSCGenInputs<Inputs>) => boolean
+    ) => Promise<{
+      exports: KeyOfEntity<K>;
+      imports: Array<
+        IImportBuilder<BuildersToImport<[K]>, undefined, undefined, string>
+      >;
+    }>;
+  };
 }
+
+type KeyOfEntity<T> = {
+  [Key in keyof T]: T[Key] extends string ? IEntityBuilder : never;
+};

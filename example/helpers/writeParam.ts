@@ -1,6 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import * as tscgen from '../../src/lib';
-import { handleRef } from './writeSchema.helper';
+import { handleRef } from './writeSchema';
 
 export const writeParam = (
   params: OpenAPIV3.OperationObject['parameters'],

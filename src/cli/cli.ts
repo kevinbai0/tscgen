@@ -97,7 +97,12 @@ async function writeGroup(
     const ctx = (
       await createContext(res.getInputs!, res.getMappedExports!, res.getPath!)
     ).map(async ({ imports, exports, inputData }) => {
-      const fileData = await format(combine(...(imports ?? []), ...exports));
+      const fileData = await format(
+        combine(
+          ...(imports ?? []),
+          ...exports.order.map((key) => exports.values[key])
+        )
+      );
       await writeFile(inputData, filePath, fileData, context);
     });
 
@@ -108,7 +113,10 @@ async function writeGroup(
   if (res.getStaticExports) {
     const outputData = await res.getStaticExports();
     const fileData = await format(
-      combine(...(outputData.imports ?? []), ...outputData.exports)
+      combine(
+        ...(outputData.imports ?? []),
+        ...outputData.exports.order.map((key) => outputData.exports.values[key])
+      )
     );
     await writeFile(
       { params: {}, data: undefined },

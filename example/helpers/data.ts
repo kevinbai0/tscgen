@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { OpenAPI, OpenAPIV3 } from 'openapi-types';
+import { OpenAPIV3 } from 'openapi-types';
 
 let openApiData: OpenAPIV3.Document | undefined;
 
 const getData = (): OpenAPIV3.Document => {
   if (!openApiData) {
-    const file = fs.readFileSync(path.join(__dirname, 'main.json'), 'utf-8');
+    const file = fs.readFileSync(path.join(__dirname, '../main.json'), 'utf-8');
     openApiData = JSON.parse(file);
     return openApiData!;
   }

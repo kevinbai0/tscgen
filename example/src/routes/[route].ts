@@ -1,7 +1,7 @@
 import * as tscgen from '../../../src/framework';
-import { getPaths } from '../data.helper';
-import { writeParam } from '../writeParam.helper';
-import { writeRequestBody } from '../writeRequestBody.helper';
+import { getPaths } from '../../helpers/data';
+import { writeParam } from '../../helpers/writeParam';
+import { writeRequestBody } from '../../helpers/writeRequestBody';
 
 export const getPath = __filename;
 
@@ -20,9 +20,9 @@ export const getInputs = tscgen.createInputsExport(() => {
   }));
 });
 
-export const getMappedExports = tscgen.createMappedExports(
+export const getMappedExports = tscgen.createMappedExports('route')(
   getInputs,
-  async ({ data, params, context }) => {
+  async ({ data, params }) => {
     const method = data.pathInfo.method;
 
     const pathParams = writeParam(
@@ -41,10 +41,9 @@ export const getMappedExports = tscgen.createMappedExports(
 
     const requestBody = await writeRequestBody(data.pathInfo.requestBody, {
       resolveReference: async (ref) => {
-        const res = await modelsRef.referenceMappedExports({
-          filter: (data) => data.data.name === ref,
-          pick: ([builder]) => builder,
-        });
+        const res = await modelsRef
+          .referenceMappedExports('routes')
+          .filter((data) => data.data.name === ref);
         return {
           typeIdentifier: tscgen.identifierType(res.exports[0]),
           importValue: res.imports[0],
@@ -52,22 +51,41 @@ export const getMappedExports = tscgen.createMappedExports(
       },
     });
 
+    const requestBodyUnion = tscgen.unionType(
+      requestBody.flatMap((body) => body.type)
+    );
+
+    const combinedType = (() => {
+      if (queryParams && requestBodyUnion.definition.length) {
+        return tscgen.objectType({
+          query: queryParams,
+          body: requestBodyUnion,
+        });
+      } else {
+        return queryParams ?? requestBodyUnion;
+      }
+    })();
+
     return {
       imports: requestBody.flatMap((body) => body.imports),
-      exports: [
-        tscgen
-          .interfaceBuilder(params.route)
-          .markExport()
-          .addBody({
-            method: tscgen.stringType(method),
-            path: tscgen.stringType(data.route),
-            params: pathParams ?? tscgen.undefinedType(),
-            query: queryParams ?? tscgen.undefinedType(),
-            requestBody: tscgen.unionType(
-              requestBody.flatMap((body) => body.type)
-            ),
-          }),
-      ],
+      exports: {
+        get route() {
+          return tscgen
+            .typeDefBuilder(params.route)
+            .markExport()
+            .setKey('IRoute')
+            .addUnion(
+              tscgen.objectType({
+                method: tscgen.stringType(method),
+                path: tscgen.stringType(data.route),
+                params: pathParams ?? tscgen.undefinedType(),
+                query: queryParams ?? tscgen.undefinedType(),
+                requestBody: requestBodyUnion,
+                combined: combinedType,
+              })
+            );
+        },
+      },
     };
   }
 );

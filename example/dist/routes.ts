@@ -16,12 +16,14 @@ export type Routes = {
   DeletePetRoute: DeletePetRoute;
 };
 
-export const routesData: {
+export type RoutesData = {
   [Key in keyof Routes]: {
     route: Routes[Key]['path'];
     method: Routes[Key]['method'];
   };
-} = {
+};
+
+export const routesData: RoutesData = {
   FindPetsRoute: { route: '/pets', method: 'get' },
   AddPetRoute: { route: '/pets', method: 'post' },
   FindByPetIdRoute: { route: '/pets/{id}', method: 'get' },

@@ -3,47 +3,30 @@ import { getInputs } from './routes/[route]';
 
 export const getPath = __filename;
 
-export const getStaticExports = tscgen.createStaticExports(async () => {
+export const getStaticExports = tscgen.createStaticExports(
+  'Route',
+  'Routes',
+  'RoutesData',
+  'routesData'
+)(async () => {
   const references = await tscgen.getReference(
     import('./routes/[route]'),
     __filename
   );
-  const { imports, exports } = await references.referenceMappedExports({
-    pick: ([val]) => val,
-  });
+  const { imports, exports } = await references
+    .referenceMappedExports('route')
+    .filter(() => true);
 
   const pathsData = await getInputs();
 
-  const routesDataBase = tscgen
-    .varObjectBuilder('routesData')
-    .addTypeDef(
-      tscgen.objectType({
-        [`[Key in keyof Routes]`]: tscgen.objectType({
-          route: tscgen.rawType(`Routes[Key]['path']`),
-          method: tscgen.rawType(`Routes[Key]['method']`),
-        }),
-      })
-    )
-    .markExport();
-  const routesData = pathsData.reduce(
-    (acc, data) =>
-      acc.addBody({
-        [data.params.route!]: tscgen.objectValue({
-          route: data.data.route,
-          method: data.data.pathInfo.method,
-        }),
-      }),
-    routesDataBase
-  );
-
   return {
     imports,
-    exports: [
-      tscgen
+    exports: {
+      Route: tscgen
         .typeDefBuilder('Route')
         .markExport()
         .addUnion(...exports.map((builder) => tscgen.identifierType(builder))),
-      tscgen
+      Routes: tscgen
         .typeDefBuilder('Routes')
         .markExport()
         .addUnion(
@@ -54,7 +37,35 @@ export const getStaticExports = tscgen.createStaticExports(async () => {
             };
           })
         ),
-      routesData,
-    ],
+      RoutesData: tscgen
+        .typeDefBuilder('RoutesData')
+        .addUnion(
+          tscgen.objectType({
+            [`[Key in keyof Routes]`]: tscgen.objectType({
+              route: tscgen.rawType(`Routes[Key]['path']`),
+              method: tscgen.rawType(`Routes[Key]['method']`),
+            }),
+          })
+        )
+        .markExport(),
+      get routesData() {
+        return tscgen
+          .varObjectBuilder('routesData')
+          .markExport()
+          .addTypeDef(tscgen.identifierType(this.RoutesData))
+          .addBody(
+            pathsData.reduce(
+              (acc, data) => ({
+                ...acc,
+                [data.params.route]: tscgen.objectValue({
+                  route: data.data.route,
+                  method: data.data.pathInfo.method,
+                }),
+              }),
+              {}
+            )
+          );
+      },
+    },
   };
 });
