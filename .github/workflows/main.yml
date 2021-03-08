@@ -23,7 +23,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Runs the Super-Linter action
       - name: Install dependencies
         run: node common/scripts/install-run-rush.js install
         env:

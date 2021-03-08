@@ -1,0 +1,25 @@
+{
+  "name": "tscgen-cli",
+  "version": "0.0.15",
+  "license": "MIT",
+  "bin": {
+    "tscgen": "cli.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@kevinbai/lint-rules": "^1.0.2",
+    "@types/node": "^14.14.32",
+    "eslint": "^7.21.0",
+    "tscgen": "workspace:*",
+    "tscgen-framework": "workspace:*",
+    "typescript": "^4.2.3",
+    "@types/js-yaml": "^4.0.0",
+    "@types/eslint": "^7.2.6"
+  },
+  "dependencies": {
+    "js-yaml": "^4.0.0",
+    "ts-node": "^9.1.1"
+  }
+}

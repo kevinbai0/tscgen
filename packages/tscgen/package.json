@@ -2,10 +2,10 @@
   "name": "tscgen",
   "version": "0.0.15",
   "description": "",
-  "main": "lib/framework/index.js",
-  "types": "lib/framework/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "build": "tsc --project build/tsconfig.build.json",
@@ -19,14 +19,14 @@
   },
   "keywords": [],
   "author": "Kevin Bai",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.14.1",
-    "@tabtabapp/lint-rules": "^1.0.9",
+    "@kevinbai/lint-rules": "^1.0.2",
     "@types/chai": "^4.2.15",
     "@types/eslint": "^7.2.6",
     "@types/mocha": "^8.2.1",
-    "@types/node": "^14.14.31",
+    "@types/node": "^14.14.32",
     "chai": "^4.3.1",
     "eslint": "^7.21.0",
     "mocha": "^8.3.0",

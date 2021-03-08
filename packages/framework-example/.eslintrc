@@ -1,8 +1,5 @@
 {
-  "extends": "./node_modules/@kevinbai/lint-rules/node/.eslintrc.js",
-  "env": {
-    "mocha": true
-  },
+  "extends": "./node_modules/@kevinbai/lint-rules/node/.eslintrc",
   "rules": {
     "@rushstack/typedef-var": 0,
     "@typescript-eslint/consistent-type-definitions": 0,

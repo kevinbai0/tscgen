@@ -393,6 +393,21 @@
       "packageName": "tscgen",
       "projectFolder": "packages/tscgen",
       "shouldPublish": true
+    },
+    {
+      "packageName": "tscgen-framework",
+      "projectFolder": "packages/framework",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "tscgen-cli",
+      "projectFolder": "packages/cli",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "tscgen-framework-example",
+      "projectFolder": "packages/framework-example",
+      "shouldPublish": false
     }
     // {
     //   /**
