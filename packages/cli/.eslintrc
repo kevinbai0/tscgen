@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@tabtabapp/lint-rules/node/.eslintrc",
+  "extends": "./node_modules/@kevinbai/lint-rules/node/.eslintrc",
   "rules": {
     "@rushstack/typedef-var": 0,
     "@typescript-eslint/consistent-type-definitions": 0,
