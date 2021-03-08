@@ -73,7 +73,6 @@ export const getMappedExports = tscgen.createMappedExports('route')(
           return tscgen
             .typeDefBuilder(params.route)
             .markExport()
-            .setKey('IRoute')
             .addUnion(
               tscgen.objectType({
                 method: tscgen.stringType(method),

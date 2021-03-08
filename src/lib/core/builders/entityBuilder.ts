@@ -16,13 +16,10 @@ export interface IBaseBuilder<
 }
 export interface IEntityBuilder<
   Type extends IEntityBuilderTypes = IEntityBuilderTypes,
-  Name extends string = string,
-  Key extends string = string
+  Name extends string = string
 > {
   type: Type;
-  key?: Key;
-  setKey<T extends string>(key: T): IEntityBuilder<Type, Name, T>;
   toString(): string;
   varName: Name;
-  markExport(): IEntityBuilder<Type, Name, Key>;
+  markExport(): IEntityBuilder<Type, Name>;
 }
