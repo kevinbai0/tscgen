@@ -1,16 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { expect } from 'chai';
-import * as tscgen from '../src/index';
-
-import {
-  booleanType,
-  genericType,
-  stringType,
-  undefinedType,
-} from '../src/index';
-import { routes } from './config/sample';
-import { Query } from './config/types';
+import { routes } from '@tests/config/sample';
+import { Query } from '@tests/config/types';
+import * as tscgen from 'tscgen';
 
 const cleanQuery = (query: Query[keyof Query]) =>
   typeof query === 'string'
@@ -29,9 +22,7 @@ type CleanBreadcrumbs = {
   dependsOn?: string[];
 };
 
-const format = tscgen.createFormatter(
-  path.resolve(__dirname, '../src/index.ts')
-);
+const format = tscgen.createFormatter(__filename);
 
 describe('Generates routes correctly', () => {
   it('generates sample test correctly', async () => {
@@ -39,7 +30,9 @@ describe('Generates routes correctly', () => {
       return tscgen.mapObject(query ?? {}, (value) => {
         const q = cleanQuery(value);
         return [
-          q.type === 'string' ? stringType() : tscgen.arrayType(stringType()),
+          q.type === 'string'
+            ? tscgen.stringType()
+            : tscgen.arrayType(tscgen.stringType()),
           q.required,
         ];
       });
@@ -63,7 +56,7 @@ describe('Generates routes correctly', () => {
         route: tscgen.stringType(route.route),
         params: route.params?.length
           ? tscgen.stringTuple(...route.params)
-          : undefinedType(),
+          : tscgen.undefinedType(),
         query: tscgen.objectType(writeQueryBody(route.query)),
         breadcrumbs: tscgen.objectType(
           writeBreadcrumbs(route.breadcrumb as CleanBreadcrumbs)
@@ -81,7 +74,7 @@ describe('Generates routes correctly', () => {
       );
 
     const sampleOutput = await fs.promises.readFile(
-      path.join(__dirname, 'config/output.snapshot.ts'),
+      path.join('tests/config/output.snapshot.ts'),
       'utf-8'
     );
 
@@ -106,7 +99,7 @@ describe('Generates routes correctly', () => {
 
   it('works with interface extends identifier', async () => {
     const parent = tscgen.interfaceBuilder('IParent').addBody({
-      name: stringType(),
+      name: tscgen.stringType(),
     });
     const build = tscgen
       .interfaceBuilder('IExtendable')
@@ -134,7 +127,7 @@ describe('Generates routes correctly', () => {
       .addUnion(
         tscgen.readonly(
           tscgen.objectType({
-            name: stringType(),
+            name: tscgen.stringType(),
           })
         )
       );
@@ -162,10 +155,10 @@ describe('Generates routes correctly', () => {
   it('union types', async () => {
     const union = tscgen.unionType([
       tscgen.objectType({
-        name: stringType(),
+        name: tscgen.stringType(),
       }),
       tscgen.objectType({
-        name: booleanType(),
+        name: tscgen.booleanType(),
       }),
     ]);
 
@@ -186,7 +179,7 @@ describe('Generates routes correctly', () => {
         tscgen.objectType({
           success: tscgen.booleanType(true),
           status: tscgen.numberType(),
-          data: genericType('T'),
+          data: tscgen.genericType('T'),
         })
       )
       .addUnion(

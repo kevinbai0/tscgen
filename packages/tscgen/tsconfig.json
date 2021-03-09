@@ -5,9 +5,19 @@
 		"module": "CommonJS",
 		"esModuleInterop": true,
 		"lib": ["ES2020"],
-		"noEmit": true
+		"outDir": "dist/types",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": true,
+		"baseUrl": ".",
+		"paths": {
+			"@tests": ["tests"],
+			"@tests/*": ["tests/*"],
+			"tscgen": ["src"],
+			"tscgen/*": ["src/*"]
+		}
 	},
 	"include": [
-		"src", "test"	
+		"src", "tests"	
 	]
 }

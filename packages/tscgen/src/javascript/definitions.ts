@@ -1,8 +1,8 @@
+import { IJsBodyValue, IJsIdentifierValue, IJsObjectValue } from './types';
 import {
   IEntityBuilder,
   IEntityBuilderTypes,
-} from '../core/builders/entityBuilder';
-import { IJsBodyValue, IJsIdentifierValue, IJsObjectValue } from './types';
+} from 'tscgen/core/builders/entityBuilder';
 
 export function objectValue(value: IJsBodyValue): IJsObjectValue {
   return {

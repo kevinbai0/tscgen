@@ -67,6 +67,7 @@ importers:
       '@types/mocha': 8.2.1
       '@types/node': 14.14.32
       chai: 4.3.3
+      esbuild: 0.8.57
       eslint: 7.21.0
       mocha: 8.3.1
       openapi-types: 7.2.3
@@ -80,6 +81,7 @@ importers:
       '@types/mocha': ^8.2.1
       '@types/node': ^14.14.32
       chai: ^4.3.1
+      esbuild: ~0.8.57
       eslint: ^7.21.0
       mocha: ^8.3.0
       openapi-types: ^7.2.3
@@ -1170,6 +1172,12 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
+  /esbuild/0.8.57:
+    dev: true
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-j02SFrUwFTRUqiY0Kjplwjm1psuzO1d6AjaXKuOR9hrY0HuPsT6sV42B6myW34h1q4CRy+Y3g4RU/cGJeI/nNA==
   /escalade/3.1.1:
     dev: true
     engines:

@@ -1,10 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist",
-    "declaration": true,
-    "target": "ESNext",
-    "noEmit": false
+    "isolatedModules": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "baseUrl": "../src",
+    "paths": {
+      "tscgen": ["."],
+			"tscgen/*": ["./*"]
+    }
   },
-  "include": ["../src"]
+  "include": ["../src"],
+  "exclude": ["../**/*.test.ts", "../tests"]
 }

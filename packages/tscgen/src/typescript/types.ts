@@ -1,7 +1,7 @@
 import {
   IEntityBuilder,
   IEntityBuilderTypes,
-} from '../core/builders/entityBuilder';
+} from 'tscgen/core/builders/entityBuilder';
 
 export type IGenericOptions =
   | {

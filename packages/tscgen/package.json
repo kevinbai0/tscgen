@@ -2,18 +2,18 @@
   "name": "tscgen",
   "version": "0.0.15",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/main/tscgen.js",
+  "types": "dist/main/tscgen.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project build/tsconfig.build.json",
+    "build": "node build/build.js && tsc --project build/tsconfig.build.json && api-extractor run --local",
     "example": "ts-node --transpile-only src/cli/cli.ts",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
     "start": "ts-node --transpile-only src/index.ts",
-    "test": "mocha -r ts-node/register **/*.test.ts --timeout 5000",
+    "test": "mocha -r ts-node/register  -r tsconfig-paths/register src/**/*.test.ts --timeout 5000",
     "changeset": "changeset && changeset version",
     "changeset:publish": "./scripts/publish.sh"
   },
@@ -32,6 +32,7 @@
     "mocha": "^8.3.0",
     "openapi-types": "^7.2.3",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "esbuild": "~0.8.57"
   }
 }

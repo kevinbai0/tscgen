@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as tscgen from '../src/index';
+import * as tscgen from 'tscgen';
 
 describe('writes javascript object code', () => {
   it('works', async () => {
