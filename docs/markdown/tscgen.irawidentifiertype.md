@@ -4,7 +4,7 @@
 
 ## IRawIdentifierType type
 
-Any raw string to include that isn't supported (i.e. Key extends string)
+Any raw string to include that isn't supported (i.e. `Key extends string`<!-- -->)
 
 <b>Signature:</b>
 

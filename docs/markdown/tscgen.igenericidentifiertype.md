@@ -4,7 +4,7 @@
 
 ## IGenericIdentifierType type
 
-Represents a generic type name (i.e. <T> or <S>)
+Represents a generic type name (i.e. `<T>` or `<S>`<!-- -->)
 
 <b>Signature:</b>
 

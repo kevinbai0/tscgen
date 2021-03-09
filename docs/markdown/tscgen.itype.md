@@ -4,7 +4,7 @@
 
 ## IType type
 
-Union of all the possible types
+Represents a Typescript type
 
 <b>Signature:</b>
 

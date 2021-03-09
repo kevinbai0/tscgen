@@ -4,7 +4,7 @@
 
 ## IBooleanType interface
 
-Represents a primitive boolean type
+Represents the `boolean` type
 
 <b>Signature:</b>
 

@@ -4,7 +4,7 @@
 
 ## IGenericValue type
 
-Represents a generic value with (i.e. &lt;<!-- -->T extends string<!-- -->&gt;<!-- -->)
+Represents a generic value with (i.e. `\<T extends string\>`<!-- -->)
 
 <b>Signature:</b>
 

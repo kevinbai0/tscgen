@@ -4,7 +4,7 @@
 
 ## IArrayType interface
 
-Represents an array type string type
+Represents the `Array<T>` type
 
 <b>Signature:</b>
 

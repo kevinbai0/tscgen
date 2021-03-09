@@ -4,7 +4,7 @@
 
 ## ILazyType interface
 
-Represents lazy type to be computed when written
+Represents a lazy type to be computed on write
 
 <b>Signature:</b>
 

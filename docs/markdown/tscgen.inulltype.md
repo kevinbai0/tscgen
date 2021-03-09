@@ -4,7 +4,7 @@
 
 ## INullType interface
 
-Represents a null type
+Represents the `null` type
 
 <b>Signature:</b>
 

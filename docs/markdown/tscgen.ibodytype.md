@@ -4,7 +4,7 @@
 
 ## IBodyType interface
 
-Body of object type, with keys being string, and values being IType or \[IType, boolean\] - where \[IType, false\] means it's not a required string
+Body of object type, with keys being `string`<!-- -->, and values being `IType` or `[IType, boolean]` - where `[IType, false]` means it's not a required value
 
 <b>Signature:</b>
 

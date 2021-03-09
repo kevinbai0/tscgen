@@ -4,7 +4,7 @@
 
 ## INumberLiteralType interface
 
-Represents a number literal such as 42
+Represents a number literal such as `42`
 
 <b>Signature:</b>
 

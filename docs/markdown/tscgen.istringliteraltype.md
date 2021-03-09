@@ -4,7 +4,7 @@
 
 ## IStringLiteralType interface
 
-Represents a string literal such as 'hello'
+Represents a string literal such as `'hello'`
 
 <b>Signature:</b>
 

@@ -4,7 +4,7 @@
 
 ## INumberType interface
 
-Represents a primitive number type
+Represents the `number` type
 
 <b>Signature:</b>
 

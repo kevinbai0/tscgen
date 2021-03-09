@@ -4,7 +4,7 @@
 
 ## ITupleType interface
 
-Represents an array type string type
+Represents a tuple type `[...T[]]`
 
 <b>Signature:</b>
 

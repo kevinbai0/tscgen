@@ -47,11 +47,11 @@
 
 |  Interface | Description |
 |  --- | --- |
-|  [IArrayType](./tscgen.iarraytype.md) | Represents an array type string type |
+|  [IArrayType](./tscgen.iarraytype.md) | Represents the <code>Array&lt;T&gt;</code> type |
 |  [IBaseBuilder](./tscgen.ibasebuilder.md) |  |
-|  [IBodyType](./tscgen.ibodytype.md) | Body of object type, with keys being string, and values being IType or \[IType, boolean\] - where \[IType, false\] means it's not a required string |
-|  [IBooleanLiteralType](./tscgen.ibooleanliteraltype.md) | Represents a boolean literal (true or false) |
-|  [IBooleanType](./tscgen.ibooleantype.md) | Represents a primitive boolean type |
+|  [IBodyType](./tscgen.ibodytype.md) | Body of object type, with keys being <code>string</code>, and values being <code>IType</code> or <code>[IType, boolean]</code> - where <code>[IType, false]</code> means it's not a required value |
+|  [IBooleanLiteralType](./tscgen.ibooleanliteraltype.md) | Represents a boolean literal <code>true</code> or <code>false</code> |
+|  [IBooleanType](./tscgen.ibooleantype.md) | Represents the <code>boolean</code> type |
 |  [IDecorationType](./tscgen.idecorationtype.md) |  |
 |  [IEntityBuilder](./tscgen.ientitybuilder.md) |  |
 |  [IIdentifierType](./tscgen.iidentifiertype.md) | Represents an identifier type to be referenced |
@@ -62,21 +62,21 @@
 |  [IImportLocationType](./tscgen.iimportlocationtype.md) |  |
 |  [IImportModuleType](./tscgen.iimportmoduletype.md) |  |
 |  [IInterfaceBuilder](./tscgen.iinterfacebuilder.md) | Represents an interface |
-|  [IIntersectionType](./tscgen.iintersectiontype.md) | Represents intersection type (i.e. A &amp; B &amp; C) |
+|  [IIntersectionType](./tscgen.iintersectiontype.md) | Represents an intersection type (i.e. <code>A &amp; B &amp; C</code>) |
 |  [IJsBodyValue](./tscgen.ijsbodyvalue.md) |  |
 |  [IJsIdentifierValue](./tscgen.ijsidentifiervalue.md) |  |
 |  [IJsObjectValue](./tscgen.ijsobjectvalue.md) |  |
-|  [ILazyType](./tscgen.ilazytype.md) | Represents lazy type to be computed when written |
-|  [INullType](./tscgen.inulltype.md) | Represents a null type |
-|  [INumberLiteralType](./tscgen.inumberliteraltype.md) | Represents a number literal such as 42 |
-|  [INumberType](./tscgen.inumbertype.md) | Represents a primitive number type |
+|  [ILazyType](./tscgen.ilazytype.md) | Represents a lazy type to be computed on write |
+|  [INullType](./tscgen.inulltype.md) | Represents the <code>null</code> type |
+|  [INumberLiteralType](./tscgen.inumberliteraltype.md) | Represents a number literal such as <code>42</code> |
+|  [INumberType](./tscgen.inumbertype.md) | Represents the <code>number</code> type |
 |  [IRawTypePropertyType](./tscgen.irawtypepropertytype.md) |  |
-|  [IStringLiteralType](./tscgen.istringliteraltype.md) | Represents a string literal such as 'hello' |
-|  [IStringType](./tscgen.istringtype.md) | Represents a primitive string type |
-|  [ITupleType](./tscgen.itupletype.md) | Represents an array type string type |
+|  [IStringLiteralType](./tscgen.istringliteraltype.md) | Represents a string literal such as <code>'hello'</code> |
+|  [IStringType](./tscgen.istringtype.md) | Represents the <code>string</code> type |
+|  [ITupleType](./tscgen.itupletype.md) | Represents a tuple type <code>[...T[]]</code> |
 |  [ITypeDefBuilder](./tscgen.itypedefbuilder.md) |  |
-|  [IUndefinedType](./tscgen.iundefinedtype.md) | Represents undefined type |
-|  [IUnionType](./tscgen.iuniontype.md) | Represents a union type (i.e. A \| B \| C) |
+|  [IUndefinedType](./tscgen.iundefinedtype.md) | Represents the <code>undefined</code> type |
+|  [IUnionType](./tscgen.iuniontype.md) | Represents a union type (i.e. <code>A &#124; B &#124; C</code>) |
 |  [IVarObjectBuilder](./tscgen.ivarobjectbuilder.md) |  |
 
 ## Variables
@@ -96,11 +96,11 @@
 |  [Formatter](./tscgen.formatter.md) |  |
 |  [IBaseBuilderTypes](./tscgen.ibasebuildertypes.md) |  |
 |  [IEntityBuilderTypes](./tscgen.ientitybuildertypes.md) |  |
-|  [IGenericIdentifierType](./tscgen.igenericidentifiertype.md) | Represents a generic type name (i.e. <T> or <S>) |
+|  [IGenericIdentifierType](./tscgen.igenericidentifiertype.md) | Represents a generic type name (i.e. <code>&lt;T&gt;</code> or <code>&lt;S&gt;</code>) |
 |  [IGenericInterfaceBuilder](./tscgen.igenericinterfacebuilder.md) |  |
 |  [IGenericOptions](./tscgen.igenericoptions.md) | The default value and extends clause of a generic type |
 |  [IGenericTypeDefBuilder](./tscgen.igenerictypedefbuilder.md) |  |
-|  [IGenericValue](./tscgen.igenericvalue.md) | Represents a generic value with (i.e. &lt;<!-- -->T extends string<!-- -->&gt;<!-- -->) |
+|  [IGenericValue](./tscgen.igenericvalue.md) | Represents a generic value with (i.e. <code>\&lt;T extends string\&gt;</code>) |
 |  [IImportBuilderTypes](./tscgen.iimportbuildertypes.md) |  |
 |  [IImportType](./tscgen.iimporttype.md) |  |
 |  [IJavascriptBuilderTypes](./tscgen.ijavascriptbuildertypes.md) |  |
@@ -109,9 +109,9 @@
 |  [IJsNumberValue](./tscgen.ijsnumbervalue.md) |  |
 |  [IJsStringValue](./tscgen.ijsstringvalue.md) |  |
 |  [IJsValue](./tscgen.ijsvalue.md) |  |
-|  [IObjectType](./tscgen.iobjecttype.md) | Represents a strongly typed object i.e. { name: string, value: 5 } |
-|  [IRawIdentifierType](./tscgen.irawidentifiertype.md) | Any raw string to include that isn't supported (i.e. Key extends string) |
-|  [IType](./tscgen.itype.md) | Union of all the possible types |
+|  [IObjectType](./tscgen.iobjecttype.md) | Represents a strongly typed object i.e. <code>\{ name: string, value: 5 \}</code> |
+|  [IRawIdentifierType](./tscgen.irawidentifiertype.md) | Any raw string to include that isn't supported (i.e. <code>Key extends string</code>) |
+|  [IType](./tscgen.itype.md) | Represents a Typescript type |
 |  [ITypePropertyType](./tscgen.itypepropertytype.md) |  |
 |  [ITypescriptBuilderTypes](./tscgen.itypescriptbuildertypes.md) |  |
 |  [JoinType](./tscgen.jointype.md) |  |

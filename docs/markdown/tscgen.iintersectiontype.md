@@ -4,7 +4,7 @@
 
 ## IIntersectionType interface
 
-Represents intersection type (i.e. A &amp; B &amp; C)
+Represents an intersection type (i.e. `A & B & C`<!-- -->)
 
 <b>Signature:</b>
 

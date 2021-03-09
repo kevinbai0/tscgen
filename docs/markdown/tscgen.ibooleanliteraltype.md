@@ -4,7 +4,7 @@
 
 ## IBooleanLiteralType interface
 
-Represents a boolean literal (true or false)
+Represents a boolean literal `true` or `false`
 
 <b>Signature:</b>
 

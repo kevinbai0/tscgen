@@ -4,7 +4,7 @@
 
 ## IUndefinedType interface
 
-Represents undefined type
+Represents the `undefined` type
 
 <b>Signature:</b>
 

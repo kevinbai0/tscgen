@@ -4,7 +4,7 @@
 
 ## IStringType interface
 
-Represents a primitive string type
+Represents the `string` type
 
 <b>Signature:</b>
 

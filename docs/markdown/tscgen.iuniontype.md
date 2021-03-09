@@ -4,7 +4,7 @@
 
 ## IUnionType interface
 
-Represents a union type (i.e. A \| B \| C)
+Represents a union type (i.e. `A | B | C`<!-- -->)
 
 <b>Signature:</b>
 
