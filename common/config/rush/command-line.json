@@ -11,6 +11,13 @@
    * "rush my-global-command --help".
    */
   "commands": [
+    {
+      "commandKind": "global",
+      "name": "docs",
+      "summary": "Generate docs for the codebase",
+      "description": "Generate docs for the codebase in the /docs folder",
+      "shellCommand": "./common/scripts/generate-docs.sh"
+    }
     // {
     //   /**
     //    * (Required) Determines the type of custom command.

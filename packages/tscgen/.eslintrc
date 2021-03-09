@@ -3,9 +3,13 @@
   "env": {
     "mocha": true
   },
+  "plugins": [
+    "eslint-plugin-tsdoc"
+  ],
   "rules": {
     "@rushstack/typedef-var": 0,
     "@typescript-eslint/consistent-type-definitions": 0,
-    "@typescript-eslint/explicit-function-return-type": 0
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "tsdoc/syntax": "warn"
   }
 }

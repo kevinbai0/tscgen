@@ -10,8 +10,11 @@ import { IEntityBuilderTypes as IEntityBuilderTypes_2 } from 'tscgen/core/builde
 // @public (undocumented)
 export function arrayType<T extends IType>(type: T, ...extract: ITypePropertyType[]): IArrayType<T>;
 
-// Warning: (ae-forgotten-export) The symbol "BooleanLiterals" needs to be exported by the entry point index.d.ts
-//
+// @public (undocumented)
+export type BooleanLiterals<T extends Readonly<boolean[]>> = {
+    [P in keyof T]: T[P] extends boolean ? IBooleanLiteralType<T[P]> : never;
+};
+
 // @public (undocumented)
 export function booleanTuple<T extends Readonly<boolean[]>>(...type: T): ITupleType<BooleanLiterals<T>>;
 
@@ -21,14 +24,17 @@ export function booleanType(): IBooleanType;
 // @public (undocumented)
 export function booleanType<T extends boolean[]>(...value: T): IUnionType<BooleanLiterals<T>>;
 
-// Warning: (ae-forgotten-export) The symbol "IImportModuleType" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export type BuildersToImport<T> = {
     [Key in keyof T]: T[Key] extends IEntityBuilder<IEntityBuilderTypes, string> ? IImportModuleType<T[Key]> : never;
 };
 
 // @public (undocumented)
+export type Combine<T, K> = {
+    [Key in keyof T | keyof K]: Key extends keyof K ? K[Key] : Key extends keyof T ? T[Key] : never;
+};
+
+// @public
 export function combine(...builders: IBaseBuilder[]): string;
 
 // @public (undocumented)
@@ -43,7 +49,7 @@ export type Formatter = ReturnType<typeof createFormatter>;
 // @public (undocumented)
 export function genericType<T extends string>(value: T): IGenericIdentifierType<T>;
 
-// @public (undocumented)
+// @public
 export interface IArrayType<T extends IType = IType> {
     // (undocumented)
     definition: T;
@@ -64,13 +70,13 @@ export interface IBaseBuilder<Type extends IBaseBuilderTypes = IBaseBuilderTypes
 // @public (undocumented)
 export type IBaseBuilderTypes = IEntityBuilderTypes | IImportBuilderTypes;
 
-// @public (undocumented)
+// @public
 export interface IBodyType {
     // (undocumented)
     [key: string]: IType | [IType, boolean];
 }
 
-// @public (undocumented)
+// @public
 export interface IBooleanLiteralType<T extends boolean = boolean> {
     // (undocumented)
     definition: T;
@@ -78,7 +84,7 @@ export interface IBooleanLiteralType<T extends boolean = boolean> {
     type: 'boolean_literal';
 }
 
-// @public (undocumented)
+// @public
 export interface IBooleanType {
     // (undocumented)
     type: 'boolean';
@@ -97,8 +103,6 @@ export interface IDecorationType<T extends Readonly<IType[]> = Readonly<IType[]>
 // @public (undocumented)
 export function identifierType<T extends IEntityBuilder<IEntityBuilderTypes, string>>(builder: T, ...extract: ITypePropertyType[]): IIdentifierType;
 
-// Warning: (ae-forgotten-export) The symbol "IJsIdentifierValue" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export function identifierValue<Type extends IEntityBuilderTypes_2, Name extends string>(builder: IEntityBuilder_2<Type, Name>): IJsIdentifierValue;
 
@@ -117,7 +121,7 @@ export interface IEntityBuilder<Type extends IEntityBuilderTypes = IEntityBuilde
 // @public (undocumented)
 export type IEntityBuilderTypes = IJavascriptBuilderTypes | ITypescriptBuilderTypes;
 
-// @public (undocumented)
+// @public
 export type IGenericIdentifierType<T extends string = string> = {
     type: 'generic_identifier';
     definition: T;
@@ -126,7 +130,7 @@ export type IGenericIdentifierType<T extends string = string> = {
 // @public (undocumented)
 export type IGenericInterfaceBuilder = IInterfaceBuilder<string, ReadonlyArray<IGenericValue<string, IGenericOptions | undefined>>, IBodyType, boolean, IIdentifierType<IEntityBuilder<'interface', string>> | undefined>;
 
-// @public (undocumented)
+// @public
 export type IGenericOptions = {
     extendsValue?: IType;
     defaultValue?: IType;
@@ -138,13 +142,13 @@ export type IGenericTypeDefBuilder = ITypeDefBuilder<string, ReadonlyArray<IGene
     joinType: 'union' | 'intersection';
 }>, boolean>;
 
-// @public (undocumented)
+// @public
 export type IGenericValue<Name extends string = string, Options extends IGenericOptions = undefined> = {
     name: Name;
     options: Options;
 };
 
-// @public (undocumented)
+// @public
 export interface IIdentifierType<T extends IEntityBuilder_2<IEntityBuilderTypes_2, string> = IEntityBuilder_2<IEntityBuilderTypes_2, string>> {
     // (undocumented)
     definition: T;
@@ -155,6 +159,14 @@ export interface IIdentifierType<T extends IEntityBuilder_2<IEntityBuilderTypes_
 }
 
 // @public (undocumented)
+export interface IImportAllModulesType<T extends string = string> {
+    // (undocumented)
+    type: 'import_all_modules';
+    // (undocumented)
+    value: T;
+}
+
+// @public (undocumented)
 export interface IImportBuilder<Module extends ReadonlyArray<IImportModuleType> = ReadonlyArray<IImportModuleType>, AllModules extends string | undefined = string | undefined, DefaultImport extends string | undefined = string | undefined, Location extends string | undefined = string | undefined> extends IBaseBuilder<'import'> {
     // (undocumented)
     addAllModuleImports: <T extends string>(name: T) => IImportBuilder<Module, T, DefaultImport, Location>;
@@ -162,8 +174,6 @@ export interface IImportBuilder<Module extends ReadonlyArray<IImportModuleType> 
     addDefaultImport: <T extends string>(name: T) => IImportBuilder<Module, AllModules, T, Location>;
     // (undocumented)
     addImportLocation: <T extends string>(name: T) => IImportBuilder<Module, AllModules, DefaultImport, T>;
-    // Warning: (ae-forgotten-export) The symbol "IImportLazyType" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     addModules: <T extends ReadonlyArray<IEntityBuilder | IImportLazyType<IImportModuleType>>>(...builder: T) => IImportBuilder<[
         ...Module,
@@ -177,26 +187,56 @@ export interface IImportBuilder<Module extends ReadonlyArray<IImportModuleType> 
 export type IImportBuilderTypes = 'import';
 
 // @public (undocumented)
-export interface IInterfaceBuilder<Name extends string, Generics extends Readonly<IGenericValue<string, IGenericOptions | undefined>[]>, Body extends IBodyType, Exported extends boolean, Extend extends IIdentifierType<IEntityBuilder<'interface', string>> | undefined> extends IEntityBuilder<'interface', Name> {
-    // Warning: (ae-forgotten-export) The symbol "Combine" needs to be exported by the entry point index.d.ts
-    //
+export interface IImportDefaultType<T extends string = string> {
     // (undocumented)
+    type: 'import_default';
+    // (undocumented)
+    value: T;
+}
+
+// @public (undocumented)
+export interface IImportLazyType<T extends IImportType = IImportType> {
+    // (undocumented)
+    type: 'import_lazy';
+    // (undocumented)
+    value: () => T;
+}
+
+// @public (undocumented)
+export interface IImportLocationType<T extends string = string> {
+    // (undocumented)
+    type: 'import_location';
+    // (undocumented)
+    value: T;
+}
+
+// @public (undocumented)
+export interface IImportModuleType<T extends IEntityBuilder<IEntityBuilderTypes, string> = IEntityBuilder<IEntityBuilderTypes, string>> {
+    // (undocumented)
+    type: 'import_module';
+    // (undocumented)
+    value: T;
+}
+
+// @public (undocumented)
+export type IImportType<T extends any = any> = IImportModuleType<T extends IEntityBuilder<IEntityBuilderTypes, string> ? T : IEntityBuilder<IEntityBuilderTypes, string>> | IImportLocationType<T extends string ? T : string> | IImportDefaultType<T extends string ? T : string> | IImportAllModulesType<T extends string ? T : string> | IImportLazyType<T extends IImportType ? T : IImportType>;
+
+// @public
+export interface IInterfaceBuilder<Name extends string, Generics extends Readonly<IGenericValue<string, IGenericOptions | undefined>[]>, Body extends IBodyType, Exported extends boolean, Extend extends IIdentifierType<IEntityBuilder<'interface', string>> | undefined> extends IEntityBuilder<'interface', Name> {
     addBody<T extends IBodyType>(body: T): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend>;
     // (undocumented)
     addGeneric<N extends string, Options extends IGenericOptions = {}, T extends Readonly<IGenericValue<N, Options>> = Readonly<IGenericValue<N, Options>>>(name: N, options?: Options): IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend>;
     // (undocumented)
     body: Body;
-    // (undocumented)
     extends<T extends IEntityBuilder<'interface', string>>(type: T): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
     // (undocumented)
     generics: Generics;
-    // (undocumented)
     markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
     // (undocumented)
     type: 'interface';
 }
 
-// @public (undocumented)
+// @public
 export interface IIntersectionType<T extends Readonly<IType[]> = []> {
     // (undocumented)
     definition: T;
@@ -210,6 +250,43 @@ export interface IIntersectionType<T extends Readonly<IType[]> = []> {
 export type IJavascriptBuilderTypes = 'object';
 
 // @public (undocumented)
+export type IJsArrayValue = IJsValue[];
+
+// @public (undocumented)
+export interface IJsBodyValue {
+    // (undocumented)
+    [key: string]: IJsValue;
+}
+
+// @public (undocumented)
+export type IJsBooleanValue = boolean;
+
+// @public (undocumented)
+export interface IJsIdentifierValue {
+    // (undocumented)
+    type: 'identifier';
+    // (undocumented)
+    value: string;
+}
+
+// @public (undocumented)
+export type IJsNumberValue = number;
+
+// @public (undocumented)
+export interface IJsObjectValue {
+    // (undocumented)
+    type: 'object';
+    // (undocumented)
+    value: IJsBodyValue;
+}
+
+// @public (undocumented)
+export type IJsStringValue = string;
+
+// @public (undocumented)
+export type IJsValue = IJsStringValue | IJsBooleanValue | IJsNumberValue | IJsArrayValue | IJsObjectValue | IJsIdentifierValue;
+
+// @public
 export interface ILazyType<T extends IType> {
     // (undocumented)
     definition: () => T;
@@ -229,7 +306,7 @@ export function importBuilder<Module extends ReadonlyArray<IImportModuleType> = 
 export function importModuleType<T extends IEntityBuilder>(value: T): IImportModuleType;
 
 // @public (undocumented)
-export function interfaceBuilder<Name extends string, Generics extends Readonly<IGenericValue[]> = [], Body extends IBodyType = {}, Exported extends boolean = false, Extend extends IIdentifierType<IEntityBuilder<'interface', string>> | undefined = undefined, Key extends string = string>(interfaceName: Name, defaultOptions?: {
+export function interfaceBuilder<Name extends string, Generics extends Readonly<IGenericValue[]> = [], Body extends IBodyType = {}, Exported extends boolean = false, Extend extends IIdentifierType<IEntityBuilder<'interface', string>> | undefined = undefined>(interfaceName: Name, defaultOptions?: {
     generics?: Generics;
     extends?: Extend;
     body: Body;
@@ -239,13 +316,13 @@ export function interfaceBuilder<Name extends string, Generics extends Readonly<
 // @public (undocumented)
 export function intersectionType<T extends ReadonlyArray<IType>>(types: T, ...extract: ITypePropertyType[]): IIntersectionType<T>;
 
-// @public (undocumented)
+// @public
 export interface INullType {
     // (undocumented)
     type: 'null';
 }
 
-// @public (undocumented)
+// @public
 export interface INumberLiteralType<T extends number = number> {
     // (undocumented)
     definition: T;
@@ -253,20 +330,20 @@ export interface INumberLiteralType<T extends number = number> {
     type: 'number_literal';
 }
 
-// @public (undocumented)
+// @public
 export interface INumberType {
     // (undocumented)
     type: 'number';
 }
 
-// @public (undocumented)
+// @public
 export type IObjectType<T extends IBodyType = IBodyType> = {
     type: 'object';
     definition: T;
     extract?: ITypePropertyType[];
 };
 
-// @public (undocumented)
+// @public
 export type IRawIdentifierType = {
     type: 'raw_identifier';
     definition: string;
@@ -280,7 +357,7 @@ export interface IRawTypePropertyType {
     type: 'raw_property_type';
 }
 
-// @public (undocumented)
+// @public
 export interface IStringLiteralType<T extends string = string> {
     // (undocumented)
     definition: T;
@@ -288,13 +365,13 @@ export interface IStringLiteralType<T extends string = string> {
     type: 'string_literal';
 }
 
-// @public (undocumented)
+// @public
 export interface IStringType {
     // (undocumented)
     type: 'string';
 }
 
-// @public (undocumented)
+// @public
 export interface ITupleType<T extends ReadonlyArray<IType> = ReadonlyArray<IType>> {
     // (undocumented)
     definition: T;
@@ -304,7 +381,7 @@ export interface ITupleType<T extends ReadonlyArray<IType> = ReadonlyArray<IType
     type: 'tuple';
 }
 
-// @public (undocumented)
+// @public
 export type IType<T extends any = any> = IStringType | INumberType | IBooleanType | IUndefinedType | INullType | IIdentifierType<T extends IEntityBuilder_2<'type' | 'interface', string> ? T : IEntityBuilder_2<'type' | 'interface', string>> | IArrayType<T extends IType ? T : IType> | IObjectType<T extends IBodyType ? T : IBodyType> | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IIntersectionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IStringLiteralType<T extends string ? T : string> | INumberLiteralType<T extends number ? T : number> | IBooleanLiteralType<T extends boolean ? T : boolean> | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IGenericIdentifierType<T extends string ? T : string> | IRawIdentifierType | ILazyType<T extends IType ? T : IType>;
 
 // @public (undocumented)
@@ -319,8 +396,6 @@ export interface ITypeDefBuilder<Name extends string, Generics extends Readonly<
         ...JoinedTypes,
         ...JoinType<'intersection', T>
     ], Exported>;
-    // Warning: (ae-forgotten-export) The symbol "JoinType" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     addUnion<T extends ReadonlyArray<IType>>(...type: T): ITypeDefBuilder<Name, Generics, [
         ...JoinedTypes,
@@ -338,13 +413,13 @@ export type ITypePropertyType = IStringType | INumberType | IBooleanType | IStri
 // @public (undocumented)
 export type ITypescriptBuilderTypes = 'type' | 'interface';
 
-// @public (undocumented)
+// @public
 export interface IUndefinedType {
     // (undocumented)
     type: 'undefined';
 }
 
-// @public (undocumented)
+// @public
 export interface IUnionType<T extends Readonly<IType[]> = []> {
     // (undocumented)
     definition: T;
@@ -354,28 +429,51 @@ export interface IUnionType<T extends Readonly<IType[]> = []> {
     type: 'union';
 }
 
+// @public (undocumented)
+export interface IVarObjectBuilder extends IEntityBuilder<'object', string> {
+    // (undocumented)
+    addBody(body: IJsBodyValue): IVarObjectBuilder;
+    // (undocumented)
+    addTypeDef(typeDefinition: IType): IVarObjectBuilder;
+    // (undocumented)
+    markExport(): IVarObjectBuilder;
+    // (undocumented)
+    setLevel(level: 'const' | 'let' | 'var'): IVarObjectBuilder;
+    // (undocumented)
+    type: 'object';
+}
+
+// @public (undocumented)
+export type JoinType<K extends 'union' | 'intersection', T> = {
+    [Key in keyof T]: {
+        joinType: K;
+        type: T[Key];
+    };
+};
+
 // @public
 export function keyOfExtractor<Type extends IEntityBuilderTypes, Name extends string>(builder: IEntityBuilder<Type, Name>): IRawTypePropertyType;
 
-// Warning: (ae-forgotten-export) The symbol "IImportType" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export function lazyImportType<T extends IImportType>(value: () => T): IImportLazyType<T>;
 
 // @public (undocumented)
 export function lazyType<T extends IType>(value: () => T): ILazyType<T>;
 
-// @public (undocumented)
+// @public
 export function mapObject<T, K>(obj: Record<string, T>, transform: (value: T, key: string) => K): Record<string, K>;
 
-// @public (undocumented)
+// @public
 export function mapObjectPromise<T, K>(obj: Record<string, T>, transform: (value: T, key: string) => Promiseable<K>): Promise<Record<string, K>>;
 
 // @public (undocumented)
 export function nullType(): INullType;
 
-// Warning: (ae-forgotten-export) The symbol "NumberLiterals" needs to be exported by the entry point index.d.ts
-//
+// @public (undocumented)
+export type NumberLiterals<T extends Readonly<number[]>> = {
+    [P in keyof T]: T[P] extends number ? INumberLiteralType<T[P]> : never;
+};
+
 // @public (undocumented)
 export function numberTuple<T extends Readonly<number[]>>(...type: T): ITupleType<NumberLiterals<T>>;
 
@@ -388,9 +486,6 @@ export function numberType<T extends number[]>(...value: T): IUnionType<NumberLi
 // @public (undocumented)
 export function objectType<T extends IBodyType>(type: T, ...extract: ITypePropertyType[]): IObjectType<T>;
 
-// Warning: (ae-forgotten-export) The symbol "IJsBodyValue" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "IJsObjectValue" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export function objectValue(value: IJsBodyValue): IJsObjectValue;
 
@@ -403,8 +498,11 @@ export function rawType(value: string): IRawIdentifierType;
 // @public (undocumented)
 export function readonly<T extends IType>(type: T): IDecorationType<[T]>;
 
-// Warning: (ae-forgotten-export) The symbol "StringLiterals" needs to be exported by the entry point index.d.ts
-//
+// @public (undocumented)
+export type StringLiterals<T extends Readonly<string[]>> = {
+    [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
+};
+
 // @public (undocumented)
 export function stringTuple<T extends Readonly<string[]>>(...type: T): ITupleType<StringLiterals<T>>;
 
@@ -415,7 +513,7 @@ export function stringType(): IStringType;
 export function stringType<T extends string[]>(...value: T): IUnionType<StringLiterals<T>>;
 
 // @public (undocumented)
-export function toObjectType<T extends any[]>(arr: T | undefined, transform: (value: T[number]) => {
+export function toObjectType<T extends unknown[]>(arr: T | undefined, transform: (value: T[number]) => {
     key: string;
     value: IBodyType[keyof IBodyType];
 } | undefined): IObjectType;
@@ -442,8 +540,6 @@ export function unionType<T extends ReadonlyArray<IType>>(types: T, ...extract: 
 // @public (undocumented)
 export type Unpromise<T> = T extends Promise<infer U> ? U : never;
 
-// Warning: (ae-forgotten-export) The symbol "IVarObjectBuilder" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export const varObjectBuilder: (name: string, defaultValue?: {
     body: IJsBodyValue;

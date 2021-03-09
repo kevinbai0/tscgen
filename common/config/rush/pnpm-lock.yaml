@@ -69,6 +69,7 @@ importers:
       chai: 4.3.3
       esbuild: 0.8.57
       eslint: 7.21.0
+      eslint-plugin-tsdoc: 0.2.11
       mocha: 8.3.1
       openapi-types: 7.2.3
       ts-node: 9.1.1_typescript@4.2.3
@@ -83,6 +84,7 @@ importers:
       chai: ^4.3.1
       esbuild: ~0.8.57
       eslint: ^7.21.0
+      eslint-plugin-tsdoc: ~0.2.11
       mocha: ^8.3.0
       openapi-types: ^7.2.3
       ts-node: ^9.1.1
