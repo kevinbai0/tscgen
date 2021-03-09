@@ -27,13 +27,13 @@ import {
   IIntersectionType,
 } from './types';
 
-type StringLiterals<T extends Readonly<string[]>> = {
+export type StringLiterals<T extends Readonly<string[]>> = {
   [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
 };
-type NumberLiterals<T extends Readonly<number[]>> = {
+export type NumberLiterals<T extends Readonly<number[]>> = {
   [P in keyof T]: T[P] extends number ? INumberLiteralType<T[P]> : never;
 };
-type BooleanLiterals<T extends Readonly<boolean[]>> = {
+export type BooleanLiterals<T extends Readonly<boolean[]>> = {
   [P in keyof T]: T[P] extends boolean ? IBooleanLiteralType<T[P]> : never;
 };
 

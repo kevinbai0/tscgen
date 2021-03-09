@@ -9,4 +9,6 @@ export * from './typescript/definitions';
 export * from './javascript/definitions';
 export * from './common/definitions';
 export * from './typescript/types';
+export * from './javascript/types';
+export * from './common/types';
 export * from './helpers/promise';

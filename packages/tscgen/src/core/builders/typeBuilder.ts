@@ -2,7 +2,7 @@ import { IGenericOptions, IGenericValue, IType } from '../../typescript/types';
 import { writeGeneric, writeType } from '../../typescript/write';
 import { IEntityBuilder } from './entityBuilder';
 
-type JoinType<K extends 'union' | 'intersection', T> = {
+export type JoinType<K extends 'union' | 'intersection', T> = {
   [Key in keyof T]: {
     joinType: K;
     type: T[Key];

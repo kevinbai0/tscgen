@@ -15,6 +15,11 @@ export type IGenericInterfaceBuilder = IInterfaceBuilder<
   boolean,
   IIdentifierType<IEntityBuilder<'interface', string>> | undefined
 >;
+
+/**
+ * Represents an interface
+ * @public
+ */
 export interface IInterfaceBuilder<
   Name extends string,
   Generics extends Readonly<
@@ -37,18 +42,35 @@ export interface IInterfaceBuilder<
     name: N,
     options?: Options
   ): IInterfaceBuilder<Name, [...Generics, T], Body, Exported, Extend>;
+
+  /**
+   * Adds a body to the interface - if multiple bodies are passed in, it merges the bodies together (but not an intersection type)
+   * @param body - The body to pass in of type IBodyType
+   * @returns A new interface builder with the specified body added
+   */
   addBody<T extends IBodyType>(
     body: T
   ): IInterfaceBuilder<Name, Generics, Combine<Body, T>, Exported, Extend>;
+
+  /**
+   * Make the interface extend another identifier - must be another Entity that it extends
+   * @param body - The body to pass in
+   * @returns A new interface builder with the new extends parameter
+   */
   extends<T extends IEntityBuilder<'interface', string>>(
     type: T
   ): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
+
+  /**
+   * Make the interface exportable
+   * @returns A new interface builder that will be exported
+   */
   markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
   body: Body;
   generics: Generics;
 }
 
-type Combine<T, K> = {
+export type Combine<T, K> = {
   [Key in keyof T | keyof K]: Key extends keyof K
     ? K[Key]
     : Key extends keyof T
@@ -56,6 +78,12 @@ type Combine<T, K> = {
     : never;
 };
 
+/**
+ *
+ * @param interfaceName - The name of the interface
+ * @returns
+ * @public
+ */
 export function interfaceBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue[]> = [],
@@ -63,8 +91,7 @@ export function interfaceBuilder<
   Exported extends boolean = false,
   Extend extends
     | IIdentifierType<IEntityBuilder<'interface', string>>
-    | undefined = undefined,
-  Key extends string = string
+    | undefined = undefined
 >(
   interfaceName: Name,
   defaultOptions: {

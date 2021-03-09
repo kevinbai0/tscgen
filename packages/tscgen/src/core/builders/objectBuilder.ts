@@ -5,7 +5,7 @@ import { IType } from '../../typescript/types';
 import { writeType } from '../../typescript/write';
 import { IEntityBuilder } from './entityBuilder';
 
-interface IVarObjectBuilder extends IEntityBuilder<'object', string> {
+export interface IVarObjectBuilder extends IEntityBuilder<'object', string> {
   type: 'object';
   addBody(body: IJsBodyValue): IVarObjectBuilder;
   addTypeDef(typeDefinition: IType): IVarObjectBuilder;
