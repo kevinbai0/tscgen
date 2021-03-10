@@ -26,26 +26,24 @@ type ContextReturnType<
 };
 
 export async function createContext<
-  Inputs extends GetInputs,
-  Exports extends ReadonlyArray<string>
+  Routes extends ReadonlyArray<string>,
+  Inputs extends GetInputs
 >(
   getInputs: Inputs,
-  mappedExports: GetMappedExports<Inputs, Exports>,
+  mappedExports: GetMappedExports<Inputs, Routes>,
   getPath: string,
   options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
   }
-): Promise<ContextReturnType<Inputs, Exports>[]> {
+): Promise<ContextReturnType<Inputs, Routes>[]> {
   const inputs = await Promise.resolve(getInputs());
 
   const state: [
     inputData: TSCGenInputs<Inputs>,
-    exportsValue:
-      | BuilderExports<Exports, false>['exports']['values']
-      | undefined
+    exportsValue: BuilderExports<Routes, false>['exports']['values'] | undefined
   ][] = inputs.map((val) => [val, undefined]);
 
-  const context: Context<Inputs, Exports> = {
+  const context: Context<Inputs, Routes> = {
     referenceIdentifier: (pick) => {
       return {
         findOne: (method) => {

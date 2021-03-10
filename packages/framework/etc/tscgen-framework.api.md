@@ -20,11 +20,6 @@ export type BuilderExports<Exports extends ReadonlyArray<string>, OmitOrder exte
 };
 
 // @public (undocumented)
-export type BuilderFromKeys<T> = {
-    [Key in keyof T]: T[Key] extends string ? IEntityBuilder : never;
-};
-
-// @public (undocumented)
 export type Context<Inputs extends GetInputs, Order extends ReadonlyArray<string>> = {
     referenceIdentifier<K extends Order[number]>(pick: K): {
         findOne: (data: (inputs: TSCGenInputs<Inputs>) => unknown) => {
@@ -37,29 +32,15 @@ export type Context<Inputs extends GetInputs, Order extends ReadonlyArray<string
 // Warning: (ae-forgotten-export) The symbol "ContextReturnType" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function createContext<Inputs extends GetInputs, Exports extends ReadonlyArray<string>>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Exports>, getPath: string, options?: {
+export function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
-}): Promise<ContextReturnType<Inputs, Exports>[]>;
+}): Promise<ContextReturnType<Inputs, Routes>[]>;
 
 // @public (undocumented)
-export function createExports<T extends ReadonlyArray<IEntityBuilder>>(imports: IBaseBuilder<'import'>[], ...exports: T): {
-    exports: T;
-    imports: IBaseBuilder<'import'>[];
-};
-
-// @public (undocumented)
-export const createInputsExport: <T, Params extends Record<string, string>>(method: GetInputs<T, Params>) => GetInputs<T, Params>;
+export const createInputs: <T, Params extends Record<string, string>>(method: GetInputs<T, Params>) => GetInputs<T, Params>;
 
 // @public (undocumented)
 export const createMappedExports: <Order extends readonly string[]>(...order: Order) => <Inputs extends GetInputs<unknown, Record<string, string>>>(_getInputs: Inputs, getMappedExports: GetMappedExportsBase<Inputs, Order, false>) => GetMappedExports<Inputs, Order, false>;
-
-// @public (undocumented)
-export const createPathExport: (dir: string, filename: string) => [dir: string, filename: string];
-
-// Warning: (ae-forgotten-export) The symbol "CreateStaticExports" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export const createStaticExports: <Exports extends readonly string[]>(...order: Exports) => CreateStaticExports<Exports>;
 
 // @public (undocumented)
 export type ExportData<Exports extends ReadonlyArray<string>> = {
@@ -88,7 +69,7 @@ export type GetMappedExportsBase<Inputs extends GetInputs, Keys extends Readonly
 // Warning: (ae-forgotten-export) The symbol "IReference" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function getReference<Inputs extends GetInputs, MappedExports extends ReadonlyArray<string>, StaticExports extends ReadonlyArray<string>, StaticBuilders extends BuilderExports<StaticExports>>(importFile: Promise<OutputModule<Inputs, MappedExports, StaticExports, StaticBuilders>>, callerPath: string): Promise<IReference<Inputs, MappedExports, StaticExports, StaticBuilders>>;
+export function getReference<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined>(importFile: Promise<OutputModule<Routes, Inputs>>, callerPath: string): Promise<IReference<Routes, Inputs>>;
 
 // @public (undocumented)
 export type GetStaticExports<Exports extends ReadonlyArray<string>, Builders extends BuilderExports<Exports>> = () => Promiseable<Builders>;
@@ -100,18 +81,33 @@ export type InputData<T = unknown, Params extends Record<string, string> = Recor
 };
 
 // @public (undocumented)
-export type OutputModule<Inputs extends GetInputs = GetInputs, MappedExports extends ReadonlyArray<string> = ReadonlyArray<string>, StaticExports extends ReadonlyArray<string> = ReadonlyArray<string>, StaticBuilders extends BuilderExports<StaticExports> = BuilderExports<StaticExports>, Unpromise extends boolean = false> = {
-    getStaticExports?: GetStaticExports<StaticExports, StaticBuilders>;
+export type OutputModule<Routes extends ReadonlyArray<string> = ReadonlyArray<string>, Inputs extends GetInputs | undefined = GetInputs | undefined> = {
+    default: Promiseable<OutputType<Routes, Inputs>>;
     getPath: string;
-    getMappedExports?: GetMappedExports<Inputs, MappedExports, Unpromise>;
-    getInputs?: Inputs;
 };
+
+// @public (undocumented)
+export type OutputType<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined> = {
+    routes: Routes;
+    inputs: Inputs;
+    getExports: Inputs extends GetInputs ? GetMappedExports<Inputs, Routes> : () => Promiseable<BuilderExports<Routes, true>>;
+};
+
+// Warning: (ae-forgotten-export) The symbol "RegisterReturn" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export function register<Routes extends ReadonlyArray<string>>(...routes: Routes): RegisterReturn<Routes>;
 
 // @public (undocumented)
 export type TSCGenBuilders<T extends GetMappedExports<GetInputs, ReadonlyArray<string>>> = Unpromise<ReturnType<T>>;
 
 // @public (undocumented)
 export type TSCGenInputs<T extends GetInputs> = Unpromise<ReturnType<T>>[number];
+
+// @public (undocumented)
+export type WithInputsReturn<Routes extends ReadonlyArray<string>, Inputs extends GetInputs> = {
+    generateExports: (method: GetMappedExportsBase<Inputs, Routes>) => Promiseable<OutputType<Routes, Inputs>>;
+};
 
 
 // (No @packageDocumentation comment for this package)

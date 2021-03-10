@@ -1,21 +1,17 @@
 import * as tscgen from 'tscgen';
-import { createStaticExports, getReference } from 'tscgen-framework';
-import { getInputs } from './routes/[route]';
+import { getReference, register } from 'tscgen-framework';
 
 export const getPath = __filename;
 
-export const getStaticExports = createStaticExports(
-  'Route',
-  'Routes',
-  'RoutesData',
-  'routesData'
-)(async () => {
+const outputs = register('Route', 'Routes', 'RoutesData', 'routesData');
+
+export default outputs.generateExports(async () => {
   const references = await getReference(import('./routes/[route]'), __filename);
   const { imports, exports } = await references
-    .referenceMappedExports('route')
+    .referenceExports('route')
     .filter(() => true);
 
-  const pathsData = await getInputs();
+  const pathsData = await references.referenceInputs();
 
   return {
     imports,
@@ -28,7 +24,7 @@ export const getStaticExports = createStaticExports(
         .typeDefBuilder('Routes')
         .markExport()
         .addUnion(
-          tscgen.toObjectType(exports, (value) => {
+          tscgen.toObjectType([...exports], (value) => {
             return {
               key: value.varName,
               value: tscgen.identifierType(value),

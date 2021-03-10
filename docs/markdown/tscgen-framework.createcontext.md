@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function createContext<Inputs extends GetInputs, Exports extends ReadonlyArray<string>>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Exports>, getPath: string, options?: {
+export declare function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
-}): Promise<ContextReturnType<Inputs, Exports>[]>;
+}): Promise<ContextReturnType<Inputs, Routes>[]>;
 ```
 
 ## Parameters
@@ -17,11 +17,11 @@ export declare function createContext<Inputs extends GetInputs, Exports extends 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  getInputs | Inputs |  |
-|  mappedExports | [GetMappedExports](./tscgen-framework.getmappedexports.md)<!-- -->&lt;Inputs, Exports&gt; |  |
+|  mappedExports | [GetMappedExports](./tscgen-framework.getmappedexports.md)<!-- -->&lt;Inputs, Routes&gt; |  |
 |  getPath | string |  |
 |  options | { filter?: (data: [TSCGenInputs](./tscgen-framework.tscgeninputs.md)<!-- -->&lt;Inputs&gt;) =&gt; boolean; } |  |
 
 <b>Returns:</b>
 
-Promise&lt;ContextReturnType&lt;Inputs, Exports&gt;\[\]&gt;
+Promise&lt;ContextReturnType&lt;Inputs, Routes&gt;\[\]&gt;
 

@@ -7,6 +7,7 @@ import {
   Promiseable,
   Unpromise,
 } from 'tscgen';
+import { OutputType } from './register';
 
 export type InputData<
   T = unknown,
@@ -92,14 +93,9 @@ export type TSCGenInputs<T extends GetInputs> = Unpromise<
 >[number];
 
 export type OutputModule<
-  Inputs extends GetInputs = GetInputs,
-  MappedExports extends ReadonlyArray<string> = ReadonlyArray<string>,
-  StaticExports extends ReadonlyArray<string> = ReadonlyArray<string>,
-  StaticBuilders extends BuilderExports<StaticExports> = BuilderExports<StaticExports>,
-  Unpromise extends boolean = false
+  Routes extends ReadonlyArray<string> = ReadonlyArray<string>,
+  Inputs extends GetInputs | undefined = GetInputs | undefined
 > = {
-  getStaticExports?: GetStaticExports<StaticExports, StaticBuilders>;
+  default: Promiseable<OutputType<Routes, Inputs>>;
   getPath: string;
-  getMappedExports?: GetMappedExports<Inputs, MappedExports, Unpromise>;
-  getInputs?: Inputs;
 };

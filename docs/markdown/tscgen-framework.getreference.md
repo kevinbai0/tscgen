@@ -7,17 +7,17 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function getReference<Inputs extends GetInputs, MappedExports extends ReadonlyArray<string>, StaticExports extends ReadonlyArray<string>, StaticBuilders extends BuilderExports<StaticExports>>(importFile: Promise<OutputModule<Inputs, MappedExports, StaticExports, StaticBuilders>>, callerPath: string): Promise<IReference<Inputs, MappedExports, StaticExports, StaticBuilders>>;
+export declare function getReference<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined>(importFile: Promise<OutputModule<Routes, Inputs>>, callerPath: string): Promise<IReference<Routes, Inputs>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  importFile | Promise&lt;[OutputModule](./tscgen-framework.outputmodule.md)<!-- -->&lt;Inputs, MappedExports, StaticExports, StaticBuilders&gt;&gt; |  |
+|  importFile | Promise&lt;[OutputModule](./tscgen-framework.outputmodule.md)<!-- -->&lt;Routes, Inputs&gt;&gt; |  |
 |  callerPath | string |  |
 
 <b>Returns:</b>
 
-Promise&lt;IReference&lt;Inputs, MappedExports, StaticExports, StaticBuilders&gt;&gt;
+Promise&lt;IReference&lt;Routes, Inputs&gt;&gt;
 

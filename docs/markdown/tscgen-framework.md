@@ -9,17 +9,15 @@
 |  Function | Description |
 |  --- | --- |
 |  [createContext(getInputs, mappedExports, getPath, options)](./tscgen-framework.createcontext.md) |  |
-|  [createExports(imports, exports)](./tscgen-framework.createexports.md) |  |
 |  [getReference(importFile, callerPath)](./tscgen-framework.getreference.md) |  |
+|  [register(routes)](./tscgen-framework.register.md) |  |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
-|  [createInputsExport](./tscgen-framework.createinputsexport.md) |  |
+|  [createInputs](./tscgen-framework.createinputs.md) |  |
 |  [createMappedExports](./tscgen-framework.createmappedexports.md) |  |
-|  [createPathExport](./tscgen-framework.createpathexport.md) |  |
-|  [createStaticExports](./tscgen-framework.createstaticexports.md) |  |
 |  [getFilename](./tscgen-framework.getfilename.md) |  |
 
 ## Type Aliases
@@ -27,7 +25,6 @@
 |  Type Alias | Description |
 |  --- | --- |
 |  [BuilderExports](./tscgen-framework.builderexports.md) |  |
-|  [BuilderFromKeys](./tscgen-framework.builderfromkeys.md) |  |
 |  [Context](./tscgen-framework.context.md) |  |
 |  [ExportData](./tscgen-framework.exportdata.md) |  |
 |  [GetInputs](./tscgen-framework.getinputs.md) |  |
@@ -36,6 +33,8 @@
 |  [GetStaticExports](./tscgen-framework.getstaticexports.md) |  |
 |  [InputData](./tscgen-framework.inputdata.md) |  |
 |  [OutputModule](./tscgen-framework.outputmodule.md) |  |
+|  [OutputType](./tscgen-framework.outputtype.md) |  |
 |  [TSCGenBuilders](./tscgen-framework.tscgenbuilders.md) |  |
 |  [TSCGenInputs](./tscgen-framework.tscgeninputs.md) |  |
+|  [WithInputsReturn](./tscgen-framework.withinputsreturn.md) |  |
 

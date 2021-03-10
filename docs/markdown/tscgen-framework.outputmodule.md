@@ -7,12 +7,10 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type OutputModule<Inputs extends GetInputs = GetInputs, MappedExports extends ReadonlyArray<string> = ReadonlyArray<string>, StaticExports extends ReadonlyArray<string> = ReadonlyArray<string>, StaticBuilders extends BuilderExports<StaticExports> = BuilderExports<StaticExports>, Unpromise extends boolean = false> = {
-    getStaticExports?: GetStaticExports<StaticExports, StaticBuilders>;
+export declare type OutputModule<Routes extends ReadonlyArray<string> = ReadonlyArray<string>, Inputs extends GetInputs | undefined = GetInputs | undefined> = {
+    default: Promiseable<OutputType<Routes, Inputs>>;
     getPath: string;
-    getMappedExports?: GetMappedExports<Inputs, MappedExports, Unpromise>;
-    getInputs?: Inputs;
 };
 ```
-<b>References:</b> [GetInputs](./tscgen-framework.getinputs.md)<!-- -->, [BuilderExports](./tscgen-framework.builderexports.md)<!-- -->, [GetStaticExports](./tscgen-framework.getstaticexports.md)<!-- -->, [GetMappedExports](./tscgen-framework.getmappedexports.md)
+<b>References:</b> [GetInputs](./tscgen-framework.getinputs.md)<!-- -->, [Promiseable](./tscgen.promiseable.md)<!-- -->, [OutputType](./tscgen-framework.outputtype.md)
 

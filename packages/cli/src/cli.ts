@@ -2,7 +2,13 @@ import fs, { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { combine } from 'tscgen';
-import { createContext, InputData, OutputModule } from 'tscgen-framework';
+import {
+  createContext,
+  GetInputs,
+  InputData,
+  OutputModule,
+  OutputType,
+} from 'tscgen-framework';
 import { apply, recursiveDir } from './helpers';
 import { IDir, ProjectConfig } from './types';
 
@@ -85,9 +91,12 @@ async function writeGroup(
 ) {
   const res: OutputModule = await import(filePath);
 
-  if (res.getInputs && res.getMappedExports) {
+  const defaultExport = await res.default;
+
+  if (res.getPath && defaultExport.inputs) {
+    const data = defaultExport as OutputType<ReadonlyArray<string>, GetInputs>;
     const ctx = (
-      await createContext(res.getInputs!, res.getMappedExports!, res.getPath!)
+      await createContext(data.inputs!, data.getExports!, res.getPath)
     ).map(async ({ imports, exports, inputData }) => {
       const output = combine(
         ...(imports ?? []),
@@ -100,16 +109,15 @@ async function writeGroup(
 
     return true;
   }
-  if (res.getStaticExports) {
-    const outputData = await res.getStaticExports();
-    const output = combine(
-      ...(outputData.imports ?? []),
-      ...outputData.exports.order.map((key) => outputData.exports.values[key])
-    );
 
-    await writeFile({ params: {}, data: undefined }, filePath, output, context);
-  }
-  return false;
+  const data = defaultExport as OutputType<ReadonlyArray<string>, undefined>;
+  const outputData = await data.getExports();
+  const output = combine(
+    ...(outputData.imports ?? []),
+    ...data.routes.map((key) => outputData.exports[key])
+  );
+
+  await writeFile({ params: {}, data: undefined }, filePath, output, context);
 }
 
 async function exists(dir: string) {

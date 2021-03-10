@@ -68,7 +68,7 @@ export const writeSchema = (
           obj.allOf.map((prop) => writeSchema(prop, handlers))
         );
         return {
-          type: tscgen.intersectionType(allOf.map((prop) => prop.type)),
+          type: tscgen.intersectionType(...allOf.map((prop) => prop.type)),
           imports: allOf.flatMap((val) => val.imports),
         };
       }
@@ -78,7 +78,7 @@ export const writeSchema = (
           obj.oneOf.map((prop) => writeSchema(prop, handlers))
         );
         return {
-          type: tscgen.unionType(oneOf.map((prop) => prop.type)),
+          type: tscgen.unionType(...oneOf.map((prop) => prop.type)),
           imports: oneOf.flatMap((val) => val.imports),
         };
       }

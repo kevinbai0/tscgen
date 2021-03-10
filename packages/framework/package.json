@@ -5,7 +5,7 @@
   "main": "dist/main/tscgen-framework.js",
   "types": "dist/main/tscgen-framework.d.ts",
   "scripts": {
-    "build": "tsc && node build/build.js",
+    "build": "tsc && node build/build.js && api-extractor run --local",
     "build:watch": "npm run build"
   },
   "dependencies": {
