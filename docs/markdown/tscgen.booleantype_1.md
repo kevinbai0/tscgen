@@ -4,6 +4,8 @@
 
 ## booleanType() function
 
+Create a union of boolean literals (i.e. `true | false`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,7 +16,7 @@ export declare function booleanType<T extends boolean[]>(...value: T): IUnionTyp
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | T |  |
+|  value | T | <code>...boolean[]</code> A list of number literals |
 
 <b>Returns:</b>
 

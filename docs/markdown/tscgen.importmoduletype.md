@@ -4,6 +4,8 @@
 
 ## importModuleType() function
 
+Specify a module for the import declaration
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function importModuleType<T extends IEntityBuilder>(value: T): II
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | T |  |
+|  value | T | Specify the module to import [IEntityBuilder](./tscgen.ientitybuilder.md) |
 
 <b>Returns:</b>
 
 [IImportModuleType](./tscgen.iimportmoduletype.md)
+
 

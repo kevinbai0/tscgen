@@ -4,21 +4,21 @@
 
 ```ts
 
-// @public (undocumented)
-export function arrayType<T extends IType>(type: T, ...extract: ITypePropertyType[]): IArrayType<T>;
+// @public
+export function arrayType<T extends IType>(type: T): IArrayType<T>;
 
-// @public (undocumented)
+// @public
 export type BooleanLiterals<T extends Readonly<boolean[]>> = {
     [P in keyof T]: T[P] extends boolean ? IBooleanLiteralType<T[P]> : never;
 };
 
-// @public (undocumented)
+// @public
 export function booleanTuple<T extends Readonly<boolean[]>>(...type: T): ITupleType<BooleanLiterals<T>>;
 
-// @public (undocumented)
+// @public
 export function booleanType(): IBooleanType;
 
-// @public (undocumented)
+// @public
 export function booleanType<T extends boolean[]>(...value: T): IUnionType<BooleanLiterals<T>>;
 
 // @public (undocumented)
@@ -26,7 +26,7 @@ export type BuildersToImport<T> = {
     [Key in keyof T]: T[Key] extends IEntityBuilder<IEntityBuilderTypes, string> ? IImportModuleType<T[Key]> : never;
 };
 
-// @public (undocumented)
+// @public
 export type Combine<T, K> = {
     [Key in keyof T | keyof K]: Key extends keyof K ? K[Key] : Key extends keyof T ? T[Key] : never;
 };
@@ -37,13 +37,13 @@ export function combine(...builders: IBaseBuilder[]): string;
 // @public (undocumented)
 export const createFormatter: (pathToFile: string) => (text: string) => Promise<string>;
 
-// @public (undocumented)
+// @public
 export function extract<T extends IType, K extends Readonly<IType[]>, U extends IUnionType<K>>(type: T, union: U): IDecorationType<[T, U]>;
 
 // @public (undocumented)
 export type Formatter = ReturnType<typeof createFormatter>;
 
-// @public (undocumented)
+// @public
 export function genericType<T extends string>(value: T): IGenericIdentifierType<T>;
 
 // @public
@@ -97,10 +97,10 @@ export interface IDecorationType<T extends Readonly<IType[]> = Readonly<IType[]>
     type: 'decoration';
 }
 
-// @public (undocumented)
+// @public
 export function identifierType<T extends IEntityBuilder<IEntityBuilderTypes, string>>(builder: T, ...extract: ITypePropertyType[]): IIdentifierType;
 
-// @public (undocumented)
+// @public
 export function identifierValue<Type extends IEntityBuilderTypes, Name extends string>(builder: IEntityBuilder<Type, Name>): IJsIdentifierValue;
 
 // @public (undocumented)
@@ -299,10 +299,10 @@ export function importBuilder<Module extends ReadonlyArray<IImportModuleType> = 
     location?: Location;
 }): IImportBuilder<Module, AllModules, DefaultImport, Location>;
 
-// @public (undocumented)
+// @public
 export function importModuleType<T extends IEntityBuilder>(value: T): IImportModuleType;
 
-// @public (undocumented)
+// @public
 export function interfaceBuilder<Name extends string, Generics extends Readonly<IGenericValue[]> = [], Body extends IBodyType = {}, Exported extends boolean = false, Extend extends IIdentifierType<IEntityBuilder<'interface', string>> | undefined = undefined>(interfaceName: Name, defaultOptions?: {
     generics?: Generics;
     extends?: Extend;
@@ -310,8 +310,8 @@ export function interfaceBuilder<Name extends string, Generics extends Readonly<
     export: boolean;
 }): IInterfaceBuilder<Name, Generics, Body, Exported, Extend>;
 
-// @public (undocumented)
-export function intersectionType<T extends ReadonlyArray<IType>>(types: T, ...extract: ITypePropertyType[]): IIntersectionType<T>;
+// @public
+export function intersectionType<T extends ReadonlyArray<IType>>(...types: T): IIntersectionType<T>;
 
 // @public
 export interface INullType {
@@ -451,10 +451,10 @@ export type JoinType<K extends 'union' | 'intersection', T> = {
 // @public
 export function keyOfExtractor<Type extends IEntityBuilderTypes, Name extends string>(builder: IEntityBuilder<Type, Name>): IRawTypePropertyType;
 
-// @public (undocumented)
+// @public
 export function lazyImportType<T extends IImportType>(value: () => T): IImportLazyType<T>;
 
-// @public (undocumented)
+// @public
 export function lazyType<T extends IType>(value: () => T): ILazyType<T>;
 
 // @public
@@ -463,60 +463,60 @@ export function mapObject<T, K>(obj: Record<string, T>, transform: (value: T, ke
 // @public
 export function mapObjectPromise<T, K>(obj: Record<string, T>, transform: (value: T, key: string) => Promiseable<K>): Promise<Record<string, K>>;
 
-// @public (undocumented)
+// @public
 export function nullType(): INullType;
 
-// @public (undocumented)
+// @public
 export type NumberLiterals<T extends Readonly<number[]>> = {
     [P in keyof T]: T[P] extends number ? INumberLiteralType<T[P]> : never;
 };
 
-// @public (undocumented)
+// @public
 export function numberTuple<T extends Readonly<number[]>>(...type: T): ITupleType<NumberLiterals<T>>;
 
-// @public (undocumented)
+// @public
 export function numberType(): INumberType;
 
-// @public (undocumented)
+// @public
 export function numberType<T extends number[]>(...value: T): IUnionType<NumberLiterals<T>>;
 
-// @public (undocumented)
-export function objectType<T extends IBodyType>(type: T, ...extract: ITypePropertyType[]): IObjectType<T>;
+// @public
+export function objectType<T extends IBodyType>(type: T): IObjectType<T>;
 
-// @public (undocumented)
+// @public
 export function objectValue(value: IJsBodyValue): IJsObjectValue;
 
 // @public (undocumented)
 export type Promiseable<T> = T | Promise<T>;
 
-// @public (undocumented)
+// @public
 export function rawType(value: string): IRawIdentifierType;
 
-// @public (undocumented)
+// @public
 export function readonly<T extends IType>(type: T): IDecorationType<[T]>;
 
-// @public (undocumented)
+// @public
 export type StringLiterals<T extends Readonly<string[]>> = {
     [P in keyof T]: T[P] extends string ? IStringLiteralType<T[P]> : never;
 };
 
-// @public (undocumented)
+// @public
 export function stringTuple<T extends Readonly<string[]>>(...type: T): ITupleType<StringLiterals<T>>;
 
-// @public (undocumented)
+// @public
 export function stringType(): IStringType;
 
-// @public (undocumented)
+// @public
 export function stringType<T extends string[]>(...value: T): IUnionType<StringLiterals<T>>;
 
-// @public (undocumented)
+// @public
 export function toObjectType<T extends unknown[]>(arr: T | undefined, transform: (value: T[number]) => {
     key: string;
     value: IBodyType[keyof IBodyType];
 } | undefined): IObjectType;
 
-// @public (undocumented)
-export function tupleType<T extends readonly IType<unknown>[]>(type: T, ...extract: ITypePropertyType[]): ITupleType<T>;
+// @public
+export function tupleType<T extends readonly IType<unknown>[]>(...type: T): ITupleType<T>;
 
 // @public (undocumented)
 export function typeDefBuilder<Name extends string, Generics extends Readonly<IGenericValue<string, IGenericOptions>[]> = [], JoinedTypes extends ReadonlyArray<{
@@ -528,11 +528,11 @@ export function typeDefBuilder<Name extends string, Generics extends Readonly<IG
     types?: JoinedTypes;
 }): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported>;
 
-// @public (undocumented)
+// @public
 export function undefinedType(): IUndefinedType;
 
-// @public (undocumented)
-export function unionType<T extends ReadonlyArray<IType>>(types: T, ...extract: ITypePropertyType[]): IUnionType<T>;
+// @public
+export function unionType<T extends ReadonlyArray<IType>>(...types: T): IUnionType<T>;
 
 // @public (undocumented)
 export type Unpromise<T> = T extends Promise<infer U> ? U : never;

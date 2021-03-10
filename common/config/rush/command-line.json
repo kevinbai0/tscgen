@@ -17,7 +17,26 @@
       "summary": "Generate docs for the codebase",
       "description": "Generate docs for the codebase in the /docs folder",
       "shellCommand": "./common/scripts/generate-docs.sh"
-    }
+    },
+    {
+      "commandKind": "global",
+      "name": "docs:watch",
+      "summary": "Watch & Generate docs for the codebase",
+      "description": "Watch & Generate docs for the codebase in the /docs folder",
+      "shellCommand": "./common/scripts/generate-docs-watch.sh"
+    },
+    {
+      "name": "build:watch",
+      "commandKind": "bulk",
+      "summary": "Build projects and watch for changes",
+      "description": "For details, see the article \"Using watch mode\" on the Rush website: https://rushjs.io/",
+
+      // use incremental build logic (important)
+      "incremental": true,
+      "enableParallelism": true,
+      // Enable "watch mode"
+      "watchForChanges": true
+    },
     // {
     //   /**
     //    * (Required) Determines the type of custom command.

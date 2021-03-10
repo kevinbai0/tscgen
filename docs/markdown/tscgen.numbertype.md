@@ -4,6 +4,8 @@
 
 ## numberType() function
 
+Create the `number` type
+
 <b>Signature:</b>
 
 ```typescript

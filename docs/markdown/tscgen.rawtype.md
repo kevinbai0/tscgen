@@ -4,6 +4,8 @@
 
 ## rawType() function
 
+Inject any value as a type (e.g `[Key in keyof T]`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function rawType(value: string): IRawIdentifierType;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | string |  |
+|  value | string | The unmodified <code>string</code> to inject |
 
 <b>Returns:</b>
 
 [IRawIdentifierType](./tscgen.irawidentifiertype.md)
+
 

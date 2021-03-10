@@ -4,6 +4,8 @@
 
 ## NumberLiterals type
 
+Helper type to convert number array into array of [INumberLiteralType](./tscgen.inumberliteraltype.md)
+
 <b>Signature:</b>
 
 ```typescript

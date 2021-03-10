@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "node build/build.js && tsc --project build/tsconfig.build.json && api-extractor run --local",
+    "build:watch": "npm run build",
     "example": "ts-node --transpile-only src/cli/cli.ts",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",

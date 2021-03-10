@@ -4,6 +4,8 @@
 
 ## genericType() function
 
+Create a reference to a generic value in the [IInterfaceBuilder](./tscgen.iinterfacebuilder.md) or [ITypeDefBuilder](./tscgen.itypedefbuilder.md)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function genericType<T extends string>(value: T): IGenericIdentif
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | T |  |
+|  value | T | <code>string</code> that represents the Generic Identifier |
 
 <b>Returns:</b>
 
 [IGenericIdentifierType](./tscgen.igenericidentifiertype.md)<!-- -->&lt;T&gt;
+
 

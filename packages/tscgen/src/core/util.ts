@@ -63,7 +63,7 @@ export function mapObject<T, K>(
 }
 
 /**
- *
+ * Transform an array to an {@link IObjectType}
  * @param arr - An array that contains the values for an object
  * @param transform - Transforms each element into a key, and IBodyType
  * @returns

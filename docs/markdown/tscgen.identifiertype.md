@@ -4,6 +4,8 @@
 
 ## identifierType() function
 
+Create an identifier type from an [IEntityBuilder](./tscgen.ientitybuilder.md)
+
 <b>Signature:</b>
 
 ```typescript
@@ -15,9 +17,10 @@ export declare function identifierType<T extends IEntityBuilder<IEntityBuilderTy
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  builder | T | The name of the interace/type |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] | Properties to extract for the identifier (eg: ITest\[number\]\[string\]) |
+|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] | Properties to extract for the identifier (eg: <code>ITest[number][string]</code>) |
 
 <b>Returns:</b>
 
 [IIdentifierType](./tscgen.iidentifiertype.md)
+
 

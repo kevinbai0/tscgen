@@ -4,6 +4,8 @@
 
 ## identifierValue() function
 
+Create a reference to another variable declared by a [IEntityBuilder](./tscgen.ientitybuilder.md)
+
 <b>Signature:</b>
 
 ```typescript

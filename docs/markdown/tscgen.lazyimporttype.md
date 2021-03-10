@@ -4,6 +4,8 @@
 
 ## lazyImportType() function
 
+Create a lazy import type to be computed only when written
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function lazyImportType<T extends IImportType>(value: () => T): I
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | () =&gt; T |  |
+|  value | () =&gt; T | closure that returns the import type to be computed lazily |
 
 <b>Returns:</b>
 
 [IImportLazyType](./tscgen.iimportlazytype.md)<!-- -->&lt;T&gt;
+
 

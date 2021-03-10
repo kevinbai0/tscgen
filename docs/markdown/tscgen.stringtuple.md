@@ -4,6 +4,8 @@
 
 ## stringTuple() function
 
+Create a tuple of string literal types (i.e. \['hello', 'world'\])
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function stringTuple<T extends Readonly<string[]>>(...type: T): I
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
+|  type | T | Variadic array of <code>ReadonlyArray&lt;string&gt;</code> |
 
 <b>Returns:</b>
 
 [ITupleType](./tscgen.itupletype.md)<!-- -->&lt;[StringLiterals](./tscgen.stringliterals.md)<!-- -->&lt;T&gt;&gt;
+
 

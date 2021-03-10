@@ -4,6 +4,8 @@
 
 ## toObjectType() function
 
+Transform an array to an [IObjectType](./tscgen.iobjecttype.md)
+
 <b>Signature:</b>
 
 ```typescript

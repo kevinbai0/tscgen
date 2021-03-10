@@ -4,20 +4,22 @@
 
 ## unionType() function
 
+Create a union type (i.e `{ value: 1 } | { value: 2 }`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
-export declare function unionType<T extends ReadonlyArray<IType>>(types: T, ...extract: ITypePropertyType[]): IUnionType<T>;
+export declare function unionType<T extends ReadonlyArray<IType>>(...types: T): IUnionType<T>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  types | T |  |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] |  |
+|  types | T | variadic array of [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [IUnionType](./tscgen.iuniontype.md)<!-- -->&lt;T&gt;
+
 

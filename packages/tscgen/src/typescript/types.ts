@@ -222,8 +222,8 @@ export interface IIntersectionType<T extends Readonly<IType[]> = []> {
 }
 
 /**
- * Represents a strongly typed object i.e. `\{ name: string, value: 5 \}`
- * @typeParam T - The body of the object
+ * Represents a strongly typed object i.e. `{ name: string, value: 5 }`
+ * @typeParam T - {@link IBodyType}
  * @public
  */
 export type IObjectType<T extends IBodyType = IBodyType> = {

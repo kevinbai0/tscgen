@@ -4,6 +4,8 @@
 
 ## extract() function
 
+Use the `Extract` selector (i.e. `Extract<SomeType, { name: string }>`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,10 +16,11 @@ export declare function extract<T extends IType, K extends Readonly<IType[]>, U 
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
-|  union | U |  |
+|  type | T | [IType](./tscgen.itype.md) |
+|  union | U | [IUnionType](./tscgen.iuniontype.md) to form the extract query |
 
 <b>Returns:</b>
 
 [IDecorationType](./tscgen.idecorationtype.md)<!-- -->&lt;\[T, U\]&gt;
+
 

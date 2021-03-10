@@ -4,6 +4,8 @@
 
 ## booleanTuple() function
 
+Create a tuple of boolean literal types (i.e. \[true, false, false\])
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function booleanTuple<T extends Readonly<boolean[]>>(...type: T):
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
+|  type | T | Variadic array of <code>ReadonlyArray&lt;boolean&gt;</code> |
 
 <b>Returns:</b>
 
 [ITupleType](./tscgen.itupletype.md)<!-- -->&lt;[BooleanLiterals](./tscgen.booleanliterals.md)<!-- -->&lt;T&gt;&gt;
+
 

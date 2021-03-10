@@ -4,6 +4,8 @@
 
 ## Combine type
 
+Combine 2 Record types into one
+
 <b>Signature:</b>
 
 ```typescript

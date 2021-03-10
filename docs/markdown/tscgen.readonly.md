@@ -4,6 +4,8 @@
 
 ## readonly() function
 
+Mark a type as readonly (i.e. `Readonly<string>`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function readonly<T extends IType>(type: T): IDecorationType<[T]>
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
+|  type | T | [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [IDecorationType](./tscgen.idecorationtype.md)<!-- -->&lt;\[T\]&gt;
+
 

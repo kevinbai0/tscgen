@@ -4,6 +4,12 @@ import {
 } from '../core/builders/entityBuilder';
 import { IJsBodyValue, IJsIdentifierValue, IJsObjectValue } from './types';
 
+/**
+ * Create a Javascript object
+ * @param value - {@link IJsBodyValue} of the object
+ * @returns
+ * @public
+ */
 export function objectValue(value: IJsBodyValue): IJsObjectValue {
   return {
     type: 'object',
@@ -12,7 +18,7 @@ export function objectValue(value: IJsBodyValue): IJsObjectValue {
 }
 
 /**
- *
+ * Create a reference to another variable declared by a {@link IEntityBuilder}
  * @param builder - The name of the interace/type
  * @param extract - Properties to extract for the identifier (eg: ITest[number][string])
  * @returns IJSIdentfierValue

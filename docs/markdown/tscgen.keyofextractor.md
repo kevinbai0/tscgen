@@ -4,7 +4,7 @@
 
 ## keyOfExtractor() function
 
-References the keyof property for a type/interface
+References the `keyof` property for a type/interface
 
 <b>Signature:</b>
 

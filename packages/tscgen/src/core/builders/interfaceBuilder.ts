@@ -70,6 +70,9 @@ export interface IInterfaceBuilder<
   generics: Generics;
 }
 
+/**
+ * Combine 2 Record types into one
+ */
 export type Combine<T, K> = {
   [Key in keyof T | keyof K]: Key extends keyof K
     ? K[Key]
@@ -79,7 +82,7 @@ export type Combine<T, K> = {
 };
 
 /**
- *
+ * Build a Typescript `interface`
  * @param interfaceName - The name of the interface
  * @returns
  * @public

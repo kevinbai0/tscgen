@@ -4,6 +4,8 @@
 
 ## undefinedType() function
 
+Create the `undefined` type
+
 <b>Signature:</b>
 
 ```typescript

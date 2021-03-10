@@ -4,6 +4,8 @@
 
 ## stringType() function
 
+Create a union of string literals (i.e. `'hello' | 'world'`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,7 +16,7 @@ export declare function stringType<T extends string[]>(...value: T): IUnionType<
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | T |  |
+|  value | T | <code>...string[]</code> A list of string literals to parse |
 
 <b>Returns:</b>
 

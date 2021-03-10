@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
-    "build": "tscgen && eslint out --fix"
+    "build": "tscgen && eslint out --fix",
+    "build:watch": ""
   },
   "devDependencies": {
     "@kevinbai/lint-rules": "^1.0.2",

@@ -4,6 +4,8 @@
 
 ## BooleanLiterals type
 
+Helper type to convert boolean array into array of [IBooleanLiteralType](./tscgen.ibooleanliteraltype.md)
+
 <b>Signature:</b>
 
 ```typescript

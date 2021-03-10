@@ -4,7 +4,7 @@
 
 ## IObjectType type
 
-Represents a strongly typed object i.e. `\{ name: string, value: 5 \}`
+Represents a strongly typed object i.e. `{ name: string, value: 5 }`
 
 <b>Signature:</b>
 

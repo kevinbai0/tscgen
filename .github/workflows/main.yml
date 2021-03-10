@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install api-extractor
-        run: npm i -g api-extractor
+        run: npm i -g @microsoft/api-extractor
 
       - name: Install dependencies
         run: node common/scripts/install-run-rush.js install

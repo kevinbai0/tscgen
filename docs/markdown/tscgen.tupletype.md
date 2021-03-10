@@ -4,20 +4,22 @@
 
 ## tupleType() function
 
+Create a tuple type (i.e. `[string, number]`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
-export declare function tupleType<T extends readonly IType<unknown>[]>(type: T, ...extract: ITypePropertyType[]): ITupleType<T>;
+export declare function tupleType<T extends readonly IType<unknown>[]>(...type: T): ITupleType<T>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] |  |
+|  type | T | variadic array of [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [ITupleType](./tscgen.itupletype.md)<!-- -->&lt;T&gt;
+
 

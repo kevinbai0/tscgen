@@ -4,6 +4,8 @@
 
 ## nullType() function
 
+Create the `null` type
+
 <b>Signature:</b>
 
 ```typescript

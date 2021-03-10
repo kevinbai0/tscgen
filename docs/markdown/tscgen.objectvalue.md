@@ -4,6 +4,8 @@
 
 ## objectValue() function
 
+Create a Javascript object
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function objectValue(value: IJsBodyValue): IJsObjectValue;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | [IJsBodyValue](./tscgen.ijsbodyvalue.md) |  |
+|  value | [IJsBodyValue](./tscgen.ijsbodyvalue.md) | [IJsBodyValue](./tscgen.ijsbodyvalue.md) of the object |
 
 <b>Returns:</b>
 
 [IJsObjectValue](./tscgen.ijsobjectvalue.md)
+
 

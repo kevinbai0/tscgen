@@ -8,40 +8,40 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [arrayType(type, extract)](./tscgen.arraytype.md) |  |
-|  [booleanTuple(type)](./tscgen.booleantuple.md) |  |
-|  [booleanType()](./tscgen.booleantype.md) |  |
-|  [booleanType(value)](./tscgen.booleantype_1.md) |  |
+|  [arrayType(type)](./tscgen.arraytype.md) | Creates an array type (i.e. <code>Array&lt;string&gt;</code>) |
+|  [booleanTuple(type)](./tscgen.booleantuple.md) | Create a tuple of boolean literal types (i.e. \[true, false, false\]) |
+|  [booleanType()](./tscgen.booleantype.md) | Create the <code>boolean</code> type |
+|  [booleanType(value)](./tscgen.booleantype_1.md) | Create a union of boolean literals (i.e. <code>true &#124; false</code>) |
 |  [combine(builders)](./tscgen.combine.md) | Combines builders and outputs the generated string of the builders sequentially |
-|  [extract(type, union)](./tscgen.extract.md) |  |
-|  [genericType(value)](./tscgen.generictype.md) |  |
-|  [identifierType(builder, extract)](./tscgen.identifiertype.md) |  |
-|  [identifierValue(builder)](./tscgen.identifiervalue.md) |  |
+|  [extract(type, union)](./tscgen.extract.md) | Use the <code>Extract</code> selector (i.e. <code>Extract&lt;SomeType, { name: string }&gt;</code>) |
+|  [genericType(value)](./tscgen.generictype.md) | Create a reference to a generic value in the [IInterfaceBuilder](./tscgen.iinterfacebuilder.md) or [ITypeDefBuilder](./tscgen.itypedefbuilder.md) |
+|  [identifierType(builder, extract)](./tscgen.identifiertype.md) | Create an identifier type from an [IEntityBuilder](./tscgen.ientitybuilder.md) |
+|  [identifierValue(builder)](./tscgen.identifiervalue.md) | Create a reference to another variable declared by a [IEntityBuilder](./tscgen.ientitybuilder.md) |
 |  [importBuilder(defaultOptions)](./tscgen.importbuilder.md) |  |
-|  [importModuleType(value)](./tscgen.importmoduletype.md) |  |
-|  [interfaceBuilder(interfaceName, defaultOptions)](./tscgen.interfacebuilder.md) |  |
-|  [intersectionType(types, extract)](./tscgen.intersectiontype.md) |  |
-|  [keyOfExtractor(builder)](./tscgen.keyofextractor.md) | References the keyof property for a type/interface |
-|  [lazyImportType(value)](./tscgen.lazyimporttype.md) |  |
-|  [lazyType(value)](./tscgen.lazytype.md) |  |
+|  [importModuleType(value)](./tscgen.importmoduletype.md) | Specify a module for the import declaration |
+|  [interfaceBuilder(interfaceName, defaultOptions)](./tscgen.interfacebuilder.md) | Build a Typescript <code>interface</code> |
+|  [intersectionType(types)](./tscgen.intersectiontype.md) | Create an intersection type (i.e. <code>{ value: number } &amp; { sample: string }</code>) |
+|  [keyOfExtractor(builder)](./tscgen.keyofextractor.md) | References the <code>keyof</code> property for a type/interface |
+|  [lazyImportType(value)](./tscgen.lazyimporttype.md) | Create a lazy import type to be computed only when written |
+|  [lazyType(value)](./tscgen.lazytype.md) | Creates a lazy type to be computed only when written |
 |  [mapObject(obj, transform)](./tscgen.mapobject.md) | Maps the values of each of value to a new one synchronously |
 |  [mapObjectPromise(obj, transform)](./tscgen.mapobjectpromise.md) | Maps the values of each of value to a new one asynchronously |
-|  [nullType()](./tscgen.nulltype.md) |  |
-|  [numberTuple(type)](./tscgen.numbertuple.md) |  |
-|  [numberType()](./tscgen.numbertype.md) |  |
-|  [numberType(value)](./tscgen.numbertype_1.md) |  |
-|  [objectType(type, extract)](./tscgen.objecttype.md) |  |
-|  [objectValue(value)](./tscgen.objectvalue.md) |  |
-|  [rawType(value)](./tscgen.rawtype.md) |  |
-|  [readonly(type)](./tscgen.readonly.md) |  |
-|  [stringTuple(type)](./tscgen.stringtuple.md) |  |
-|  [stringType()](./tscgen.stringtype.md) |  |
-|  [stringType(value)](./tscgen.stringtype_1.md) |  |
-|  [toObjectType(arr, transform)](./tscgen.toobjecttype.md) |  |
-|  [tupleType(type, extract)](./tscgen.tupletype.md) |  |
+|  [nullType()](./tscgen.nulltype.md) | Create the <code>null</code> type |
+|  [numberTuple(type)](./tscgen.numbertuple.md) | Create a tuple of number literal types (i.e. \[1, 2, 3\]) |
+|  [numberType()](./tscgen.numbertype.md) | Create the <code>number</code> type |
+|  [numberType(value)](./tscgen.numbertype_1.md) | Create a union of number literal (i.e. <code>1 &#124; 2 &#124; 3</code>) |
+|  [objectType(type)](./tscgen.objecttype.md) | Creates an object type - more specifically create a strongly typed <code>Record&lt;string, unknown&gt;</code> |
+|  [objectValue(value)](./tscgen.objectvalue.md) | Create a Javascript object |
+|  [rawType(value)](./tscgen.rawtype.md) | Inject any value as a type (e.g <code>[Key in keyof T]</code>) |
+|  [readonly(type)](./tscgen.readonly.md) | Mark a type as readonly (i.e. <code>Readonly&lt;string&gt;</code>) |
+|  [stringTuple(type)](./tscgen.stringtuple.md) | Create a tuple of string literal types (i.e. \['hello', 'world'\]) |
+|  [stringType()](./tscgen.stringtype.md) | Create the <code>string</code> type |
+|  [stringType(value)](./tscgen.stringtype_1.md) | Create a union of string literals (i.e. <code>'hello' &#124; 'world'</code>) |
+|  [toObjectType(arr, transform)](./tscgen.toobjecttype.md) | Transform an array to an [IObjectType](./tscgen.iobjecttype.md) |
+|  [tupleType(type)](./tscgen.tupletype.md) | Create a tuple type (i.e. <code>[string, number]</code>) |
 |  [typeDefBuilder(name, defaultOptions)](./tscgen.typedefbuilder.md) |  |
-|  [undefinedType()](./tscgen.undefinedtype.md) |  |
-|  [unionType(types, extract)](./tscgen.uniontype.md) |  |
+|  [undefinedType()](./tscgen.undefinedtype.md) | Create the <code>undefined</code> type |
+|  [unionType(types)](./tscgen.uniontype.md) | Create a union type (i.e <code>{ value: 1 } &#124; { value: 2 }</code>) |
 
 ## Interfaces
 
@@ -90,9 +90,9 @@
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [BooleanLiterals](./tscgen.booleanliterals.md) |  |
+|  [BooleanLiterals](./tscgen.booleanliterals.md) | Helper type to convert boolean array into array of [IBooleanLiteralType](./tscgen.ibooleanliteraltype.md) |
 |  [BuildersToImport](./tscgen.builderstoimport.md) |  |
-|  [Combine](./tscgen.combine.md) |  |
+|  [Combine](./tscgen.combine.md) | Combine 2 Record types into one |
 |  [Formatter](./tscgen.formatter.md) |  |
 |  [IBaseBuilderTypes](./tscgen.ibasebuildertypes.md) |  |
 |  [IEntityBuilderTypes](./tscgen.ientitybuildertypes.md) |  |
@@ -109,14 +109,14 @@
 |  [IJsNumberValue](./tscgen.ijsnumbervalue.md) |  |
 |  [IJsStringValue](./tscgen.ijsstringvalue.md) |  |
 |  [IJsValue](./tscgen.ijsvalue.md) |  |
-|  [IObjectType](./tscgen.iobjecttype.md) | Represents a strongly typed object i.e. <code>\{ name: string, value: 5 \}</code> |
+|  [IObjectType](./tscgen.iobjecttype.md) | Represents a strongly typed object i.e. <code>{ name: string, value: 5 }</code> |
 |  [IRawIdentifierType](./tscgen.irawidentifiertype.md) | Any raw string to include that isn't supported (i.e. <code>Key extends string</code>) |
 |  [IType](./tscgen.itype.md) | Represents a Typescript type |
 |  [ITypePropertyType](./tscgen.itypepropertytype.md) |  |
 |  [ITypescriptBuilderTypes](./tscgen.itypescriptbuildertypes.md) |  |
 |  [JoinType](./tscgen.jointype.md) |  |
-|  [NumberLiterals](./tscgen.numberliterals.md) |  |
+|  [NumberLiterals](./tscgen.numberliterals.md) | Helper type to convert number array into array of [INumberLiteralType](./tscgen.inumberliteraltype.md) |
 |  [Promiseable](./tscgen.promiseable.md) |  |
-|  [StringLiterals](./tscgen.stringliterals.md) |  |
+|  [StringLiterals](./tscgen.stringliterals.md) | Helper type to convert string array into array of [IStringLiteralType](./tscgen.istringliteraltype.md) |
 |  [Unpromise](./tscgen.unpromise.md) |  |
 

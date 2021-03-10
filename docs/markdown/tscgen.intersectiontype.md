@@ -4,20 +4,22 @@
 
 ## intersectionType() function
 
+Create an intersection type (i.e. `{ value: number } & { sample: string }`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
-export declare function intersectionType<T extends ReadonlyArray<IType>>(types: T, ...extract: ITypePropertyType[]): IIntersectionType<T>;
+export declare function intersectionType<T extends ReadonlyArray<IType>>(...types: T): IIntersectionType<T>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  types | T |  |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] |  |
+|  types | T | variadic array of [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [IIntersectionType](./tscgen.iintersectiontype.md)<!-- -->&lt;T&gt;
+
 

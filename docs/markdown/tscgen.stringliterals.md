@@ -4,6 +4,8 @@
 
 ## StringLiterals type
 
+Helper type to convert string array into array of [IStringLiteralType](./tscgen.istringliteraltype.md)
+
 <b>Signature:</b>
 
 ```typescript

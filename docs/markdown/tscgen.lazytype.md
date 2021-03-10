@@ -4,6 +4,8 @@
 
 ## lazyType() function
 
+Creates a lazy type to be computed only when written
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function lazyType<T extends IType>(value: () => T): ILazyType<T>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | () =&gt; T |  |
+|  value | () =&gt; T | callback to compute the lazy value - returns a [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [ILazyType](./tscgen.ilazytype.md)<!-- -->&lt;T&gt;
+
 

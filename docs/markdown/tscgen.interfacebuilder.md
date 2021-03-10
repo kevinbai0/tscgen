@@ -4,6 +4,8 @@
 
 ## interfaceBuilder() function
 
+Build a Typescript `interface`
+
 <b>Signature:</b>
 
 ```typescript

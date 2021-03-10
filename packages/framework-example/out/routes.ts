@@ -1,7 +1,7 @@
-import { FindPetsRoute } from './routes/FindPetsRoute';
 import { AddPetRoute } from './routes/AddPetRoute';
-import { FindByPetIdRoute } from './routes/FindByPetIdRoute';
 import { DeletePetRoute } from './routes/DeletePetRoute';
+import { FindByPetIdRoute } from './routes/FindByPetIdRoute';
+import { FindPetsRoute } from './routes/FindPetsRoute';
 
 export type Route =
   | FindPetsRoute

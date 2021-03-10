@@ -34,6 +34,7 @@ importers:
       esbuild: 0.8.57
       eslint: 7.21.0
       typescript: 4.2.3
+      watch: 1.0.2
     specifiers:
       '@kevinbai/lint-rules': ^1.0.2
       '@types/node': ^14.14.32
@@ -41,6 +42,7 @@ importers:
       eslint: ^7.21.0
       tscgen: workspace:*
       typescript: ^4.2.3
+      watch: ~1.0.2
   ../../packages/framework-example:
     devDependencies:
       '@kevinbai/lint-rules': 1.0.2_typescript@4.2.3
@@ -51,6 +53,7 @@ importers:
       tscgen-cli: link:../cli
       tscgen-framework: link:../framework
       typescript: 4.2.3
+      watch: 1.0.2
     specifiers:
       '@kevinbai/lint-rules': ^1.0.2
       '@types/node': ^14.14.32
@@ -60,6 +63,7 @@ importers:
       tscgen-cli: workspace:*
       tscgen-framework: workspace:*
       typescript: ^4.2.3
+      watch: ~1.0.2
   ../../packages/tscgen:
     devDependencies:
       '@changesets/cli': 2.14.1
@@ -76,6 +80,7 @@ importers:
       openapi-types: 7.2.3
       ts-node: 9.1.1_typescript@4.2.3
       typescript: 4.2.3
+      watch: 1.0.2
     specifiers:
       '@changesets/cli': ^2.14.1
       '@kevinbai/lint-rules': ^1.0.2
@@ -91,6 +96,7 @@ importers:
       openapi-types: ^7.2.3
       ts-node: ^9.1.1
       typescript: ^4.2.3
+      watch: ~1.0.2
 lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.12.11:
@@ -1463,6 +1469,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
+  /exec-sh/0.2.2:
+    dependencies:
+      merge: 1.2.1
+    dev: true
+    resolution:
+      integrity: sha512-FIUCJz1RbuS0FKTdaAafAByGS0CPvU3R0MeHxgtl+djzCc//F8HakL8GzmVNZanasTbTAY/3DRFA0KpVqj/eAw==
   /execa/0.7.0:
     dependencies:
       cross-spawn: 5.1.0
@@ -2176,6 +2188,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-3YffViIt2QWgTy6Pale5QpopX/IvU3LPL03jOTqp6pGj3VjesdO/U8CuHMKpnQr4shCNCM5fd5XFFvIIl6JBHg==
+  /merge/1.2.1:
+    dev: true
+    resolution:
+      integrity: sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
   /merge2/1.4.1:
     dev: true
     engines:
@@ -3257,6 +3273,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==
+  /watch/1.0.2:
+    dependencies:
+      exec-sh: 0.2.2
+      minimist: 1.2.5
+    dev: true
+    engines:
+      node: '>=0.1.95'
+    hasBin: true
+    resolution:
+      integrity: sha1-NApxe952Vyb6CqB9ch4BR6VR3ww=
   /wcwidth/1.0.1:
     dependencies:
       defaults: 1.0.3

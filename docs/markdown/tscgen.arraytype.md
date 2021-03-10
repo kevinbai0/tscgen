@@ -4,20 +4,22 @@
 
 ## arrayType() function
 
+Creates an array type (i.e. `Array<string>`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
-export declare function arrayType<T extends IType>(type: T, ...extract: ITypePropertyType[]): IArrayType<T>;
+export declare function arrayType<T extends IType>(type: T): IArrayType<T>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] |  |
+|  type | T | [IType](./tscgen.itype.md) |
 
 <b>Returns:</b>
 
 [IArrayType](./tscgen.iarraytype.md)<!-- -->&lt;T&gt;
+
 

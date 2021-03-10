@@ -4,6 +4,8 @@
 
 ## booleanType() function
 
+Create the `boolean` type
+
 <b>Signature:</b>
 
 ```typescript

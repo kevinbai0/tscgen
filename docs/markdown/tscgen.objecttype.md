@@ -4,20 +4,22 @@
 
 ## objectType() function
 
+Creates an object type - more specifically create a strongly typed `Record<string, unknown>`
+
 <b>Signature:</b>
 
 ```typescript
-export declare function objectType<T extends IBodyType>(type: T, ...extract: ITypePropertyType[]): IObjectType<T>;
+export declare function objectType<T extends IBodyType>(type: T): IObjectType<T>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
-|  extract | [ITypePropertyType](./tscgen.itypepropertytype.md)<!-- -->\[\] |  |
+|  type | T | [IBodyType](./tscgen.ibodytype.md) |
 
 <b>Returns:</b>
 
 [IObjectType](./tscgen.iobjecttype.md)<!-- -->&lt;T&gt;
+
 

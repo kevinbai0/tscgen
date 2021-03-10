@@ -4,6 +4,8 @@
 
 ## numberTuple() function
 
+Create a tuple of number literal types (i.e. \[1, 2, 3\])
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,10 @@ export declare function numberTuple<T extends Readonly<number[]>>(...type: T): I
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  type | T |  |
+|  type | T | Variadic array of <code>ReadonlyArray&lt;number&gt;</code> |
 
 <b>Returns:</b>
 
 [ITupleType](./tscgen.itupletype.md)<!-- -->&lt;[NumberLiterals](./tscgen.numberliterals.md)<!-- -->&lt;T&gt;&gt;
+
 

@@ -6,7 +6,8 @@
     "tscgen": "cli.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:watch": ""
   },
   "devDependencies": {
     "@kevinbai/lint-rules": "^1.0.2",

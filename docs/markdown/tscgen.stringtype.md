@@ -4,6 +4,8 @@
 
 ## stringType() function
 
+Create the `string` type
+
 <b>Signature:</b>
 
 ```typescript

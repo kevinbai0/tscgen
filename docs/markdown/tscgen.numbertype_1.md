@@ -4,6 +4,8 @@
 
 ## numberType() function
 
+Create a union of number literal (i.e. `1 | 2 | 3`<!-- -->)
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,7 +16,7 @@ export declare function numberType<T extends number[]>(...value: T): IUnionType<
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  value | T |  |
+|  value | T | <code>...number[]</code> A list of number literals |
 
 <b>Returns:</b>
 
