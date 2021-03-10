@@ -10,52 +10,14 @@ To simplify code generation by declaring/writing interfaces, types, and variable
 - Make it easy to take advantage code generation to type data in projects without overly complex generics and type annotations
 - Make maintaining, updating, and updating generated code in projects easy
 
-## Simple sample usage
+## Projects
 
-### Creating an interface
+The `tscgen` monorepo a number of different projects and packages which are located under the `packages` folder.
 
-```ts
-import tscgen from 'tscgen';
-
-const ISampleInterface = tscgen
-  .interfaceBuilder('ISampleInterface')
-  .markExport()
-  .addBody({
-    type: tscgen.stringType(),
-    data: tscgen.numberType(1, 2, 3, 4)
-    inputs: tscgen.booleanTuple(true, false)
-  })
-
-console.log(ISampleInterface.toString());
-
-// output (after linted)
-
-export interface ISampleInterface {
-  type: string;
-  data: 1 | 2 | 3 | 4;
-  inputs: [true, false]
-}
-```
-
-### Creating a Type Alias
-
-```ts
-import tscgen from 'tscgen';
-
-const TestAlias = tscgen
-  .typeDefBuilder('TestAlias')
-  .addUnion(
-    tscgen.arrayType(tscgen.stringType())
-  )
-  .addUnion(
-    tscgen.stringType('none')
-  )
-
-console.log(TestAlias.toString());
-
-// output (after linted)
-
-type TestAlias = Array<string> | 'none';
-```
+| Project        | Description           |
+| :------------- |:-------------|
+| [tscgen](./packages/tscgen/README.md)     | The core package for constructing & writing Typescript interfaces, type alises, and JS Objects |
+| [tscgen-framework](./packages/framework/README.md)      | A small framework for structuring, processing, and outputting code-generation projects.      |
+| [tscgen-cli](./packages/cli/README.md) | CLI-tool that interfaces with [tscgen-framework](./packages/framework/README.md) to build projects.     |  
 
 ### [API Reference](docs/markdown/index.md)
