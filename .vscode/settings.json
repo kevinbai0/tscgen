@@ -1,5 +1,11 @@
 {
   "files.associations": {
     "*.json": "jsonc"
-  }
+  },
+  "eslint.workingDirectories": [
+    { "directory": "packages/tscgen", "changeProcessCWD": true },
+    { "directory": "packages/framework", "changeProcessCWD": true },
+    { "directory": "packages/framework-example", "changeProcessCWD": true },
+    { "directory": "packages/cli", "changeProcessCWD": true }
+  ]
 }

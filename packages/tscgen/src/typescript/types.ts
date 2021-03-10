@@ -1,7 +1,7 @@
 import {
   IEntityBuilder,
   IEntityBuilderTypes,
-} from 'tscgen/core/builders/entityBuilder';
+} from '../core/builders/entityBuilder';
 
 /**
  * The default value and extends clause of a generic type

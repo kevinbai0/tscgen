@@ -1,10 +1,10 @@
 import {
   identifierType,
-  IEntityBuilder,
   importBuilder,
   lazyType,
   lazyImportType,
   importModuleType,
+  IBaseBuilder,
 } from 'tscgen';
 import { getFilename } from './getFilename';
 import {
@@ -13,7 +13,17 @@ import {
   GetMappedExports,
   TSCGenInputs,
   BuilderExports,
+  ExportData,
 } from './types';
+
+type ContextReturnType<
+  Inputs extends GetInputs,
+  Exports extends ReadonlyArray<string>
+> = {
+  imports?: ReadonlyArray<IBaseBuilder<'import'>>;
+  exports: ExportData<Exports>;
+  inputData: TSCGenInputs<Inputs>;
+};
 
 export async function createContext<
   Inputs extends GetInputs,
@@ -25,7 +35,7 @@ export async function createContext<
   options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
   }
-) {
+): Promise<ContextReturnType<Inputs, Exports>[]> {
   const inputs = await Promise.resolve(getInputs());
 
   const state: [
@@ -82,12 +92,3 @@ export async function createContext<
 
   return res.filter((val) => options?.filter?.(val.inputData) ?? true);
 }
-
-type ExportsWithEntity<T> = {
-  [Key in keyof T]: T[Key] extends string
-    ? {
-        key: T[Key];
-        entity: IEntityBuilder;
-      }
-    : never;
-};

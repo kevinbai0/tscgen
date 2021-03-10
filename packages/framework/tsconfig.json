@@ -5,8 +5,9 @@
 		"module": "CommonJS",
 		"esModuleInterop": true,
 		"lib": ["ES2020"],
-		"outDir": "dist",
-		"declaration": true
+		"outDir": "dist/types",
+		"declaration": true,
+		"emitDeclarationOnly": true
 	},
 	"include": [
 		"src"	

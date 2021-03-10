@@ -9,4 +9,5 @@
 |  Package | Description |
 |  --- | --- |
 |  [tscgen](./tscgen.md) |  |
+|  [tscgen-framework](./tscgen-framework.md) |  |
 

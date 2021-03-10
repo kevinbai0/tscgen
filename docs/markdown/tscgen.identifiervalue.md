@@ -20,3 +20,5 @@ export declare function identifierValue<Type extends IEntityBuilderTypes, Name e
 
 [IJsIdentifierValue](./tscgen.ijsidentifiervalue.md)
 
+IJSIdentfierValue
+

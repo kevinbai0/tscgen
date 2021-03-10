@@ -31,11 +31,13 @@ importers:
     devDependencies:
       '@kevinbai/lint-rules': 1.0.2_typescript@4.2.3
       '@types/node': 14.14.32
+      esbuild: 0.8.57
       eslint: 7.21.0
       typescript: 4.2.3
     specifiers:
       '@kevinbai/lint-rules': ^1.0.2
       '@types/node': ^14.14.32
+      esbuild: ~0.8.57
       eslint: ^7.21.0
       tscgen: workspace:*
       typescript: ^4.2.3

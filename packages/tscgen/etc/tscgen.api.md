@@ -4,9 +4,6 @@
 
 ```ts
 
-import { IEntityBuilder as IEntityBuilder_2 } from 'tscgen/core/builders/entityBuilder';
-import { IEntityBuilderTypes as IEntityBuilderTypes_2 } from 'tscgen/core/builders/entityBuilder';
-
 // @public (undocumented)
 export function arrayType<T extends IType>(type: T, ...extract: ITypePropertyType[]): IArrayType<T>;
 
@@ -104,7 +101,7 @@ export interface IDecorationType<T extends Readonly<IType[]> = Readonly<IType[]>
 export function identifierType<T extends IEntityBuilder<IEntityBuilderTypes, string>>(builder: T, ...extract: ITypePropertyType[]): IIdentifierType;
 
 // @public (undocumented)
-export function identifierValue<Type extends IEntityBuilderTypes_2, Name extends string>(builder: IEntityBuilder_2<Type, Name>): IJsIdentifierValue;
+export function identifierValue<Type extends IEntityBuilderTypes, Name extends string>(builder: IEntityBuilder<Type, Name>): IJsIdentifierValue;
 
 // @public (undocumented)
 export interface IEntityBuilder<Type extends IEntityBuilderTypes = IEntityBuilderTypes, Name extends string = string> {
@@ -149,7 +146,7 @@ export type IGenericValue<Name extends string = string, Options extends IGeneric
 };
 
 // @public
-export interface IIdentifierType<T extends IEntityBuilder_2<IEntityBuilderTypes_2, string> = IEntityBuilder_2<IEntityBuilderTypes_2, string>> {
+export interface IIdentifierType<T extends IEntityBuilder<IEntityBuilderTypes, string> = IEntityBuilder<IEntityBuilderTypes, string>> {
     // (undocumented)
     definition: T;
     // (undocumented)
@@ -382,7 +379,7 @@ export interface ITupleType<T extends ReadonlyArray<IType> = ReadonlyArray<IType
 }
 
 // @public
-export type IType<T extends any = any> = IStringType | INumberType | IBooleanType | IUndefinedType | INullType | IIdentifierType<T extends IEntityBuilder_2<'type' | 'interface', string> ? T : IEntityBuilder_2<'type' | 'interface', string>> | IArrayType<T extends IType ? T : IType> | IObjectType<T extends IBodyType ? T : IBodyType> | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IIntersectionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IStringLiteralType<T extends string ? T : string> | INumberLiteralType<T extends number ? T : number> | IBooleanLiteralType<T extends boolean ? T : boolean> | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IGenericIdentifierType<T extends string ? T : string> | IRawIdentifierType | ILazyType<T extends IType ? T : IType>;
+export type IType<T extends any = any> = IStringType | INumberType | IBooleanType | IUndefinedType | INullType | IIdentifierType<T extends IEntityBuilder<'type' | 'interface', string> ? T : IEntityBuilder<'type' | 'interface', string>> | IArrayType<T extends IType ? T : IType> | IObjectType<T extends IBodyType ? T : IBodyType> | IUnionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IIntersectionType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IStringLiteralType<T extends string ? T : string> | INumberLiteralType<T extends number ? T : number> | IBooleanLiteralType<T extends boolean ? T : boolean> | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>> | IGenericIdentifierType<T extends string ? T : string> | IRawIdentifierType | ILazyType<T extends IType ? T : IType>;
 
 // @public (undocumented)
 export interface ITypeDefBuilder<Name extends string, Generics extends Readonly<IGenericValue<string, IGenericOptions>[]>, JoinedTypes extends ReadonlyArray<{

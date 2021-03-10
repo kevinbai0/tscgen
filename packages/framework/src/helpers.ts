@@ -29,16 +29,18 @@ export const createMappedExports = <Order extends ReadonlyArray<string>>(
   };
 };
 
-export const createPathExport = (...path: [dir: string, filename: string]) =>
-  path;
-export const createStaticExports = <Exports extends ReadonlyArray<string>>(
-  ...order: Exports
-) => (
+type CreateStaticExports<Exports extends ReadonlyArray<string>> = (
   getBuilders: () => Promise<{
     imports: ReadonlyArray<IBaseBuilder<'import'>>;
     exports: Record<Exports[number], IEntityBuilder>;
   }>
-) => async (): Promise<BuilderExports<Exports>> => {
+) => () => Promise<BuilderExports<Exports>>;
+
+export const createPathExport = (...path: [dir: string, filename: string]) =>
+  path;
+export const createStaticExports = <Exports extends ReadonlyArray<string>>(
+  ...order: Exports
+): CreateStaticExports<Exports> => (getBuilders) => async () => {
   const res = await getBuilders();
 
   return {

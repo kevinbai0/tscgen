@@ -16,21 +16,21 @@ export type InputData<
   data: T;
 };
 
+export type ExportData<Exports extends ReadonlyArray<string>> = {
+  values: {
+    [Key in Exports[number]]: IEntityBuilder;
+  };
+  order: Exports;
+};
+
 export type BuilderExports<
   Exports extends ReadonlyArray<string>,
   OmitOrder extends boolean = false
 > = {
   imports?: ReadonlyArray<IBaseBuilder<'import'>>;
   exports: OmitOrder extends true
-    ? {
-        [Key in Exports[number]]: IEntityBuilder;
-      }
-    : {
-        values: {
-          [Key in Exports[number]]: IEntityBuilder;
-        };
-        order: Exports;
-      };
+    ? ExportData<Exports>['values']
+    : ExportData<Exports>;
 };
 
 export type Context<
