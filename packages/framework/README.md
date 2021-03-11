@@ -28,3 +28,22 @@ projectDir: src
 `tscgen` will build your project from the `projectDir` and generate the output in the `outDir`.
 
 Each file in `projectDir` gets processed and generated as a corresponding typescript generated file in the `outDir`.
+
+## Documentation
+
+### Project Setup Guide
+
+#### 1. Standalone Projects
+
+NPM Scripts:
+
+```json
+{
+  "scripts": {
+    "generate": "tscgen generate",
+    "build": "tsc"
+  }
+}
+```
+
+#### 2. Subfolder

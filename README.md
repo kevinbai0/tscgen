@@ -1,6 +1,6 @@
-<div align="center" style="font-size:32px; font-weight: 700">
+<h1 align="center">
   tscgen
-</div>
+</h1>
 
 <div align="center">
 <em>A collection of tools for Typescript code generation.</em>
@@ -17,9 +17,6 @@
   - [Build your project](#build-your-project)
 - [Documentation](#documentation)
   - [tscgen-framework](#tscgen-framework)
-    - [Project Setup Guide](#project-setup-guide)
-      - [1. Standalone Projects](#1-standalone-projects)
-      - [2. Subfolder](#2-subfolder)
   - [tscgen](#tscgen)
 
 ## Why?
@@ -119,21 +116,8 @@ This section outlines detailed usage of both `tscgen` and `tscgen-framework`. A 
 
 ### tscgen-framework
 
-#### Project Setup Guide
-
-##### 1. Standalone Projects
-
-NPM Scripts:
-
-```json
-{
-  "scripts": {
-    "generate": "tscgen generate",
-    "build": "tsc"
-  }
-}
-```
-
-##### 2. Subfolder
+[Docs](./packages/framework/README.md)
 
 ### tscgen
+
+[Docs](./packages/tscgen/README.md)
