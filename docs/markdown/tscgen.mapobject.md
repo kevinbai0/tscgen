@@ -16,7 +16,7 @@ export declare function mapObject<T, K>(obj: Record<string, T>, transform: (valu
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  obj | Record&lt;string, T&gt; | object of type Record<!-- -->&lt;<!-- -->string, any<!-- -->&gt; to map |
+|  obj | Record&lt;string, T&gt; | object of type <code>Record&lt;string, any&gt;</code> to map |
 |  transform | (value: T, key: string) =&gt; K | callback that returns the new value for each key/value pair |
 
 <b>Returns:</b>

@@ -18,35 +18,59 @@ import {
   objectType,
   isUndefinedType,
   valueProperties,
+  IJsIdentifierValue,
+  IJsBodyValue,
 } from 'tscgen';
 import { getReference, getStaticReference, register } from 'tscgen-framework';
 
 export const getPath = __filename;
 
 const outputs = register(`defaultExport`).withInputs(async () => {
-  const values = await getReference(import('../routes/[route]'), getPath);
+  const values = await getReference(
+    import('../../routes/[route]'),
+    getPath,
+    {}
+  );
   const inputs = await values.referenceInputs();
 
   return inputs.map((input) => ({
     ...input,
     params: {
-      endpoint: input.params.route,
+      path: input.data.route.replace(/[{}]/g, ''),
+      endpoint: input.data.pathInfo.method,
     },
   }));
 });
 
 export default outputs.generateExports(async ({ data, params }) => {
-  const reference = await getReference(import('../routes/[route]'), getPath);
+  const reference = await getReference(
+    import('../../routes/[route]'),
+    getPath,
+    params
+  );
   const foundRoutes = await reference
     .referenceExports('route')
-    .filter((inp) => inp.params.route === params.endpoint);
+    .filter((inp) => {
+      return (
+        inp.data.route === data.route &&
+        inp.data.pathInfo.method === data.pathInfo.method
+      );
+    });
 
   const route = foundRoutes.exports[0].as('interface');
 
-  const createRequest = getStaticReference('../request.static.ts')
+  const createRequest = getStaticReference(
+    '../../request.static.ts',
+    getPath,
+    params
+  )
     .getReference('createRequest')
     .asVariable();
-  const ResponseMessage = getStaticReference('../ResponseMessage.static.ts')
+  const ResponseMessage = getStaticReference(
+    '../../ResponseMessage.static.ts',
+    getPath,
+    params
+  )
     .getReference('ResponseMessage')
     .asTypeAlias();
 
@@ -119,6 +143,28 @@ export default outputs.generateExports(async ({ data, params }) => {
     apiPath ?? ''
   );
 
+  const getBody = (fnParams: Record<string, IJsIdentifierValue>) => {
+    const body: IJsBodyValue =
+      hasBody && hasQuery
+        ? {
+            body: valueProperties(fnParams.data, 'body'),
+            query: valueProperties(fnParams.data, 'query'),
+          }
+        : hasBody
+        ? {
+            body: fnParams.data,
+          }
+        : hasQuery
+        ? {
+            query: fnParams.data,
+          }
+        : {};
+    return {
+      ...body,
+      method: data.pathInfo.method,
+    };
+  };
+
   return {
     imports: [
       createRequest.import,
@@ -133,30 +179,12 @@ export default outputs.generateExports(async ({ data, params }) => {
           ).returns((fnParams) =>
             callFunction(
               identifierValue(createRequest.exports[0]),
-              [
-                apiStr,
-                objectValue(
-                  hasBody && hasQuery
-                    ? {
-                        body: valueProperties(fnParams.data, 'body'),
-                        query: valueProperties(fnParams.data, 'query'),
-                      }
-                    : hasBody
-                    ? {
-                        body: fnParams.data,
-                      }
-                    : hasQuery
-                    ? {
-                        query: fnParams.data,
-                      }
-                    : {}
-                ),
-              ],
+              [apiStr, objectValue(getBody(fnParams))],
               [responseGeneric]
             )
           )
         )
-        .markExport(),
+        .markExport(true),
     },
   };
 });

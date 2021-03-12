@@ -106,7 +106,6 @@
 
 |  Variable | Description |
 |  --- | --- |
-|  [createFormatter](./tscgen.createformatter.md) |  |
 |  [variableBuilder](./tscgen.variablebuilder.md) |  |
 
 ## Type Aliases
@@ -116,7 +115,6 @@
 |  [BooleanLiterals](./tscgen.booleanliterals.md) | Helper type to convert boolean array into array of [IBooleanLiteralType](./tscgen.ibooleanliteraltype.md) |
 |  [BuildersToImport](./tscgen.builderstoimport.md) |  |
 |  [Combine](./tscgen.combine.md) | Combine 2 Record types into one |
-|  [Formatter](./tscgen.formatter.md) |  |
 |  [IBaseBuilderTypes](./tscgen.ibasebuildertypes.md) |  |
 |  [IEntityBuilderTypes](./tscgen.ientitybuildertypes.md) |  |
 |  [IGenericIdentifierType](./tscgen.igenericidentifiertype.md) | Represents a generic type name (i.e. <code>&lt;T&gt;</code> or <code>&lt;S&gt;</code>) |

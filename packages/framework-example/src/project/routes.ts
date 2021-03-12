@@ -6,7 +6,11 @@ export const getPath = __filename;
 const outputs = register('Route', 'Routes', 'RoutesData', 'routesData');
 
 export default outputs.generateExports(async () => {
-  const references = await getReference(import('./routes/[route]'), __filename);
+  const references = await getReference(
+    import('./routes/[route]'),
+    __filename,
+    {}
+  );
   const { imports, exports } = await references
     .referenceExports('route')
     .filter(() => true);

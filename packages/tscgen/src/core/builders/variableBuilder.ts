@@ -10,7 +10,7 @@ export interface IVariableBuilder extends IEntityBuilder<'variable', string> {
   setAssignment(body: IJsValue): IVariableBuilder;
   addTypeAlias(typeDefinition: IType): IVariableBuilder;
   setLevel(level: 'const' | 'let' | 'var'): IVariableBuilder;
-  markExport(): IVariableBuilder;
+  markExport(defaultExport?: boolean): IVariableBuilder;
 }
 
 export const variableBuilder = (
@@ -20,9 +20,11 @@ export const variableBuilder = (
     decorate: 'const' | 'let' | 'var';
     export: boolean;
     type?: IType;
+    defaultExport: boolean;
   } = {
     decorate: 'const',
     export: false,
+    defaultExport: false,
   }
 ): IVariableBuilder => {
   function build() {
@@ -30,11 +32,15 @@ export const variableBuilder = (
       ? `: ${writeType(defaultValue.type)}`
       : '';
 
+    const valueStr = `${writeJsValue(defaultValue.body ?? undefinedValue())}`;
+
+    if (defaultValue.export && defaultValue.defaultExport) {
+      return `export default ${valueStr}`;
+    }
+
     return `${defaultValue.export ? 'export ' : ''}${
       defaultValue.decorate
-    } ${name}${typeStr} = ${writeJsValue(
-      defaultValue.body ?? undefinedValue()
-    )}`;
+    } ${name}${typeStr} = ${valueStr}`;
   }
   return {
     varName: name,
@@ -44,10 +50,11 @@ export const variableBuilder = (
         ...defaultValue,
         body,
       }),
-    markExport: () =>
+    markExport: (defaultExport = false) =>
       variableBuilder(name, {
         ...defaultValue,
         export: true,
+        defaultExport,
       }),
     setLevel: (level) =>
       variableBuilder(name, {

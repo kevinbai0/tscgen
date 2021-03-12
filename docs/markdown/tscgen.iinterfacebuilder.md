@@ -28,5 +28,5 @@ export interface IInterfaceBuilder<Name extends string, Generics extends Readonl
 |  [addBody(body)](./tscgen.iinterfacebuilder.addbody.md) | Adds a body to the interface - if multiple bodies are passed in, it merges the bodies together (but not an intersection type) |
 |  [addGeneric(name, options)](./tscgen.iinterfacebuilder.addgeneric.md) |  |
 |  [extends(type)](./tscgen.iinterfacebuilder.extends.md) | Make the interface extend another identifier - must be another Entity that it extends |
-|  [markExport()](./tscgen.iinterfacebuilder.markexport.md) | Make the interface exportable |
+|  [markExport(defaultExport)](./tscgen.iinterfacebuilder.markexport.md) | Make the interface exportable |
 

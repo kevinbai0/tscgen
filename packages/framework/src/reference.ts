@@ -14,7 +14,8 @@ export async function getReference<
   Inputs extends GetInputs | undefined
 >(
   importFile: Promise<OutputModule<Routes, Inputs>>,
-  callerPath: string
+  callerPath: string,
+  callerParams: Record<string, string>
 ): Promise<IReference<Routes, Inputs>> {
   const res = await importFile;
   if (!res.getPath) {
@@ -45,6 +46,7 @@ export async function getReference<
                 data.inputs,
                 data.getExports,
                 res.getPath,
+                callerParams,
                 filter ? { filter } : undefined
               )
             ).map((val) => ({
@@ -66,7 +68,12 @@ export async function getReference<
                       .map(([, value]) => value as IEntityBuilder)
                   )
                   .addImportLocation(
-                    getFilename(res.getPath, callerPath, inputData.params)
+                    getFilename(
+                      res.getPath,
+                      callerPath,
+                      inputData.params,
+                      callerParams
+                    )
                   );
               }),
             };

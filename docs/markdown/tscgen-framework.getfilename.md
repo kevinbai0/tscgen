@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-getFilename: (toFile: string, caller: string, params: Record<string, string>) => string
+getFilename: (toFile: string, caller: string, params: Record<string, string>, callerParams: Record<string, string>) => string
 ```

@@ -117,7 +117,7 @@ async function writeGroup(
   if (res.getPath && defaultExport.inputs) {
     const data = defaultExport as OutputType<ReadonlyArray<string>, GetInputs>;
     const ctx = (
-      await createContext(data.inputs!, data.getExports!, res.getPath)
+      await createContext(data.inputs!, data.getExports!, res.getPath, {})
     ).map(async ({ imports, exports, inputData }) => {
       const output = combine(
         ...(imports ?? []),

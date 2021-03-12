@@ -22,7 +22,7 @@ export interface IVariableBuilder extends IEntityBuilder<'variable', string>
 |  Method | Description |
 |  --- | --- |
 |  [addTypeAlias(typeDefinition)](./tscgen.ivariablebuilder.addtypealias.md) |  |
-|  [markExport()](./tscgen.ivariablebuilder.markexport.md) |  |
+|  [markExport(defaultExport)](./tscgen.ivariablebuilder.markexport.md) |  |
 |  [setAssignment(body)](./tscgen.ivariablebuilder.setassignment.md) |  |
 |  [setLevel(level)](./tscgen.ivariablebuilder.setlevel.md) |  |
 

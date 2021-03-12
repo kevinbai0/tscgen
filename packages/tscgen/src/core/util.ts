@@ -44,7 +44,7 @@ export async function mapObjectPromise<T, K>(
 
 /**
  * Maps the values of each of value to a new one synchronously
- * @param obj - object of type Record<string, any> to map
+ * @param obj - object of type `Record<string, any>` to map
  * @param transform - callback that returns the new value for each key/value pair
  * @returns The new transformed object as a Record
  * @public

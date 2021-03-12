@@ -34,7 +34,11 @@ export default outputs.generateExports(async ({ data, params }) => {
     (val) => val.in === 'query'
   );
 
-  const modelsRef = await getReference(import('../models/[name]'), getPath);
+  const modelsRef = await getReference(
+    import('../models/[name]'),
+    getPath,
+    params
+  );
 
   const requestBody = await writeRequestBody(data.pathInfo.requestBody, {
     resolveReference: async (ref) => {

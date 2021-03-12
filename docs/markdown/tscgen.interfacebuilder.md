@@ -14,6 +14,7 @@ export declare function interfaceBuilder<Name extends string, Generics extends R
     extends?: Extend;
     body: Body;
     export: boolean;
+    defaultExport: boolean;
 }): IInterfaceBuilder<Name, Generics, Body, Exported, Extend>;
 ```
 
@@ -22,7 +23,7 @@ export declare function interfaceBuilder<Name extends string, Generics extends R
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  interfaceName | Name | The name of the interface |
-|  defaultOptions | { generics?: Generics; extends?: Extend; body: Body; export: boolean; } |  |
+|  defaultOptions | { generics?: Generics; extends?: Extend; body: Body; export: boolean; defaultExport: boolean; } |  |
 
 <b>Returns:</b>
 

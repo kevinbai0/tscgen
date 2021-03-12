@@ -1,7 +1,18 @@
+import path from 'path';
 import * as tscgen from 'tscgen';
 
-export const getStaticReference = (relative: string) => {
-  const importPath = relative.replace('.static.ts', '');
+export const getStaticReference = (
+  relative: string,
+  callerPath: string,
+  params: Record<string, string>
+) => {
+  const repl = Object.entries(params).reduce(
+    (acc, [key, value]) => acc.replace(`[${key}]`, value),
+    callerPath
+  );
+  const basePath = path.resolve(callerPath, relative);
+  const newPath = path.relative(repl, basePath);
+  const importPath = newPath.replace('.static.ts', '');
   return {
     getReference: <Routes extends ReadonlyArray<string>>(...values: Routes) => {
       return {

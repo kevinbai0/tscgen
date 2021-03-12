@@ -32,6 +32,7 @@ export async function createContext<
   getInputs: Inputs,
   mappedExports: GetMappedExports<Inputs, Routes>,
   getPath: string,
+  callerParams: Record<string, string>,
   options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
   }
@@ -60,7 +61,7 @@ export async function createContext<
                 lazyImportType(() => importModuleType(found[1]![pick]))
               )
               .addImportLocation(
-                getFilename(getPath, getPath, found[0].params)
+                getFilename(getPath, getPath, found[0].params, callerParams)
               ),
             typeIdentifier: lazyType(() => {
               return identifierType(found[1]![pick]);

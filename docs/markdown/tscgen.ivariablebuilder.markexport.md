@@ -7,8 +7,15 @@
 <b>Signature:</b>
 
 ```typescript
-markExport(): IVariableBuilder;
+markExport(defaultExport?: boolean): IVariableBuilder;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  defaultExport | boolean |  |
+
 <b>Returns:</b>
 
 [IVariableBuilder](./tscgen.ivariablebuilder.md)

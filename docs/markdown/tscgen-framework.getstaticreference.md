@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-getStaticReference: (relative: string) => {
+getStaticReference: (relative: string, callerPath: string, params: Record<string, string>) => {
     getReference: <Routes extends readonly string[]>(...values: Routes) => {
         asTypeAlias(): {
             exports: MapToEntityBuilder<Routes>;

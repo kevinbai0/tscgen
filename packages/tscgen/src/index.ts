@@ -3,7 +3,6 @@ export * from './core/builders/typeBuilder';
 export * from './core/builders/variableBuilder';
 export * from './core/builders/importBuilder';
 export * from './core/builders/entityBuilder';
-export * from './core/format';
 export * from './core/util';
 export * from './typescript/definitions';
 export * from './javascript/definitions';

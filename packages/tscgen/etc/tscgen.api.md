@@ -45,17 +45,11 @@ export type Combine<T, K> = {
 // @public
 export function combine(...builders: IBaseBuilder[]): string;
 
-// @public (undocumented)
-export const createFormatter: (pathToFile: string) => (text: string) => Promise<string>;
-
 // @public
 export function extract<T extends IType, K extends Readonly<IType[]>, U extends IUnionType<K>>(type: T, union: U): IDecorationType<[T, U]>;
 
 // @public (undocumented)
 export function fnParam<Key extends string>(key: Key, type: IType): IJsFunctionParamValue<Key>;
-
-// @public (undocumented)
-export type Formatter = ReturnType<typeof createFormatter>;
 
 // @public (undocumented)
 export function genericProperties<T extends IIdentifierType>(identifier: T, ...generics: ReadonlyArray<IType>): IGenericPropertiesType<T>;
@@ -130,7 +124,7 @@ export interface IEntityBuilder<Type extends IEntityBuilderTypes = IEntityBuilde
     // (undocumented)
     as<Identifier extends IEntityBuilderTypes>(identifier: Identifier): Identifier extends 'type' ? IGenericTypeAliasBuilder : Identifier extends 'interface' ? IGenericInterfaceBuilder : IVariableBuilder;
     // (undocumented)
-    markExport(): IEntityBuilder<Type, Name>;
+    markExport(defaultExport?: boolean): IEntityBuilder<Type, Name>;
     // (undocumented)
     toString(): string;
     // (undocumented)
@@ -262,7 +256,7 @@ export interface IInterfaceBuilder<Name extends string, Generics extends Readonl
     extends<T extends IEntityBuilder<'interface', string>>(type: T): IInterfaceBuilder<Name, Generics, Body, Exported, IIdentifierType<T>>;
     // (undocumented)
     generics: Generics;
-    markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
+    markExport(defaultExport?: boolean): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
     // (undocumented)
     type: 'interface';
 }
@@ -388,6 +382,7 @@ export function interfaceBuilder<Name extends string, Generics extends Readonly<
     extends?: Extend;
     body: Body;
     export: boolean;
+    defaultExport: boolean;
 }): IInterfaceBuilder<Name, Generics, Body, Exported, Extend>;
 
 // @public
@@ -552,7 +547,7 @@ export interface IVariableBuilder extends IEntityBuilder<'variable', string> {
     // (undocumented)
     addTypeAlias(typeDefinition: IType): IVariableBuilder;
     // (undocumented)
-    markExport(): IVariableBuilder;
+    markExport(defaultExport?: boolean): IVariableBuilder;
     // (undocumented)
     setAssignment(body: IJsValue): IVariableBuilder;
     // (undocumented)
@@ -681,6 +676,7 @@ export const variableBuilder: (name: string, defaultValue?: {
     decorate: 'const' | 'let' | 'var';
     export: boolean;
     type?: IType;
+    defaultExport: boolean;
 }) => IVariableBuilder;
 
 

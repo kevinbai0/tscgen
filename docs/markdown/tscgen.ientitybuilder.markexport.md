@@ -7,8 +7,15 @@
 <b>Signature:</b>
 
 ```typescript
-markExport(): IEntityBuilder<Type, Name>;
+markExport(defaultExport?: boolean): IEntityBuilder<Type, Name>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  defaultExport | boolean |  |
+
 <b>Returns:</b>
 
 [IEntityBuilder](./tscgen.ientitybuilder.md)<!-- -->&lt;Type, Name&gt;

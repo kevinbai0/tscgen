@@ -65,7 +65,9 @@ export interface IInterfaceBuilder<
    * Make the interface exportable
    * @returns A new interface builder that will be exported
    */
-  markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
+  markExport(
+    defaultExport?: boolean
+  ): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
   body: Body;
   generics: Generics;
 }
@@ -102,18 +104,21 @@ export function interfaceBuilder<
     extends?: Extend;
     body: Body;
     export: boolean;
+    defaultExport: boolean;
   } = {
     body: {} as Body,
     export: false,
+    defaultExport: false,
   }
 ): IInterfaceBuilder<Name, Generics, Body, Exported, Extend> {
   function build(): string {
     const extendsStr = defaultOptions.extends
       ? ` extends ${writeType(defaultOptions.extends)}`
       : '';
-    return `${
-      defaultOptions.export ? 'export ' : ''
-    }interface ${interfaceName}${writeGeneric(
+    const exportStr = defaultOptions.export
+      ? `${defaultOptions.defaultExport ? 'default ' : ''} export `
+      : '';
+    return `${exportStr}interface ${interfaceName}${writeGeneric(
       defaultOptions.generics ?? []
     )}${extendsStr} {${writeBodyType(defaultOptions.body)}}`;
   }
@@ -154,10 +159,11 @@ export function interfaceBuilder<
     get varName() {
       return interfaceName;
     },
-    markExport: () =>
+    markExport: (defaultExport = false) =>
       interfaceBuilder(interfaceName, {
         ...defaultOptions,
         export: true,
+        defaultExport,
       }),
     get body() {
       return defaultOptions.body;

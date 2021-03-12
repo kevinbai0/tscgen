@@ -9,8 +9,15 @@ Make the interface exportable
 <b>Signature:</b>
 
 ```typescript
-markExport(): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
+markExport(defaultExport?: boolean): IInterfaceBuilder<Name, Generics, Body, true, Extend>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  defaultExport | boolean |  |
+
 <b>Returns:</b>
 
 [IInterfaceBuilder](./tscgen.iinterfacebuilder.md)<!-- -->&lt;Name, Generics, Body, true, Extend&gt;

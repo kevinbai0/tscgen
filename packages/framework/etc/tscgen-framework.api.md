@@ -33,7 +33,7 @@ export type Context<Inputs extends GetInputs, Order extends ReadonlyArray<string
 // Warning: (ae-forgotten-export) The symbol "ContextReturnType" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, options?: {
+export function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, callerParams: Record<string, string>, options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
 }): Promise<ContextReturnType<Inputs, Routes>[]>;
 
@@ -52,7 +52,7 @@ export type ExportData<Exports extends ReadonlyArray<string>> = {
 };
 
 // @public (undocumented)
-export const getFilename: (toFile: string, caller: string, params: Record<string, string>) => string;
+export const getFilename: (toFile: string, caller: string, params: Record<string, string>, callerParams: Record<string, string>) => string;
 
 // @public (undocumented)
 export type GetInputs<T = unknown, Params extends Record<string, string> = Record<string, string>> = () => Promiseable<Array<InputData<T, Params>>>;
@@ -70,13 +70,13 @@ export type GetMappedExportsBase<Inputs extends GetInputs, Keys extends Readonly
 // Warning: (ae-forgotten-export) The symbol "IReference" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function getReference<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined>(importFile: Promise<OutputModule<Routes, Inputs>>, callerPath: string): Promise<IReference<Routes, Inputs>>;
+export function getReference<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined>(importFile: Promise<OutputModule<Routes, Inputs>>, callerPath: string, callerParams: Record<string, string>): Promise<IReference<Routes, Inputs>>;
 
 // @public (undocumented)
 export type GetStaticExports<Exports extends ReadonlyArray<string>, Builders extends BuilderExports<Exports>> = () => Promiseable<Builders>;
 
 // @public (undocumented)
-export const getStaticReference: (relative: string) => {
+export const getStaticReference: (relative: string, callerPath: string, params: Record<string, string>) => {
     getReference: <Routes extends readonly string[]>(...values: Routes) => {
         asTypeAlias(): {
             exports: MapToEntityBuilder<Routes>;

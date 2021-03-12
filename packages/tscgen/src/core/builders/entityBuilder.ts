@@ -32,7 +32,5 @@ export interface IEntityBuilder<
     : Identifier extends 'interface'
     ? IGenericInterfaceBuilder
     : IVariableBuilder;
-  markExport(): IEntityBuilder<Type, Name>;
+  markExport(defaultExport?: boolean): IEntityBuilder<Type, Name>;
 }
-
-const a = (e: IEntityBuilder) => e.as('type');

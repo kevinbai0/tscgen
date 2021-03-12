@@ -22,6 +22,6 @@ export interface IEntityBuilder<Type extends IEntityBuilderTypes = IEntityBuilde
 |  Method | Description |
 |  --- | --- |
 |  [as(identifier)](./tscgen.ientitybuilder.as.md) |  |
-|  [markExport()](./tscgen.ientitybuilder.markexport.md) |  |
+|  [markExport(defaultExport)](./tscgen.ientitybuilder.markexport.md) |  |
 |  [toString()](./tscgen.ientitybuilder.tostring.md) |  |
 

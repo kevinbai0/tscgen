@@ -12,5 +12,6 @@ variableBuilder: (name: string, defaultValue?: {
     decorate: 'const' | 'let' | 'var';
     export: boolean;
     type?: IType;
+    defaultExport: boolean;
 }) => IVariableBuilder
 ```

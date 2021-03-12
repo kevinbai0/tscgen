@@ -8,8 +8,8 @@
 
 |  Function | Description |
 |  --- | --- |
-|  [createContext(getInputs, mappedExports, getPath, options)](./tscgen-framework.createcontext.md) |  |
-|  [getReference(importFile, callerPath)](./tscgen-framework.getreference.md) |  |
+|  [createContext(getInputs, mappedExports, getPath, callerParams, options)](./tscgen-framework.createcontext.md) |  |
+|  [getReference(importFile, callerPath, callerParams)](./tscgen-framework.getreference.md) |  |
 |  [register(routes)](./tscgen-framework.register.md) |  |
 
 ## Variables

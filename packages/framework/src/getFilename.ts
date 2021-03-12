@@ -3,9 +3,12 @@ import path from 'path';
 export const getFilename = (
   toFile: string,
   caller: string,
-  params: Record<string, string>
+  params: Record<string, string>,
+  callerParams: Record<string, string>
 ) => {
-  const callerComponents = caller.split('/');
+  const callerComponents = Object.entries(callerParams)
+    .reduce((acc, [key, value]) => acc.replace(`[${key}]`, value), caller)
+    .split('/');
   const referenceComponents = toFile.split('/');
   const relativePath = path.relative(
     callerComponents.slice(0, -1).join('/'),

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, options?: {
+export declare function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, callerParams: Record<string, string>, options?: {
     filter?: (data: TSCGenInputs<Inputs>) => boolean;
 }): Promise<ContextReturnType<Inputs, Routes>[]>;
 ```
@@ -19,6 +19,7 @@ export declare function createContext<Routes extends ReadonlyArray<string>, Inpu
 |  getInputs | Inputs |  |
 |  mappedExports | [GetMappedExports](./tscgen-framework.getmappedexports.md)<!-- -->&lt;Inputs, Routes&gt; |  |
 |  getPath | string |  |
+|  callerParams | Record&lt;string, string&gt; |  |
 |  options | { filter?: (data: [TSCGenInputs](./tscgen-framework.tscgeninputs.md)<!-- -->&lt;Inputs&gt;) =&gt; boolean; } |  |
 
 <b>Returns:</b>
