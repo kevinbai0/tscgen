@@ -165,5 +165,9 @@ export function interfaceBuilder<
     get generics() {
       return (defaultOptions.generics ?? []) as Generics;
     },
+    as() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return this as any;
+    },
   };
 }

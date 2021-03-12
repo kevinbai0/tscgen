@@ -1,4 +1,8 @@
-export type IJavascriptBuilderTypes = 'object';
+import { IGenericInterfaceBuilder } from './interfaceBuilder';
+import { IGenericTypeAliasBuilder } from './typeBuilder';
+import { IVariableBuilder } from './variableBuilder';
+
+export type IJavascriptBuilderTypes = 'variable';
 export type ITypescriptBuilderTypes = 'type' | 'interface';
 export type IImportBuilderTypes = 'import';
 
@@ -21,5 +25,14 @@ export interface IEntityBuilder<
   type: Type;
   toString(): string;
   varName: Name;
+  as<Identifier extends IEntityBuilderTypes>(
+    identifier: Identifier
+  ): Identifier extends 'type'
+    ? IGenericTypeAliasBuilder
+    : Identifier extends 'interface'
+    ? IGenericInterfaceBuilder
+    : IVariableBuilder;
   markExport(): IEntityBuilder<Type, Name>;
 }
+
+const a = (e: IEntityBuilder) => e.as('type');

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type IJsValue = IJsStringValue | IJsBooleanValue | IJsNumberValue | IJsArrayValue | IJsObjectValue | IJsIdentifierValue;
+export declare type IJsValue = IJsStringValue | IJsBooleanValue | IJsNumberValue | IJsArrayValue | IJsObjectValue | IJsIdentifierValue | IJsArrowFnDefinitionValue | IJsFunctionCallValue | IJsProperties | IUndefinedValue | INullValue;
 ```
-<b>References:</b> [IJsStringValue](./tscgen.ijsstringvalue.md)<!-- -->, [IJsBooleanValue](./tscgen.ijsbooleanvalue.md)<!-- -->, [IJsNumberValue](./tscgen.ijsnumbervalue.md)<!-- -->, [IJsArrayValue](./tscgen.ijsarrayvalue.md)<!-- -->, [IJsObjectValue](./tscgen.ijsobjectvalue.md)<!-- -->, [IJsIdentifierValue](./tscgen.ijsidentifiervalue.md)
+<b>References:</b> [IJsStringValue](./tscgen.ijsstringvalue.md)<!-- -->, [IJsBooleanValue](./tscgen.ijsbooleanvalue.md)<!-- -->, [IJsNumberValue](./tscgen.ijsnumbervalue.md)<!-- -->, [IJsArrayValue](./tscgen.ijsarrayvalue.md)<!-- -->, [IJsObjectValue](./tscgen.ijsobjectvalue.md)<!-- -->, [IJsIdentifierValue](./tscgen.ijsidentifiervalue.md)<!-- -->, [IJsArrowFnDefinitionValue](./tscgen.ijsarrowfndefinitionvalue.md)<!-- -->, [IJsFunctionCallValue](./tscgen.ijsfunctioncallvalue.md)<!-- -->, [IJsProperties](./tscgen.ijsproperties.md)<!-- -->, [IUndefinedValue](./tscgen.iundefinedvalue.md)<!-- -->, [INullValue](./tscgen.inullvalue.md)
 

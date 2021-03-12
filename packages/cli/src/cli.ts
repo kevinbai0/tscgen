@@ -43,6 +43,27 @@ async function main() {
       fileComponents.length > 2 &&
       hiddenExtensions.has(fileComponents.slice(-2, -1)[0]);
 
+    if (file.filename.endsWith('.static.ts')) {
+      const fileData = await fs.promises.readFile(
+        path.join(file.path, file.filename),
+        'utf-8'
+      );
+
+      await writeFile(
+        {
+          data: undefined,
+          params: {},
+        },
+        `${path.join(file.path, file.filename.replace('.static', ''))}`,
+        fileData,
+        {
+          outDir,
+          projectDir,
+        }
+      );
+      return {};
+    }
+
     if (isTypescript && !isConfigFile) {
       return {
         out: await writeGroup(path.join(file.path, file.filename), {

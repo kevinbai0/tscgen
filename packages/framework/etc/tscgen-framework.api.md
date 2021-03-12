@@ -11,6 +11,7 @@ import { IIdentifierType } from 'tscgen';
 import { IImportBuilder } from 'tscgen';
 import { ILazyType } from 'tscgen';
 import { Promiseable } from 'tscgen';
+import * as tscgen from 'tscgen';
 import { Unpromise } from 'tscgen';
 
 // @public (undocumented)
@@ -75,6 +76,24 @@ export function getReference<Routes extends ReadonlyArray<string>, Inputs extend
 export type GetStaticExports<Exports extends ReadonlyArray<string>, Builders extends BuilderExports<Exports>> = () => Promiseable<Builders>;
 
 // @public (undocumented)
+export const getStaticReference: (relative: string) => {
+    getReference: <Routes extends readonly string[]>(...values: Routes) => {
+        asTypeAlias(): {
+            exports: MapToEntityBuilder<Routes>;
+            import: tscgen.IImportBuilder<[...tscgen.BuildersToImport<MapToEntityBuilder<Routes>>], undefined, undefined, string>;
+        };
+        asInterface(): {
+            exports: MapToEntityBuilder<Routes>;
+            import: tscgen.IImportBuilder<[...tscgen.BuildersToImport<MapToEntityBuilder<Routes>>], undefined, undefined, string>;
+        };
+        asVariable(): {
+            exports: MapToEntityBuilder<Routes>;
+            import: tscgen.IImportBuilder<[...tscgen.BuildersToImport<MapToEntityBuilder<Routes>>], undefined, undefined, string>;
+        };
+    };
+};
+
+// @public (undocumented)
 export type InputData<T = unknown, Params extends Record<string, string> = Record<string, string>> = {
     params: Params;
     data: T;
@@ -109,6 +128,10 @@ export type WithInputsReturn<Routes extends ReadonlyArray<string>, Inputs extend
     generateExports: (method: GetMappedExportsBase<Inputs, Routes>) => Promiseable<OutputType<Routes, Inputs>>;
 };
 
+
+// Warnings were encountered during analysis:
+//
+// dist/types/staticReference.d.ts:5:13 - (ae-forgotten-export) The symbol "MapToEntityBuilder" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

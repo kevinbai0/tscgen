@@ -53,6 +53,8 @@ export type IType<T extends any = any> =
   | ITupleType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
   | IDecorationType<T extends Readonly<IType[]> ? T : Readonly<IType[]>>
   | IGenericIdentifierType<T extends string ? T : string>
+  | IGenericPropertiesType<T extends IIdentifierType ? T : IIdentifierType>
+  | ITypeProperties<T extends IType ? T : IType>
   | IRawIdentifierType
   | ILazyType<T extends IType ? T : IType>;
 
@@ -204,7 +206,7 @@ export interface INumberLiteralType<T extends number = number> {
  * @typeParam T - Array of types to union
  * @public
  */
-export interface IUnionType<T extends Readonly<IType[]> = []> {
+export interface IUnionType<T extends Readonly<IType[]> = Readonly<IType[]>> {
   type: 'union';
   definition: T;
   extract?: ITypePropertyType[];
@@ -251,6 +253,20 @@ export type IGenericIdentifierType<T extends string = string> = {
   type: 'generic_identifier';
   definition: T;
 };
+
+export interface IGenericPropertiesType<
+  T extends IIdentifierType = IIdentifierType
+> {
+  type: 'generic_properties';
+  definition: T;
+  generics: ReadonlyArray<IType>;
+}
+
+export interface ITypeProperties<T extends IType = IType> {
+  type: 'type_properties';
+  definition: T;
+  properties: ReadonlyArray<IType>;
+}
 
 /**
  * Body of object type, with keys being `string`, and values being `IType` or `[IType, boolean]` - where `[IType, false]` means it's not a required value

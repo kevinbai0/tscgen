@@ -18,6 +18,8 @@ import {
   IGenericIdentifierType,
   ILazyType,
   IIntersectionType,
+  IGenericPropertiesType,
+  ITypeProperties,
 } from './types';
 
 export function writeGeneric(
@@ -107,6 +109,25 @@ function writeGenericIdentifierType(type: IGenericIdentifierType) {
   return type.definition;
 }
 
+function writeGenericProperties(type: IGenericPropertiesType): string {
+  if (!type.generics.length) {
+    return writeIdentifierType(type.definition);
+  }
+  return `${writeIdentifierType(type.definition)}<${type.generics
+    .map(writeType)
+    .join(',')}>`;
+}
+
+function writeTypeProperties(type: ITypeProperties): string {
+  if (!type.properties.length) {
+    return writeType(type.definition);
+  }
+  return `${writeType(type.definition)}${type.properties
+    .map(writeType)
+    .map((val) => `[${val}]`)
+    .join('')}`;
+}
+
 function writeTypePropertyType(type: ITypePropertyType) {
   const wrap = (value: string) => `[${value}]`;
 
@@ -171,6 +192,10 @@ export function writeType(type: IType | undefined): string {
       return writeRawType(type);
     case 'generic_identifier':
       return writeGenericIdentifierType(type);
+    case 'generic_properties':
+      return writeGenericProperties(type);
+    case 'type_properties':
+      return writeTypeProperties(type);
     case 'decoration':
       return writeDecorationType(type);
     case 'lazy_type':

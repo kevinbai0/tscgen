@@ -19,6 +19,7 @@
 |  [createInputs](./tscgen-framework.createinputs.md) |  |
 |  [createMappedExports](./tscgen-framework.createmappedexports.md) |  |
 |  [getFilename](./tscgen-framework.getfilename.md) |  |
+|  [getStaticReference](./tscgen-framework.getstaticreference.md) |  |
 
 ## Type Aliases
 

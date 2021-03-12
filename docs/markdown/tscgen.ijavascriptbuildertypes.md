@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type IJavascriptBuilderTypes = 'object';
+export declare type IJavascriptBuilderTypes = 'variable';
 ```

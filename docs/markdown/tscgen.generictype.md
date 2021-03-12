@@ -4,7 +4,7 @@
 
 ## genericType() function
 
-Create a reference to a generic value in the [IInterfaceBuilder](./tscgen.iinterfacebuilder.md) or [ITypeDefBuilder](./tscgen.itypedefbuilder.md)
+Create a reference to a generic value in the [IInterfaceBuilder](./tscgen.iinterfacebuilder.md) or 
 
 <b>Signature:</b>
 

@@ -28,7 +28,7 @@ export default outputs.generateExports(async ({ data, params, context }) => {
     exports: {
       get routes() {
         return tscgen
-          .typeDefBuilder(params.name)
+          .typeAliasBuilder(params.name)
           .markExport()
           .addUnion(body.type);
       },

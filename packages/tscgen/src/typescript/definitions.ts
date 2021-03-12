@@ -25,6 +25,8 @@ import {
   IGenericIdentifierType,
   ILazyType,
   IIntersectionType,
+  IGenericPropertiesType,
+  ITypeProperties,
 } from './types';
 
 /**
@@ -383,6 +385,28 @@ export function extract<
     type: 'decoration',
     definition: [type, union],
     decorate: (value, unionValue) => `Extract<${value}, ${unionValue}>`,
+  };
+}
+
+export function genericProperties<T extends IIdentifierType>(
+  identifier: T,
+  ...generics: ReadonlyArray<IType>
+): IGenericPropertiesType<T> {
+  return {
+    type: 'generic_properties',
+    definition: identifier,
+    generics,
+  };
+}
+
+export function typeProperties<T extends IType>(
+  identifier: T,
+  ...properties: ReadonlyArray<IType>
+): ITypeProperties<T> {
+  return {
+    type: 'type_properties',
+    definition: identifier,
+    properties,
   };
 }
 

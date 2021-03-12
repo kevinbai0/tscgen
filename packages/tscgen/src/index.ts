@@ -1,6 +1,6 @@
 export * from './core/builders/interfaceBuilder';
 export * from './core/builders/typeBuilder';
-export * from './core/builders/objectBuilder';
+export * from './core/builders/variableBuilder';
 export * from './core/builders/importBuilder';
 export * from './core/builders/entityBuilder';
 export * from './core/format';
@@ -10,5 +10,7 @@ export * from './javascript/definitions';
 export * from './common/definitions';
 export * from './typescript/types';
 export * from './javascript/types';
+export * from './typescript/checks';
+export * from './core/tryPipe';
 export * from './common/types';
 export * from './helpers/promise';

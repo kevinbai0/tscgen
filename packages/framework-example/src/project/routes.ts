@@ -17,11 +17,11 @@ export default outputs.generateExports(async () => {
     imports,
     exports: {
       Route: tscgen
-        .typeDefBuilder('Route')
+        .typeAliasBuilder('Route')
         .markExport()
         .addUnion(...exports.map((builder) => tscgen.identifierType(builder))),
       Routes: tscgen
-        .typeDefBuilder('Routes')
+        .typeAliasBuilder('Routes')
         .markExport()
         .addUnion(
           tscgen.toObjectType([...exports], (value) => {
@@ -32,7 +32,7 @@ export default outputs.generateExports(async () => {
           })
         ),
       RoutesData: tscgen
-        .typeDefBuilder('RoutesData')
+        .typeAliasBuilder('RoutesData')
         .addUnion(
           tscgen.objectType({
             [`[Key in keyof Routes]`]: tscgen.objectType({
@@ -44,19 +44,21 @@ export default outputs.generateExports(async () => {
         .markExport(),
       get routesData() {
         return tscgen
-          .varObjectBuilder('routesData')
+          .variableBuilder('routesData')
           .markExport()
-          .addTypeDef(tscgen.identifierType(this.RoutesData))
-          .addBody(
-            pathsData.reduce(
-              (acc, data) => ({
-                ...acc,
-                [data.params.route]: tscgen.objectValue({
-                  route: data.data.route,
-                  method: data.data.pathInfo.method,
+          .addTypeAlias(tscgen.identifierType(this.RoutesData))
+          .setAssignment(
+            tscgen.objectValue(
+              pathsData.reduce(
+                (acc, data) => ({
+                  ...acc,
+                  [data.params.route]: tscgen.objectValue({
+                    route: data.data.route,
+                    method: data.data.pathInfo.method,
+                  }),
                 }),
-              }),
-              {}
+                {}
+              )
             )
           );
       },

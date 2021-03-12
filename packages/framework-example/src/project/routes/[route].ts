@@ -3,6 +3,7 @@ import { getReference, register } from 'tscgen-framework';
 import { getPaths } from '../../helpers/data';
 import { writeParam } from '../../helpers/writeParam';
 import { writeRequestBody } from '../../helpers/writeRequestBody';
+import { writeResponseBody } from '../../helpers/writeResponseBody';
 
 export const getPath = __filename;
 
@@ -47,38 +48,50 @@ export default outputs.generateExports(async ({ data, params }) => {
     },
   });
 
-  const requestBodyUnion = tscgen.unionType(
-    ...requestBody.flatMap((body) => body.type)
-  );
+  const requestBodyUnion = requestBody.length
+    ? tscgen.unionType(...requestBody.flatMap((body) => body.type))
+    : tscgen.undefinedType();
 
-  const combinedType = (() => {
-    if (queryParams && requestBodyUnion.definition.length) {
-      return tscgen.objectType({
-        query: queryParams,
-        body: requestBodyUnion,
-      });
-    } else {
-      return queryParams ?? requestBodyUnion;
-    }
-  })();
+  const responses = await writeResponseBody(data.pathInfo.responses, {
+    resolveReference: async (ref) => {
+      const values = await modelsRef
+        .referenceExports('routes')
+        .filter((input) => input.data.name === ref);
+
+      return {
+        importValue: values.imports[0],
+        typeIdentifier: tscgen.identifierType(values.exports[0]),
+      };
+    },
+  });
 
   return {
-    imports: requestBody.flatMap((body) => body.imports),
+    imports: requestBody
+      .flatMap((body) => body.imports)
+      .concat(responses.flatMap((val) => val.imports)),
     exports: {
       get route() {
         return tscgen
-          .typeDefBuilder(params.route)
+          .interfaceBuilder(params.route)
           .markExport()
-          .addUnion(
-            tscgen.objectType({
-              method: tscgen.stringType(method),
-              path: tscgen.stringType(data.route),
-              params: pathParams ?? tscgen.undefinedType(),
-              query: queryParams ?? tscgen.undefinedType(),
-              requestBody: requestBodyUnion,
-              combined: combinedType,
-            })
-          );
+          .addBody({
+            method: tscgen.stringType(method),
+            path: tscgen.stringType(data.route),
+            params: pathParams ?? tscgen.undefinedType(),
+            query: queryParams ?? tscgen.undefinedType(),
+            requestBody: requestBodyUnion,
+            responses: tscgen.unionType(
+              ...responses.map((response) =>
+                tscgen.objectType({
+                  status:
+                    response.status === 'default'
+                      ? tscgen.numberType()
+                      : tscgen.numberType(Number(response.status)),
+                  data: response.type,
+                })
+              )
+            ),
+          });
       },
     },
   };

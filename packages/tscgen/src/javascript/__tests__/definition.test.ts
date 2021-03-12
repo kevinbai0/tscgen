@@ -1,31 +1,31 @@
 import { expect } from 'chai';
-import * as tscgen from 'tscgen';
+import { objectValue } from '../definitions';
+import { variableBuilder } from 'src/core/builders/variableBuilder';
+import { arrayType, numberType, objectType } from 'src/typescript/definitions';
 
 describe('writes javascript object code', () => {
   it('works', async () => {
-    const output = tscgen
-      .varObjectBuilder('test')
+    const output = variableBuilder('test')
       .setLevel('const')
       .markExport()
-      .addBody({
-        name: 'Hello',
-      });
-    expect(output.toString()).to.equal("export const test = {name: 'Hello'}");
+      .setAssignment('Hello');
+    expect(output.toString()).to.equal("export const test = 'Hello'");
   });
 
   it('works with type definitions', () => {
-    const output = tscgen
-      .varObjectBuilder('test')
+    const output = variableBuilder('test')
       .setLevel('const')
       .markExport()
-      .addTypeDef(
-        tscgen.objectType({
-          cool: tscgen.arrayType(tscgen.numberType()),
+      .addTypeAlias(
+        objectType({
+          cool: arrayType(numberType()),
         })
       )
-      .addBody({
-        cool: [5, 6, 7, 8],
-      });
+      .setAssignment(
+        objectValue({
+          cool: [5, 6, 7, 8],
+        })
+      );
 
     expect(output.toString()).to.equal(
       'export const test: {cool: number[]} = {cool: [5,6,7,8]}'

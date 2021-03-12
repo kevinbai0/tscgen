@@ -9,7 +9,7 @@ export type JoinType<K extends 'union' | 'intersection', T> = {
   };
 };
 
-export type IGenericTypeDefBuilder = ITypeDefBuilder<
+export type IGenericTypeAliasBuilder = ITypeAliasBuilder<
   string,
   ReadonlyArray<IGenericValue<string, IGenericOptions | undefined>>,
   ReadonlyArray<{
@@ -19,7 +19,7 @@ export type IGenericTypeDefBuilder = ITypeDefBuilder<
   boolean
 >;
 
-export interface ITypeDefBuilder<
+export interface ITypeAliasBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue<string, IGenericOptions>[]>,
   JoinedTypes extends ReadonlyArray<{
@@ -31,7 +31,7 @@ export interface ITypeDefBuilder<
   type: 'type';
   addUnion<T extends ReadonlyArray<IType>>(
     ...type: T
-  ): ITypeDefBuilder<
+  ): ITypeAliasBuilder<
     Name,
     Generics,
     [...JoinedTypes, ...JoinType<'union', T>],
@@ -39,7 +39,7 @@ export interface ITypeDefBuilder<
   >;
   addIntersection<T extends ReadonlyArray<IType>>(
     ...type: IType[]
-  ): ITypeDefBuilder<
+  ): ITypeAliasBuilder<
     Name,
     Generics,
     [...JoinedTypes, ...JoinType<'intersection', T>],
@@ -54,11 +54,11 @@ export interface ITypeDefBuilder<
   >(
     name: N,
     options?: Options
-  ): ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
-  markExport(): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported>;
+  ): ITypeAliasBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
+  markExport(): ITypeAliasBuilder<Name, Generics, JoinedTypes, Exported>;
 }
 
-export function typeDefBuilder<
+export function typeAliasBuilder<
   Name extends string,
   Generics extends Readonly<IGenericValue<string, IGenericOptions>[]> = [],
   JoinedTypes extends ReadonlyArray<{
@@ -75,7 +75,7 @@ export function typeDefBuilder<
   } = {
     export: false,
   }
-): ITypeDefBuilder<Name, Generics, JoinedTypes, Exported> {
+): ITypeAliasBuilder<Name, Generics, JoinedTypes, Exported> {
   function build(): string {
     const genericsStr = writeGeneric(defaultOptions.generics);
     const types =
@@ -94,7 +94,7 @@ export function typeDefBuilder<
 
   function newBuilder(joinType: 'union' | 'intersection') {
     return <T extends ReadonlyArray<IType>>(...types: T) =>
-      typeDefBuilder(name, {
+      typeAliasBuilder(name, {
         ...defaultOptions,
         types: [
           ...(defaultOptions.types ?? []),
@@ -113,13 +113,13 @@ export function typeDefBuilder<
       Options extends IGenericOptions,
       T extends IGenericValue<N, Options>
     >(genericName: N, options?: Options) {
-      return typeDefBuilder(name, {
+      return typeAliasBuilder(name, {
         ...defaultOptions,
         generics: [
           ...(defaultOptions.generics ?? []),
           { name: genericName, options },
         ] as ReadonlyArray<IGenericValue<N, Options>>,
-      }) as ITypeDefBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
+      }) as ITypeAliasBuilder<Name, [...Generics, T], JoinedTypes, Exported>;
     },
     addUnion: newBuilder('union'),
     addIntersection: newBuilder('intersection'),
@@ -130,9 +130,13 @@ export function typeDefBuilder<
       return name as Name;
     },
     markExport: () =>
-      typeDefBuilder(name, {
+      typeAliasBuilder(name, {
         ...defaultOptions,
         export: true,
       }),
+    as() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return this as any;
+    },
   };
 }

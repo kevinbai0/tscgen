@@ -9,7 +9,7 @@ Represents a union type (i.e. `A | B | C`<!-- -->)
 <b>Signature:</b>
 
 ```typescript
-export interface IUnionType<T extends Readonly<IType[]> = []> 
+export interface IUnionType<T extends Readonly<IType[]> = Readonly<IType[]>> 
 ```
 
 ## Properties

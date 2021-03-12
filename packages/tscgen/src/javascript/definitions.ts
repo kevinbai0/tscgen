@@ -2,7 +2,20 @@ import {
   IEntityBuilder,
   IEntityBuilderTypes,
 } from '../core/builders/entityBuilder';
-import { IJsBodyValue, IJsIdentifierValue, IJsObjectValue } from './types';
+import { variableBuilder } from '../core/builders/variableBuilder';
+import { IGenericValue, IType } from '../typescript/types';
+import {
+  IJsArrowFnDefinitionValue,
+  IJsBodyValue,
+  IJsFunctionCallValue,
+  IJsFunctionParamValue,
+  IJsIdentifierValue,
+  IJsObjectValue,
+  IJsProperties,
+  IJsValue,
+  INullValue,
+  IUndefinedValue,
+} from './types';
 
 /**
  * Create a Javascript object
@@ -31,5 +44,103 @@ export function identifierValue<
   return {
     type: 'identifier',
     value: builder.varName,
+  };
+}
+
+export function fnParam<Key extends string>(
+  key: Key,
+  type: IType
+): IJsFunctionParamValue<Key> {
+  return {
+    type: 'function_param',
+    value: {
+      key,
+      type,
+    },
+  };
+}
+
+type InjectedParams<Params extends IJsFunctionParamValue[]> = (
+  injected: Record<Params[number]['value']['key'], IJsIdentifierValue>
+) => IJsValue;
+
+export function arrowFunctionValue<Params extends IJsFunctionParamValue[]>(
+  ...params: Params
+) {
+  function returns(generics: IGenericValue[]) {
+    return (
+      value: IJsValue | InjectedParams<Params>,
+      type?: IType
+    ): IJsArrowFnDefinitionValue => {
+      const returnValue = (() => {
+        if (typeof value === 'function') {
+          const injectedParams = params.reduce(
+            (acc, param) => ({
+              ...acc,
+              [param.value.key]: identifierValue(
+                variableBuilder(param.value.key)
+              ),
+            }),
+            {} as Record<Params[number]['value']['key'], IJsIdentifierValue>
+          );
+
+          return value(injectedParams);
+        }
+        return value;
+      })();
+      return {
+        type: 'arrow_function',
+        value: {
+          generic: generics,
+          params: params,
+          returnType: type,
+          returnValue: returnValue,
+        },
+      };
+    };
+  }
+  return {
+    addGenerics(...generics: IGenericValue[]) {
+      return {
+        returns: returns(generics),
+      };
+    },
+    returns: returns([]),
+  };
+}
+
+export function undefinedValue(): IUndefinedValue {
+  return {
+    type: 'undefined',
+  };
+}
+
+export function nullValue(): INullValue {
+  return {
+    type: 'null',
+  };
+}
+
+export function valueProperties(
+  value: IJsValue,
+  ...properties: IJsValue[]
+): IJsProperties {
+  return {
+    type: 'value_properties',
+    value,
+    properties,
+  };
+}
+
+export function callFunction(
+  value: IJsArrowFnDefinitionValue | IJsIdentifierValue,
+  params: IJsValue[],
+  genericCalls?: IType[]
+): IJsFunctionCallValue {
+  return {
+    type: 'function_call',
+    value,
+    params,
+    genericCalls,
   };
 }

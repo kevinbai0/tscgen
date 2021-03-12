@@ -24,8 +24,8 @@ export type RoutesData = {
 };
 
 export const routesData: RoutesData = {
-  FindPetsRoute: { route: '/pets', method: 'get' },
-  AddPetRoute: { route: '/pets', method: 'post' },
-  FindByPetIdRoute: { route: '/pets/{id}', method: 'get' },
-  DeletePetRoute: { route: '/pets/{id}', method: 'delete' },
+  FindPetsRoute: { route: `/pets`, method: `get` },
+  AddPetRoute: { route: `/pets`, method: `post` },
+  FindByPetIdRoute: { route: `/pets/{id}`, method: `get` },
+  DeletePetRoute: { route: `/pets/{id}`, method: `delete` },
 };
