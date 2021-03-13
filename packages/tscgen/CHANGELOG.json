@@ -1,0 +1,17 @@
+{
+  "name": "tscgen",
+  "entries": [
+    {
+      "version": "0.0.15",
+      "tag": "tscgen_v0.0.15",
+      "date": "Sat, 13 Mar 2021 17:51:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "core features complete"
+          }
+        ]
+      }
+    }
+  ]
+}

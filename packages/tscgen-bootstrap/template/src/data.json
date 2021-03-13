@@ -1,0 +1,17 @@
+{
+  "name": "tscgen-start",
+  "data": [
+    {
+      "color": "red"
+    },
+    {
+      "color": "blue"
+    },
+    {
+      "color": "yellow"
+    },
+    {
+      "color": "orange"
+    }
+  ]
+}
