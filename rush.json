@@ -392,16 +392,25 @@
     {
       "packageName": "tscgen",
       "projectFolder": "packages/tscgen",
+      "versionPolicyName": "tscgen",
       "shouldPublish": true
     },
     {
       "packageName": "tscgen-framework",
       "projectFolder": "packages/framework",
+      "versionPolicyName": "tscgen",
       "shouldPublish": true
     },
     {
       "packageName": "tscgen-cli",
       "projectFolder": "packages/cli",
+      "versionPolicyName": "tscgen",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "tscgen-bootstrap",
+      "projectFolder": "packages/tscgen-bootstrap",
+      "versionPolicyName": "tscgen",
       "shouldPublish": true
     },
     {
