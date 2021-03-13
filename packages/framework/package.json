@@ -1,7 +1,7 @@
 {
   "name": "tscgen-framework",
   "version": "0.0.15",
-  "license": "MIT",
+  "license": "ISC",
   "main": "dist/main/tscgen-framework.js",
   "types": "dist/main/tscgen-framework.d.ts",
   "scripts": {

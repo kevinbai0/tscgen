@@ -43,7 +43,7 @@ async function main() {
       fileComponents.length > 2 &&
       hiddenExtensions.has(fileComponents.slice(-2, -1)[0]);
 
-    if (file.filename.endsWith('.static.ts')) {
+    if (file.filename.endsWith('.static.ts') || !isTypescript) {
       const fileData = await fs.promises.readFile(
         path.join(file.path, file.filename),
         'utf-8'

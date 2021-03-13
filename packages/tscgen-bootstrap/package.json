@@ -1,0 +1,20 @@
+{
+  "name": "tscgen-bootstrap",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tscgen",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "chalk": "~4.1.0",
+    "ts-node": "^9.1.1",
+    "yargs": "~16.2.0"
+  },
+  "devDependencies": {
+    "@kevinbai/lint-rules": "^1.0.2",
+    "@types/node": "^14.14.32",
+    "@types/yargs": "~16.0.0",
+    "eslint": "^7.21.0",
+    "yargs": "~16.2.0"
+  }
+}

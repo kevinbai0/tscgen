@@ -1,0 +1,67 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "env": {
+    "es6": true,
+    "es2020": true,
+    "commonjs": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "plugins": [
+    "prettier",
+    "import"
+  ],
+  "rules": {
+    "indent": 0,
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": 0,
+    "no-void": 0,
+    "no-extend-native": 0,
+    "prettier/prettier": "error",
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/ban-types": 0,
+    "@typescript-eslint/no-namespace": 0,
+    "@typescript-eslint/no-parameter-properties": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/naming-convention": 0,
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true,
+        "amd": true,
+        "caseSensitive": false
+      }
+    ],
+    "import/no-extraneous-dependencies": 2,
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2,
+    "import/order": [
+      "error",
+      { "alphabetize": { "order": "asc", "caseInsensitive": true } }
+    ]
+  }
+}
