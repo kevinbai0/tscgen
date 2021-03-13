@@ -5,7 +5,7 @@
   "main": "dist/main/tscgen.js",
   "types": "dist/main/tscgen.d.ts",
   "files": [
-    "dist"
+    "dist/main"
   ],
   "scripts": {
     "build": "node build/build.js && tsc --project build/tsconfig.build.json && api-extractor run --local",

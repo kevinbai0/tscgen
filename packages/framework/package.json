@@ -4,7 +4,9 @@
   "license": "ISC",
   "main": "dist/main/tscgen-framework.js",
   "types": "dist/main/tscgen-framework.d.ts",
-  "files": ["dist/main"],
+  "files": [
+    "dist/main"
+  ],
   "scripts": {
     "build": "tsc && node build/build.js && api-extractor run --local",
     "build:watch": "npm run build"
@@ -15,8 +17,8 @@
   "devDependencies": {
     "@kevinbai/lint-rules": "^1.0.2",
     "@types/node": "^14.14.32",
+    "esbuild": "~0.8.57",
     "eslint": "^7.21.0",
-    "typescript": "^4.2.3",
-    "esbuild": "~0.8.57"
+    "typescript": "^4.2.3"
   }
 }
