@@ -1,6 +1,11 @@
 {
   "name": "tscgen-bootstrap",
-  "version": "0.0.1",
+  "version": "0.0.16-1",
+  "license": "ISC",
+  "files": [
+    "template",
+    "src"
+  ],
   "scripts": {
     "build": "tscgen",
     "lint": "eslint ."
