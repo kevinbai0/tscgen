@@ -1,9 +1,14 @@
 {
   "name": "{{projectName}}",
   "version": "1.0.0",
+  "scripts": {
+    "generate": "tscgen && npm run lint --fix",
+    "lint": "eslint ."
+  },
   "dependencies": {
-    "tscgen": "",
-    "tscgen-framework": ""
+    "tscgen": "^0.0.16-1",
+    "tscgen-cli": "^0.0.16-1",
+    "tscgen-framework": "^0.0.16-1"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^4.17.0",

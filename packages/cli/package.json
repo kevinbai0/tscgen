@@ -4,7 +4,8 @@
   "license": "ISC",
   "files": [
     "src",
-    "cli.js"
+    "cli.js",
+    "tsconfig.json"
   ],
   "bin": {
     "tscgen": "cli.js"

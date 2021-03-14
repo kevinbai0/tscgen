@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "tscgen",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "rm -rf hello && ts-node --transpile-only src/cli.ts -p hello"
   },
   "dependencies": {
     "chalk": "~4.1.0",
