@@ -1,6 +1,6 @@
 {
   "name": "tscgen-bootstrap",
-  "version": "0.0.16-7",
+  "version": "0.0.16-8",
   "license": "ISC",
   "files": [
     "template",
@@ -12,7 +12,7 @@
   "scripts": {
     "build": "node build.js",
     "lint": "eslint .",
-    "test": "rm -rf hello && ts-node --transpile-only src/cli.ts -p hello"
+    "test": "rm -rf hello && yarn build && node dist/index.js -p hello"
   },
   "dependencies": {
     "chalk": "~4.1.0",

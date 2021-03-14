@@ -2,21 +2,23 @@
   "name": "{{projectName}}",
   "version": "1.0.0",
   "scripts": {
-    "generate": "tscgen && npm run lint --fix",
+    "generate": "tscgen && npm run lint -- --fix",
     "lint": "eslint ."
   },
   "dependencies": {
-    "tscgen": "^0.0.16-3",
-    "tscgen-cli": "^0.0.16-3",
-    "tscgen-framework": "^0.0.16-3"
+    "tscgen": "^0.0.16-7",
+    "tscgen-cli": "^0.0.16-7",
+    "tscgen-framework": "^0.0.16-7"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3"
   }
 }

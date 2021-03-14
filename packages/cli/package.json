@@ -1,6 +1,6 @@
 {
   "name": "tscgen-cli",
-  "version": "0.0.16-7",
+  "version": "0.0.16-8",
   "license": "ISC",
   "files": [
     "src",
