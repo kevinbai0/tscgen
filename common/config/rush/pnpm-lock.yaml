@@ -100,25 +100,21 @@ importers:
     dependencies:
       chalk: 4.1.0
       ts-node: 9.1.1
-      tscgen: link:../tscgen
-      tscgen-cli: link:../cli
-      tscgen-framework: link:../framework
       yargs: 16.2.0
     devDependencies:
       '@kevinbai/lint-rules': 1.0.2
       '@types/node': 14.14.32
       '@types/yargs': 16.0.0
+      esbuild: 0.8.57
       eslint: 7.21.0
     specifiers:
       '@kevinbai/lint-rules': ^1.0.2
       '@types/node': ^14.14.32
       '@types/yargs': ~16.0.0
       chalk: ~4.1.0
+      esbuild: ~0.8.57
       eslint: ^7.21.0
       ts-node: ^9.1.1
-      tscgen: workspace:*
-      tscgen-cli: workspace:*
-      tscgen-framework: workspace:*
       yargs: ~16.2.0
 lockfileVersion: 5.2
 packages:

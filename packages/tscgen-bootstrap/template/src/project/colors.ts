@@ -1,4 +1,4 @@
-import tscgen from 'tscgen';
+import * as tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
 import data from '../data.json';
 

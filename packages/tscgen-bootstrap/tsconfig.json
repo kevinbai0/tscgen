@@ -7,5 +7,5 @@
     "lib": ["ES2020"],
     "noEmit": true
   },
-  "include": ["template", "src"]
+  "include": ["template", "src", "cli.js"]
 }

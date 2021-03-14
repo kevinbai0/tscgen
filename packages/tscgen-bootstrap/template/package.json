@@ -6,9 +6,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "tscgen": "^0.0.16-1",
-    "tscgen-cli": "^0.0.16-1",
-    "tscgen-framework": "^0.0.16-1"
+    "tscgen": "^0.0.16-3",
+    "tscgen-cli": "^0.0.16-3",
+    "tscgen-framework": "^0.0.16-3"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^4.17.0",

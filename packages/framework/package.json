@@ -1,6 +1,6 @@
 {
   "name": "tscgen-framework",
-  "version": "0.0.16-1",
+  "version": "0.0.16-7",
   "license": "ISC",
   "main": "dist/main/tscgen-framework.js",
   "types": "dist/main/tscgen-framework.d.ts",
