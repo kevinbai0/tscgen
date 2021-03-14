@@ -12,7 +12,7 @@
   {
     "definitionName": "lockStepVersion",
     "policyName": "tscgen",
-    "version": "0.0.16-1",
+    "version": "0.0.16-8",
     "nextBump": "prerelease",
     "mainProject": "tscgen"
   }

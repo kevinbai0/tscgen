@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "tscgen",
+      "comment": "Add esbuild to bootstrap and bundle single build file",
+      "type": "none"
+    }
+  ],
+  "packageName": "tscgen",
+  "email": "kevin.c.bai0@gmail.com"
+}

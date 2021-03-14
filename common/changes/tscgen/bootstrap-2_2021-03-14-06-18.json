@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "tscgen",
+      "comment": "Add tscgen-bootstrap bin",
+      "type": "none"
+    }
+  ],
+  "packageName": "tscgen",
+  "email": "kevin.c.bai0@gmail.com"
+}

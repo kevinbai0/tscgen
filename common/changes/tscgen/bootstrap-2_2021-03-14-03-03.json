@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "tscgen",
+      "comment": "publish tsconfig with the cli package",
+      "type": "none"
+    }
+  ],
+  "packageName": "tscgen",
+  "email": "kevin.c.bai0@gmail.com"
+}

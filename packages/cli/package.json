@@ -1,10 +1,11 @@
 {
   "name": "tscgen-cli",
-  "version": "0.0.16-1",
+  "version": "0.0.16-8",
   "license": "ISC",
   "files": [
     "src",
-    "cli.js"
+    "cli.js",
+    "tsconfig.json"
   ],
   "bin": {
     "tscgen": "cli.js"

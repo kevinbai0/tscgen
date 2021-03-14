@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "tscgen",
+      "comment": "Update cli ts-node register to work",
+      "type": "none"
+    }
+  ],
+  "packageName": "tscgen",
+  "email": "kevin.c.bai0@gmail.com"
+}
