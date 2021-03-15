@@ -70,6 +70,7 @@ The `tscgen` monorepo contains a number of different projects and packages which
 | [tscgen-framework](./packages/framework/README.md)      | A small framework for building & maintaining code-generation projects.      |
 | [tscgen-cli](./packages/cli/README.md) | CLI-tool for [tscgen-framework](./packages/framework/README.md) to build code-generation projects.     |
 [tscgen-bootstrap](./packages/tscgen-bootstrap/README.md) | A `create-react-app`-like tool for bootstrappin a `tscgen-framework` project     |
+[framework-example](./packages/framework-example/README.md) | An example project that parses OpenAPI3 spec and generates FE code.    |
 
 ## Getting Started
 
@@ -80,7 +81,7 @@ There are 2 primary types of projects for code generation:
 1) Standalone project to be published as a package (other projects consume this package).
 2) As a subfolder inside of a single-project directory
 
-See the [Project Setup Guide](.) for more information about using the tool for each specific use case. For the Getting Started Guide, we'll assume that you're creating a standalone project.
+For the Getting Started Guide, we'll assume that you're creating a standalone project.
 
 ### Creating your project
 

@@ -13,14 +13,14 @@ A framework for `tscgen` for creating code generation projects that are easy to 
   - [Registering exports](#registering-exports)
 - [Sample Usage](#sample-usage)
   - [Output an interface](#output-an-interface)
-  - [Reference a static file](#reference-a-static-file)
+  - [Reference a Static File with a Static Exports file](#reference-a-static-file-with-a-static-exports-file)
+  - [A Mapped Export File](#a-mapped-export-file)
 - [Documentation](#documentation)
   - [File types](#file-types)
     - [Static Files](#static-files)
+    - [Static Export File](#static-export-file)
+    - [Mapped Export File](#mapped-export-file)
   - [`tscgen.yaml`](#tscgenyaml)
-  - [Project Setup Guide](#project-setup-guide)
-    - [1. Standalone Projects](#1-standalone-projects)
-    - [2. Subfolder](#2-subfolder)
 
 ## Getting Started
 
@@ -130,9 +130,9 @@ an output file.
 
 **3. Mapped Exports** - Each `Mapped Export File` can be generated into
 multiple output files. It takes a list of inputs and generates an output
-file for each input.
+file for each input. These files are in a folder with a path param, or the filename itself contains a path param (i.e. `models/[name].ts` or `[path]/name.ts`) where `[]` in the file/folder name denotes a path param.
 
-See [File Types](#file-types) for usage of the files.
+See [File Types](#file-types) for more detailed information or [Sample Usage](#sample-usage) for examples.
 
 ### Registering exports
 
@@ -174,12 +174,15 @@ export default registeredNames.generateExports(() => {
 
 ```typescript
 // <projectDir>/colors.ts
+
+// this file is a Static Export File (it generates a `colors.ts` file in
+// outDir by calculating the output of this file)
 import tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
 
 export const getPath = __filename;
 
-export default register('IColor').generateOutput(() => {
+export default register('IColor').generateExports(() => {
   return {
     exports: {
       IColor: tscgen
@@ -206,21 +209,26 @@ export interface IColor {
 }
 ```
 
-### Reference a static file
+### Reference a Static File with a Static Exports file
 
 ```typescript
 // <projectDir>/response.static.ts
-export interface Response<T> {
-  data: T
+
+// this file is a Static File (it gets copied to the output dir)
+export interface Response {
+  data: unknown;
 }
 
 // <projectDir>/errorResponse.ts
+
+// this file is a Static Export File (it generates a `errorResponse.ts` file in
+// outDir by calculating the output of this file)
 import tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
 
 export const getPath = __filename;
 
-export default register('IErrorResponse').generateOutput(() => {
+export default register('IErrorResponse').generateExports(() => {
   const Response = getStaticReference(
     './response.static.ts',
     getPath,
@@ -257,6 +265,70 @@ export interface IErrorResponse extends Response {
 }
 ```
 
+### A Mapped Export File
+
+```typescript
+// <projectDir>/models/[name].ts
+
+// this file is a Mapped Export File - it takes in an array of inputs
+// of type Array<{ data: T, params: Record<string, string> }>.
+// For each input, it calculates the name of the output path by
+// substituting the `params` with into the path and injecting the data
+// into the generateExports function
+
+import tscgen from 'tscgen';
+import { register } from 'tscgen-framework';
+
+export const getPath = __filename;
+
+const outputs = register('Model').withInputs(() => {
+  const data = [
+    { name: 'Car', type: 'Vehicle' },
+    { name: 'Dog', type: 'Animal' },
+    { name: 'Tulip' type: 'Flower' }
+  ]
+
+  return data.map(val => ({
+    data: val,
+    params: {
+      name: `I${val.name}Model`
+    }
+  }))
+})
+
+export default outputs.generateExports(({ data, params }) => {
+  return {
+    exports: {
+      Model: tscgen
+        .interfaceBuilder(params.name)
+        .markExport()
+        .addBody({
+          name: tscgen.stringType(data.name),
+          type: tsgen.stringType(data.type)
+        })
+    }
+  }
+})
+
+//<outDir>/models/ICarModel.ts
+export interface ICarModel {
+  name: 'Car';
+  type: 'Vehicle';
+}
+
+//<outDir>/models/IDogModel.ts
+export interface IDogModel {
+  name: 'Dog';
+  type: 'Animal';
+}
+
+//<outDir>/models/ITulipModel.ts
+export interface IDogModel {
+  name: 'Tulip';
+  type: 'Flower';
+}
+```
+
 ## Documentation
 
 ### File types
@@ -265,10 +337,8 @@ export interface IErrorResponse extends Response {
 
 Declare with `<filename>.static.ts`
 
+#### Static Export File
+
+#### Mapped Export File
+
 ### `tscgen.yaml`
-
-### Project Setup Guide
-
-#### 1. Standalone Projects
-
-#### 2. Subfolder

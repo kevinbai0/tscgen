@@ -55,7 +55,7 @@ const TestAlias = tscgen
 
 console.log(TestAlias.toString());
 
-// output (after linted)
+// output (if linted)
 
 type TestAlias = Array<string> | 'none';
 ```
