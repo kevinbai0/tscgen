@@ -5,9 +5,6 @@
 <div align="center">
 <em>A (WIP) collection of tools for Typescript code generation.</em>
 </div>
-
-<hr style="background-color: #555555; height: 1px;" />
-
 - [Why?](#why)
 - [Goals](#goals)
 - [Sample Usage](#sample-usage)
@@ -69,7 +66,7 @@ The `tscgen` monorepo contains a number of different projects and packages which
 | [tscgen](./packages/tscgen/README.md)     | The core package for constructing type definitions and variables declaratively |
 | [tscgen-framework](./packages/framework/README.md)      | A small framework for building & maintaining code-generation projects.      |
 | [tscgen-cli](./packages/cli/README.md) | CLI-tool for [tscgen-framework](./packages/framework/README.md) to build code-generation projects.     |
-[tscgen-bootstrap](./packages/tscgen-bootstrap/README.md) | A `create-react-app`-like tool for bootstrappin a `tscgen-framework` project     |
+[tscgen-bootstrap](./packages/tscgen-bootstrap/README.md) | A `create-react-app`-like tool for bootstrapping a `tscgen-framework` project     |
 [framework-example](./packages/framework-example/README.md) | An example project that parses OpenAPI3 spec and generates FE code.    |
 
 ## Getting Started

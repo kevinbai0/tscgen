@@ -9,16 +9,16 @@ A framework for `tscgen` for creating code generation projects that are easy to 
   - [Setup](#setup)
 - [Concepts](#concepts)
   - [Directory structure](#directory-structure)
-  - [Static Files vs Static Exports vs Mapped Exports](#static-files-vs-static-exports-vs-mapped-exports)
+  - [Static Files vs Single Exports vs Mapped Exports](#static-files-vs-single-exports-vs-mapped-exports)
   - [Registering exports](#registering-exports)
 - [Sample Usage](#sample-usage)
   - [Output an interface](#output-an-interface)
-  - [Reference a Static File with a Static Exports file](#reference-a-static-file-with-a-static-exports-file)
+  - [Reference a Static File with a Single Exports file](#reference-a-static-file-with-a-static-exports-file)
   - [A Mapped Export File](#a-mapped-export-file)
 - [Documentation](#documentation)
   - [File types](#file-types)
     - [Static Files](#static-files)
-    - [Static Export File](#static-export-file)
+    - [Single Export File](#single-export-file)
     - [Mapped Export File](#mapped-export-file)
   - [`tscgen.yaml`](#tscgenyaml)
 
@@ -118,14 +118,14 @@ Each file in the `projectDir` is transpiled into a corresponding file
 in the `outDir` - whatever is put into the `projectDir` is outputted as
 a generated file as well.
 
-### Static Files vs Static Exports vs Mapped Exports
+### Static Files vs Single Exports vs Mapped Exports
 
 There are 3 types of files that can be created inside your `projectDir`.
 
 **1. Static Files** - Files that are copied from the `projectDir`
 to `outDir` with no modifications. These files end in `.static.ts`.
 
-**2. Static Exports** - Each `Static Export File` is generated into
+**2. Single Exports** - Each `Single Export File` is generated into
 an output file.
 
 **3. Mapped Exports** - Each `Mapped Export File` can be generated into
@@ -136,7 +136,7 @@ See [File Types](#file-types) for more detailed information or [Sample Usage](#s
 
 ### Registering exports
 
-For [Static Exports](#static-exports) and [Mapped Exports](#mapped-exports), the value of the `default export` is used to generate the corresponding output file.
+For [Single Exports](#single-exports) and [Mapped Exports](#mapped-exports), the value of a module's default export is used to generate the corresponding output file.
 
 The `default export` is constructed by:
 
@@ -175,7 +175,7 @@ export default registeredNames.generateExports(() => {
 ```typescript
 // <projectDir>/colors.ts
 
-// this file is a Static Export File (it generates a `colors.ts` file in
+// this file is a Single Export File (it generates a `colors.ts` file in
 // outDir by calculating the output of this file)
 import tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
@@ -209,7 +209,7 @@ export interface IColor {
 }
 ```
 
-### Reference a Static File with a Static Exports file
+### Reference a Static File with a Single Export File
 
 ```typescript
 // <projectDir>/response.static.ts
@@ -221,7 +221,7 @@ export interface Response {
 
 // <projectDir>/errorResponse.ts
 
-// this file is a Static Export File (it generates a `errorResponse.ts` file in
+// this file is a Single Export File (it generates a `errorResponse.ts` file in
 // outDir by calculating the output of this file)
 import tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
@@ -273,7 +273,7 @@ export interface IErrorResponse extends Response {
 // this file is a Mapped Export File - it takes in an array of inputs
 // of type Array<{ data: T, params: Record<string, string> }>.
 // For each input, it calculates the name of the output path by
-// substituting the `params` with into the path and injecting the data
+// substituting the `params` into the path and injecting the data
 // into the generateExports function
 
 import tscgen from 'tscgen';
@@ -333,12 +333,52 @@ export interface IDogModel {
 
 ### File types
 
+### Export Files
+
+These include both [Single Export Files](#single-export-file) & [Mapped Export File](mapped-export-file)
+
+These files must:
+
+- Export the path of the file in the current dir with a `getPath` export
+- Provide a default export that tells the `tscgen` cli what to export.
+
+#### The `getPath` Export
+
+The `getPath` should be a constant assigned to a string. More specifically, it should be:
+
+```typescript
+export const getPath = __filename;
+```
+
+Each file needs a `getPath` export so that relative imports between `Export File`s can be resolved automatically when generating the code output.
+
+#### The Default Export
+
+The default export tells the `tscgen` CLI what code to actually process. The default export needs:
+
+- A list of `routes` (a bunch of names that "hold" [builders](.))
+- A mapping  of `routes` to `builders`.
+- Optionally, a list of `imports` that should be included
+- For [Mapped Export Files](#mapped-export-file), the [input function](#input-function).
+
 #### Static Files
 
-Declare with `<filename>.static.ts`
+Static files are files that are copied from the `projectDir` to the `outDir` without any processing. Static files always end in the extension `.static.ts`. When copying static files, the `.static` extension in the filename is stripped (i.e. `<projectDir>/file.static.ts` -> `<outDir>/file.ts`)
 
-#### Static Export File
+Static files useful since it's not ideal to type to use the [builders](.) to output large amounts of code. It's much easier to understand and read code by itself.
+
+- Use static files if a file you want "generated" doesn't rely on any inputs - you know what the contents of the file is going to be beforehand.
+- You can use exports of [Static Files](#static-files) in [Single Export Files](#single-export-file) & [Mapped Export Files](#mapped-export-file).
+
+#### Single Export File
+
+Single Export Files are processed by `tscgen` and emit Typescript code in the project's `outDir`. A single export file has a one-to-one mapping relationship to its `outDir` (i.e: `<projectDir>/file.ts` -> `<outDir>/file.ts`)
 
 #### Mapped Export File
 
 ### `tscgen.yaml`
+
+The `tscgen.yaml` file is placed in the root of the directory (wherever `node_modules` is installed). When the `tscgen` cli runs, it looks for the `tscgen.yaml`. The only two fields are
+
+- `projectDir` - the dir of where the project is located 
+- `outDir` the dir where the output is stored
