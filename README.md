@@ -5,6 +5,7 @@
 <div align="center">
 <em>A (WIP) collection of tools for Typescript code generation.</em>
 </div>
+
 - [Why?](#why)
 - [Goals](#goals)
 - [Sample Usage](#sample-usage)
