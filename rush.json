@@ -402,6 +402,12 @@
       "shouldPublish": true
     },
     {
+      "packageName": "tscgen-openapi",
+      "projectFolder": "packages/openapi",
+      "versionPolicyName": "tscgen",
+      "shouldPublish": true
+    },
+    {
       "packageName": "tscgen-cli",
       "projectFolder": "packages/cli",
       "versionPolicyName": "tscgen",

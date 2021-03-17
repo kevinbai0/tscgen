@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"target": "ESNext",
+		"module": "CommonJS",
+		"esModuleInterop": true,
+		"lib": ["ES2020"],
+		"noEmit": true
+	},
+	"include": [
+		"src",
+		"out"
+	]
+}
