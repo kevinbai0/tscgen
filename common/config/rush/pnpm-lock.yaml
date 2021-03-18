@@ -3,13 +3,17 @@ importers:
     specifiers: {}
   ../../packages/cli:
     dependencies:
+      chalk: 4.1.0
+      commander: 7.1.0
       js-yaml: 4.0.0
       ts-node: 9.1.1_typescript@4.2.3
+      yargs: 16.2.0
     devDependencies:
       '@kevinbai/lint-rules': 1.0.2_typescript@4.2.3
       '@types/eslint': 7.2.7
       '@types/js-yaml': 4.0.0
       '@types/node': 14.14.32
+      '@types/yargs': 16.0.0
       eslint: 7.21.0
       tscgen: link:../tscgen
       tscgen-framework: link:../framework
@@ -19,12 +23,16 @@ importers:
       '@types/eslint': ^7.2.6
       '@types/js-yaml': ^4.0.0
       '@types/node': ^14.14.32
+      '@types/yargs': ~16.0.0
+      chalk: ~4.1.0
+      commander: ~7.1.0
       eslint: ^7.21.0
       js-yaml: ^4.0.0
       ts-node: ^9.1.1
       tscgen: workspace:*
       tscgen-framework: workspace:*
       typescript: ^4.2.3
+      yargs: ~16.2.0
   ../../packages/framework:
     dependencies:
       tscgen: link:../tscgen
@@ -42,6 +50,30 @@ importers:
       tscgen: workspace:*
       typescript: ^4.2.3
   ../../packages/framework-example:
+    dependencies:
+      cross-fetch: 3.0.6
+      query-string: 6.14.1
+    devDependencies:
+      '@kevinbai/lint-rules': 1.0.2_typescript@4.2.3
+      '@types/node': 14.14.32
+      eslint: 7.21.0
+      openapi-types: 7.2.3
+      tscgen: link:../tscgen
+      tscgen-cli: link:../cli
+      tscgen-framework: link:../framework
+      typescript: 4.2.3
+    specifiers:
+      '@kevinbai/lint-rules': ^1.0.2
+      '@types/node': ^14.14.32
+      cross-fetch: ~3.0.6
+      eslint: ^7.21.0
+      openapi-types: ^7.2.3
+      query-string: ~6.14.1
+      tscgen: workspace:*
+      tscgen-cli: workspace:*
+      tscgen-framework: workspace:*
+      typescript: ^4.2.3
+  ../../packages/openapi:
     dependencies:
       cross-fetch: 3.0.6
       query-string: 6.14.1
@@ -99,7 +131,6 @@ importers:
   ../../packages/tscgen-bootstrap:
     dependencies:
       chalk: 4.1.0
-      ts-node: 9.1.1
       yargs: 16.2.0
     devDependencies:
       '@kevinbai/lint-rules': 1.0.2
@@ -114,7 +145,6 @@ importers:
       chalk: ~4.1.0
       esbuild: ~0.8.57
       eslint: ^7.21.0
-      ts-node: ^9.1.1
       yargs: ~16.2.0
 lockfileVersion: 5.2
 packages:
@@ -1076,6 +1106,12 @@ packages:
   /color-name/1.1.4:
     resolution:
       integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+  /commander/7.1.0:
+    dev: false
+    engines:
+      node: '>= 10'
+    resolution:
+      integrity: sha512-pRxBna3MJe6HKnBGsDyMv8ETbptw3axEdYHoqNh7gu5oDcew8fs0xnivZGm06Ogk8zGAJ9VX+OPEr2GXEQK4dg==
   /concat-map/0.0.1:
     dev: true
     resolution:
@@ -3305,22 +3341,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-C4+gOpvmxaSMKuEf9Qc134F1ZuOHVXKRbtEflf4NTtuuJDEIJ9p5PXsalL8SkeRw+qit1Mo+yuvMPAKwWg/1hA==
-  /ts-node/9.1.1:
-    dependencies:
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      source-map-support: 0.5.19
-      yn: 3.1.1
-    dev: false
-    engines:
-      node: '>=10.0.0'
-    hasBin: true
-    peerDependencies:
-      typescript: '>=2.7'
-    resolution:
-      integrity: sha512-hPlt7ZACERQGf03M253ytLY3dHbGNGrAq9qIHWUY9XHYl1z7wYngSr3OQ5xmui8o2AaxsONxIzjafLUiWBo1Fg==
   /ts-node/9.1.1_typescript@4.2.3:
     dependencies:
       arg: 4.1.3
