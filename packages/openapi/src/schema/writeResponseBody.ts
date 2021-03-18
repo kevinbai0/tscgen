@@ -1,10 +1,15 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { mapObjectPromise, undefinedType } from 'tscgen';
-import { handleRef, SchemaHandlers, writeSchema } from './writeSchema';
+import {
+  handleRef,
+  IWriteSchemaTypeHandlers,
+  SchemaHandlers,
+  writeSchema,
+} from './writeSchema';
 
 export const writeResponseBody = (
   responses: OpenAPIV3.OperationObject['responses'],
-  handlers: SchemaHandlers
+  handlers: SchemaHandlers & Partial<IWriteSchemaTypeHandlers>
 ) => {
   const res = Object.entries(responses ?? {}).map(([key, body]) => {
     return handleRef(body, {

@@ -1,7 +1,7 @@
 import * as tscgen from 'tscgen';
 import { register } from 'tscgen-framework';
-import { getSchemas } from '../../helpers/data';
-import { writeSchema } from '../../helpers/writeSchema';
+import { getSchemas } from '../../schema/data';
+import { writeSchema } from '../../schema/writeSchema';
 
 export const getPath = __filename;
 

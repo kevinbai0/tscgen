@@ -1,9 +1,9 @@
 import * as tscgen from 'tscgen';
 import { getReference, register } from 'tscgen-framework';
-import { getPaths } from '../../helpers/data';
-import { writeParam } from '../../helpers/writeParam';
-import { writeRequestBody } from '../../helpers/writeRequestBody';
-import { writeResponseBody } from '../../helpers/writeResponseBody';
+import { getPaths } from '../../schema/data';
+import { writeParam } from '../../schema/writeParam';
+import { writeRequestBody } from '../../schema/writeRequestBody';
+import { writeResponseBody } from '../../schema/writeResponseBody';
 
 export const getPath = __filename;
 
