@@ -90,8 +90,11 @@ export async function recursiveDir(dir: string): Promise<IDirItem[]> {
   );
 }
 
-export const withApplyFn = <K extends Record<string, unknown>>(
-  applyFn: (file: IFile) => Promise<K>
+export const withApplyFn = <
+  T extends Record<string, unknown>,
+  K extends Record<string, unknown>
+>(
+  applyFn: (file: IFile<T>) => Promise<K>
 ) => {
   return applyFn;
 };

@@ -17,7 +17,6 @@ export type IDirItem<T extends Record<string, unknown> = {}> =
   | IFile<T>;
 
 export type ProjectConfig = {
-  outDir?: string;
-  projectDir?: string;
-  formatFile?: string;
+  outDir: string;
+  projectDir: string;
 };

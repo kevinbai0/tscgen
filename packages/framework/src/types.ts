@@ -52,8 +52,8 @@ export type Context<
 
 export type GetInputs<
   T = unknown,
-  Params extends Record<string, string> = Record<string, string>
-> = () => Promiseable<Array<InputData<T, Params>>>;
+  Params extends string = string
+> = () => Promiseable<Array<InputData<T, Record<Params, string>>>>;
 
 export type GetMappedExportsBase<
   Inputs extends GetInputs,

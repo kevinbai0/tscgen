@@ -9,14 +9,9 @@ import {
   OutputType,
 } from 'tscgen-framework';
 import { apply } from './files/helpers';
-import { IDir } from './files/types';
+import { IDir, ProjectConfig } from './files/types';
 
-export interface IProjectContext {
-  outDir: string;
-  projectDir: string;
-}
-
-export async function transpileFolder(project: IDir, context: IProjectContext) {
+export async function transpileFolder(project: IDir, context: ProjectConfig) {
   await apply(project, async (file) => {
     const fileComponents = file.filename.split('.');
     const isTypescript = fileComponents.slice(-1)[0] === 'ts';
