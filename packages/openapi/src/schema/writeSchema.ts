@@ -2,12 +2,13 @@ import { OpenAPIV3 } from 'openapi-types';
 import * as tscgen from 'tscgen';
 
 export type SchemaHandlers = {
-  resolveReference: (
-    refName: string
-  ) => tscgen.Promiseable<{
-    typeIdentifier: tscgen.IType;
-    importValue: tscgen.IImportBuilder;
-  }>;
+  handleReference: (
+    refName: string,
+    assigner: {
+      setType: (type: tscgen.IType) => void;
+      addImport: (value: tscgen.IImportBuilder[]) => void;
+    }
+  ) => tscgen.Promiseable<void>;
 };
 
 export const handleRef = <T, K>(
@@ -156,11 +157,27 @@ export function writeSchema(
     ref: async (ref) => {
       const importName = ref.$ref.split('/').slice(-1)[0];
 
-      const res = await handlers.resolveReference(importName);
+      const resResult: {
+        typeIdentifier?: tscgen.IType;
+        imports: tscgen.IImportBuilder[];
+      } = {
+        imports: [],
+      };
+
+      await handlers.handleReference(importName, {
+        addImport: (val) => (resResult.imports = resResult.imports.concat(val)),
+        setType: (val) => {
+          resResult.typeIdentifier = val;
+        },
+      });
+
+      if (!resResult.typeIdentifier) {
+        throw new Error('Reference not handled');
+      }
 
       return {
-        type: res.typeIdentifier,
-        imports: [res.importValue],
+        type: resResult.typeIdentifier!,
+        imports: resResult.imports,
       };
     },
     notRef: async (

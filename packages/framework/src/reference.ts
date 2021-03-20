@@ -4,6 +4,8 @@ import {
   IImportBuilder,
   BuildersToImport,
 } from 'tscgen';
+
+/*
 import { createContext } from './context';
 import { getFilename } from './getFilename';
 import { OutputType } from './register';
@@ -115,7 +117,9 @@ type ReferenceExports<
     >;
   }>;
 };
+*/
 
+/*
 interface IReference<
   Routes extends ReadonlyArray<string>,
   Inputs extends GetInputs | undefined
@@ -125,10 +129,11 @@ interface IReference<
    *
    * @param options filter and pick
    */
-  referenceExports: ReferenceExports<Routes, Inputs>;
+/* referenceExports: ReferenceExports<Routes, Inputs>;
   referenceInputs: () => Promise<ReturnType<NonNullable<Inputs>>>;
 }
 
 type KeyOfEntity<T> = {
   [Key in keyof T]: T[Key] extends string ? IEntityBuilder : never;
 };
+*/

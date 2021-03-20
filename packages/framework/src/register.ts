@@ -66,5 +66,3 @@ export function outputsBuilder<Routes extends ReadonlyArray<string>>(
   }
   return builder();
 }
-
-outputsBuilder('123', '234').addParams('route').addParams('23oijf');

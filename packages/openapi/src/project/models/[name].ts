@@ -5,7 +5,7 @@ import { writeSchema } from '../../schema/writeSchema';
 
 export const getPath = __filename;
 
-const outputs = register('routes').withInputs(() =>
+const outputs = register('routes').withInputs<IModel>(() =>
   getSchemas().map((data) => ({
     data,
     params: {
