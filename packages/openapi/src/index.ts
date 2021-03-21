@@ -1,59 +1,50 @@
-import { combine, typeAliasBuilder } from 'tscgen';
 import { register, registerAll, writeApplication } from 'tscgen-framework';
-import { IModel } from './schema/data';
-import { writeSchema } from './schema/writeSchema';
+import { allRoutes } from './newProject/allRoutes';
+import { endpoints } from './newProject/endpoints';
+import { models } from './newProject/models';
+import { routes } from './newProject/routes';
+import { getPaths, getSchemas } from './schema/data';
 
-export const models = register('models/[name].ts')
-  .setInputShape<IModel>()
-  .generate(async ({ params, data, context }) => {
-    const body = await writeSchema(data.schema, {
-      handleReference: async (importName, handler) => {
-        const match = await context.getReference<App>()(
-          'models/[name].ts',
-          'routes',
-          (value) => value.data.name === importName
-        );
-        handler.setType(match.type);
-        handler.addImport(match.imports);
-      },
-    });
+export const createRequestComponent = register('createRequest.ts').setSource(
+  'src/project/request.static.ts'
+);
 
-    return {
-      imports: body.imports,
-      exports: {
-        get routes() {
-          return typeAliasBuilder(params.name).markExport().addUnion(body.type);
-        },
-      },
-    };
-  });
+export const responseMessageComponent = register(
+  'ResponseMessage.ts'
+).setSource('src/project/ResponseMessage.static.ts');
 
-type T = typeof models;
+const promise = registerAll(
+  models,
+  routes,
+  endpoints,
+  allRoutes,
+  Promise.resolve(createRequestComponent),
+  Promise.resolve(responseMessageComponent)
+);
 
-const promise = registerAll(models);
+const schemas = getSchemas();
 
 export const app = promise.setInputs({
-  'models/[name].ts': [
-    {
-      data: {
-        name: 'Test',
-        schema: {
-          type: 'object',
-          properties: {
-            name: {
-              type: 'string',
-            },
-          },
-        },
-      },
-      params: {
-        name: 'Test',
-      },
+  'models/[name].ts': schemas.map((val) => ({
+    data: val,
+    params: { name: val.name },
+  })),
+  'routes/[route].ts': getPaths().map((path) => ({
+    data: path,
+    params: {
+      route: path.pathInfo.operationId!,
     },
-  ],
+  })),
+  'api/[path]/[endpoint].ts': getPaths().map((path) => ({
+    data: path,
+    params: {
+      path: path.route.replace(/[{}]/g, ''),
+      endpoint: path.pathInfo.method,
+    },
+  })),
 });
 
-type App = typeof app;
+export type App = typeof app;
 
 async function main() {
   const val = await app;

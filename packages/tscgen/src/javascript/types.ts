@@ -14,7 +14,7 @@ export type IJsValue =
   | INullValue;
 
 export interface IJsIdentifierValue {
-  type: 'identifier';
+  type: 'js_identifier';
   value: string;
 }
 

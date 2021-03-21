@@ -42,7 +42,7 @@ export function identifierValue<
   Name extends string
 >(builder: IEntityBuilder<Type, Name>): IJsIdentifierValue {
   return {
-    type: 'identifier',
+    type: 'js_identifier',
     value: builder.varName,
   };
 }

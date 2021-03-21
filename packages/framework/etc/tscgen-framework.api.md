@@ -6,8 +6,10 @@
 
 import { IBaseBuilder } from 'tscgen';
 import { IEntityBuilder } from 'tscgen';
+import { IIdentifierType } from 'tscgen';
 import { IImportBuilder } from 'tscgen';
-import { IType } from 'tscgen';
+import { IJsIdentifierValue } from 'tscgen';
+import { ILazyType } from 'tscgen';
 import { Promiseable } from 'tscgen';
 import * as tscgen from 'tscgen';
 import { Unpromise } from 'tscgen';
@@ -43,8 +45,21 @@ export type Errors = typeof Errors;
 // @public (undocumented)
 export type FilePath<T extends string> = PathError<T> | ParsedFilePath<T>;
 
+// Warning: (ae-forgotten-export) The symbol "ModuleExportsType" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FindModule" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModuleInputData" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type GetCircularReference<CurrPath extends string> = <T extends Promise<Application>>() => (module: keyof ModuleExportsType<FindModule<T, CurrPath>>, findOne: (val: ModuleInputData<FindModule<T, CurrPath>>) => boolean) => Promise<ICircularReferenceResponse>;
+
 // @public (undocumented)
 export const getFilename: (toFile: string, caller: string, params: Record<string, string>, callerParams: Record<string, string>) => string;
+
+// @public (undocumented)
+export type GetGlobalReference = <T extends RegisteredModule>(path: Promise<T>, routes: (keyof ModuleExportsType<T>)[], filterFn: (val: ModuleInputData<T>) => boolean) => Promise<IGlobalReferenceResponse<T>>;
+
+// @public (undocumented)
+export type GetStaticReference = <T extends RegisteredModule, S extends IJsIdentifierValue | IIdentifierType>(regModule: T, module: string, identifier: S['type']) => IStaticReferenceResponse<S>;
 
 // @public (undocumented)
 export const getStaticReference: (relative: string, callerPath: string, params: Record<string, string>) => {
@@ -65,9 +80,28 @@ export const getStaticReference: (relative: string, callerPath: string, params: 
 };
 
 // @public (undocumented)
+export type ICircularReferenceResponse = {
+    identifier: ILazyType<IIdentifierType>;
+    imports: IImportBuilder[];
+};
+
+// @public (undocumented)
+export type IGlobalReferenceResponse<T extends RegisteredModule> = {
+    entities: IEntityBuilder[];
+    imports: IImportBuilder[];
+    inputData: ModuleInputData<T>[];
+};
+
+// @public (undocumented)
 export type InputData<T = unknown, Params extends Record<string, string> = Record<string, string>> = {
     params: Params;
     data: T;
+};
+
+// @public (undocumented)
+export type IStaticReferenceResponse<Type extends IIdentifierType | IJsIdentifierValue = IIdentifierType> = {
+    identifier: Type;
+    imports: IImportBuilder[];
 };
 
 // Warning: (ae-forgotten-export) The symbol "IsMappedPath" needs to be exported by the entry point index.d.ts
@@ -102,7 +136,7 @@ export type ParsedFilePath<T extends string> = {
 export type PathError<T extends string> = Exclude<IsTypescript<T> | IsRelativePath<T>, boolean>;
 
 // @public (undocumented)
-export function register<T extends string>(path: T): Output<T>;
+export function register<T extends string>(modulePath: T): Output<T>;
 
 // Warning: (ae-forgotten-export) The symbol "WithPromise" needs to be exported by the entry point index.d.ts
 //

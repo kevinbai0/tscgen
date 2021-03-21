@@ -322,7 +322,7 @@ export function identifierType<
   T extends IEntityBuilder<IEntityBuilderTypes, string>
 >(builder: T, ...extract: ITypePropertyType[]): IIdentifierType {
   return {
-    type: 'identifier',
+    type: 'type_identifier',
     definition: builder,
     extract,
   };
