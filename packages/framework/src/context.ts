@@ -7,15 +7,7 @@ import {
   IBaseBuilder,
 } from 'tscgen';
 import { getFilename } from './getFilename';
-import {
-  Context,
-  GetInputs,
-  GetMappedExports,
-  TSCGenInputs,
-  BuilderExports,
-  ExportData,
-} from './types';
-
+/*
 type ContextReturnType<
   Inputs extends GetInputs,
   Exports extends ReadonlyArray<string>
@@ -91,3 +83,5 @@ export async function createContext<
 
   return res.filter((val) => options?.filter?.(val.inputData) ?? true);
 }
+
+*/

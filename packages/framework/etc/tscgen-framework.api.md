@@ -4,76 +4,47 @@
 
 ```ts
 
-import { BuildersToImport } from 'tscgen';
 import { IBaseBuilder } from 'tscgen';
 import { IEntityBuilder } from 'tscgen';
-import { IIdentifierType } from 'tscgen';
 import { IImportBuilder } from 'tscgen';
-import { ILazyType } from 'tscgen';
+import { IType } from 'tscgen';
 import { Promiseable } from 'tscgen';
 import * as tscgen from 'tscgen';
 import { Unpromise } from 'tscgen';
 
 // @public (undocumented)
-export type BuilderExports<Exports extends ReadonlyArray<string>, OmitOrder extends boolean = false> = {
-    imports?: ReadonlyArray<IBaseBuilder<'import'>>;
-    exports: OmitOrder extends true ? ExportData<Exports>['values'] : ExportData<Exports>;
-};
-
-// @public (undocumented)
-export type Context<Inputs extends GetInputs, Order extends ReadonlyArray<string>> = {
-    referenceIdentifier<K extends Order[number]>(pick: K): {
-        findOne: (data: (inputs: TSCGenInputs<Inputs>) => unknown) => {
-            importValue: IImportBuilder;
-            typeIdentifier: ILazyType<IIdentifierType>;
-        };
+export type Application<Modules extends ReadonlyArray<RegisteredModule> = ReadonlyArray<RegisteredModule>> = {
+    modules: Modules;
+    data: {
+        [Key in MappedOnly<Modules>['pathData']['path']]: InputData<NonNullable<Extract<Modules[number], {
+            pathData: {
+                path: Key;
+            };
+        }>['data']>, Record<Extract<Modules[number], {
+            pathData: {
+                path: Key;
+            };
+        }>['pathData']['paramList'][number], string>>[];
     };
 };
 
-// Warning: (ae-forgotten-export) The symbol "ContextReturnType" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export function createContext<Routes extends ReadonlyArray<string>, Inputs extends GetInputs>(getInputs: Inputs, mappedExports: GetMappedExports<Inputs, Routes>, getPath: string, callerParams: Record<string, string>, options?: {
-    filter?: (data: TSCGenInputs<Inputs>) => boolean;
-}): Promise<ContextReturnType<Inputs, Routes>[]>;
-
-// @public (undocumented)
-export const createInputs: <T, Params extends Record<string, string>>(method: GetInputs<T, Params>) => GetInputs<T, Params>;
-
-// @public (undocumented)
-export const createMappedExports: <Order extends readonly string[]>(...order: Order) => <Inputs extends GetInputs<unknown, Record<string, string>>>(_getInputs: Inputs, getMappedExports: GetMappedExportsBase<Inputs, Order, false>) => GetMappedExports<Inputs, Order, false>;
-
-// @public (undocumented)
-export type ExportData<Exports extends ReadonlyArray<string>> = {
-    values: {
-        [Key in Exports[number]]: IEntityBuilder;
-    };
-    order: Exports;
+export const Errors: {
+    readonly IsRelativePathError: "Path cannot be absolute";
+    readonly IsTypescriptError: "Path must end in a .ts extension";
+    readonly IsStaticPathError: "Not a static typescript file";
+    readonly IsMappedPathError: "Not a mapped type";
+    readonly IsNonConflictingPathError: "Path cannot be both static and mapped";
 };
+
+// @public (undocumented)
+export type Errors = typeof Errors;
+
+// @public (undocumented)
+export type FilePath<T extends string> = PathError<T> | ParsedFilePath<T>;
 
 // @public (undocumented)
 export const getFilename: (toFile: string, caller: string, params: Record<string, string>, callerParams: Record<string, string>) => string;
-
-// @public (undocumented)
-export type GetInputs<T = unknown, Params extends Record<string, string> = Record<string, string>> = () => Promiseable<Array<InputData<T, Params>>>;
-
-// @public (undocumented)
-export type GetMappedExports<Inputs extends GetInputs, Keys extends ReadonlyArray<string>, Unpromise extends boolean = false> = (options: TSCGenInputs<Inputs> & {
-    context: Context<Inputs, Keys>;
-}) => Unpromise extends true ? BuilderExports<Keys> : Promiseable<BuilderExports<Keys>>;
-
-// @public (undocumented)
-export type GetMappedExportsBase<Inputs extends GetInputs, Keys extends ReadonlyArray<string>, Unpromise extends boolean = false> = (options: TSCGenInputs<Inputs> & {
-    context: Context<Inputs, Keys>;
-}) => Unpromise extends true ? BuilderExports<Keys, true> : Promiseable<BuilderExports<Keys, true>>;
-
-// Warning: (ae-forgotten-export) The symbol "IReference" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function getReference<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined>(importFile: Promise<OutputModule<Routes, Inputs>>, callerPath: string, callerParams: Record<string, string>): Promise<IReference<Routes, Inputs>>;
-
-// @public (undocumented)
-export type GetStaticExports<Exports extends ReadonlyArray<string>, Builders extends BuilderExports<Exports>> = () => Promiseable<Builders>;
 
 // @public (undocumented)
 export const getStaticReference: (relative: string, callerPath: string, params: Record<string, string>) => {
@@ -99,34 +70,62 @@ export type InputData<T = unknown, Params extends Record<string, string> = Recor
     data: T;
 };
 
-// @public (undocumented)
-export type OutputModule<Routes extends ReadonlyArray<string> = ReadonlyArray<string>, Inputs extends GetInputs | undefined = GetInputs | undefined> = {
-    default: Promiseable<OutputType<Routes, Inputs>>;
-    getPath: string;
-};
-
-// @public (undocumented)
-export type OutputType<Routes extends ReadonlyArray<string>, Inputs extends GetInputs | undefined> = {
-    routes: Routes;
-    inputs: Inputs;
-    getExports: Inputs extends GetInputs ? GetMappedExports<Inputs, Routes> : () => Promiseable<BuilderExports<Routes, true>>;
-};
-
-// Warning: (ae-forgotten-export) The symbol "RegisterReturn" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IsMappedPath" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function register<Routes extends ReadonlyArray<string>>(...routes: Routes): RegisterReturn<Routes>;
+export type MappedOnly<T extends ReadonlyArray<RegisteredModule>> = {
+    [Key in T[number]['pathData']['path']]: IsMappedPath<Key> extends true ? Extract<T[number], {
+        pathData: {
+            path: Key;
+        };
+    }> : never;
+}[T[number]['pathData']['path']];
+
+// Warning: (ae-forgotten-export) The symbol "OutputBuilder" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type Output<T extends string> = PathError<T> | OutputBuilder<T>;
 
 // @public (undocumented)
-export type TSCGenBuilders<T extends GetMappedExports<GetInputs, ReadonlyArray<string>>> = Unpromise<ReturnType<T>>;
+export type Params<T extends string, P extends ReadonlyArray<string> = []> = T extends `${infer _}[${infer Param}]${infer End}` ? Param extends '' ? Params<End, P> : Params<End, [...P, Param]> : P;
 
 // @public (undocumented)
-export type TSCGenInputs<T extends GetInputs> = Unpromise<ReturnType<T>>[number];
-
-// @public (undocumented)
-export type WithInputsReturn<Routes extends ReadonlyArray<string>, Inputs extends GetInputs> = {
-    generateExports: (method: GetMappedExportsBase<Inputs, Routes>) => Promiseable<OutputType<Routes, Inputs>>;
+export type ParsedFilePath<T extends string> = {
+    path: T;
+    paramList: Params<T>;
 };
+
+// Warning: (ae-forgotten-export) The symbol "IsTypescript" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IsRelativePath" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type PathError<T extends string> = Exclude<IsTypescript<T> | IsRelativePath<T>, boolean>;
+
+// @public (undocumented)
+export function register<T extends string>(path: T): Output<T>;
+
+// Warning: (ae-forgotten-export) The symbol "WithPromise" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export function registerAll<T extends ReadonlyArray<RegisteredModule>>(...modules: WithPromise<T>): {
+    setInputs: (values: Application<T>['data']) => Promise<Application<T>>;
+};
+
+// @public (undocumented)
+export type RegisteredModule<T extends string = `${string}.ts`, Exports extends Record<string, IEntityBuilder> = Record<string, IEntityBuilder>, Data = any, IsStatic extends boolean = boolean> = {
+    isStatic: IsStatic;
+    source: IsStatic extends true ? `${string}.static.ts` : undefined;
+    data?: Data;
+    pathData: FilePath<T>;
+    getData: (inputs: InputData<Data, Record<string, string>>[], app: Application) => Promise<{
+        imports?: IBaseBuilder<'import'>[];
+        exports: Exports;
+        data: InputData<Data, Record<ParsedFilePath<T>['paramList'][number], string>>;
+    }[]>;
+};
+
+// @public (undocumented)
+export function writeApplication(app: Application<ReadonlyArray<RegisteredModule>>): Promise<void>;
 
 
 // Warnings were encountered during analysis:

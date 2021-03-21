@@ -1,4 +1,4 @@
-import { GetInputs, GetMappedExports, GetMappedExportsBase } from './types';
+/*import { GetInputs, GetMappedExports, GetMappedExportsBase } from './types';
 
 export const createInputs = <T, Params extends Record<string, string>>(
   method: GetInputs<T, Params>
@@ -22,3 +22,4 @@ export const createMappedExports = <Order extends ReadonlyArray<string>>(
     };
   };
 };
+*/

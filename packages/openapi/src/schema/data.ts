@@ -13,6 +13,11 @@ const getData = (): OpenAPIV3.Document => {
   return openApiData!;
 };
 
+export type IModel = {
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
+  name: string;
+};
+
 export const getSchemas = () => {
   const data = getData();
   if (!data.components?.schemas) {

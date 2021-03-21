@@ -336,7 +336,6 @@ async function writeApplication(
       const res = module.getData(data[module.pathData.path]);
 
       res.forEach((val) => {
-        console.log(module.pathData.paramList);
         const newFilePath = module.pathData.paramList.reduce(
           (acc, param) => acc.replace(`[${param}]`, val.data.params[param]),
           module.pathData.path as string
