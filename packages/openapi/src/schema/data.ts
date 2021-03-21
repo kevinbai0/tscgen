@@ -42,6 +42,13 @@ const operators = [
   'trace',
 ] as const;
 
+export type IPath = {
+  route: string;
+  pathInfo: OpenAPIV3.OperationObject & {
+    method: typeof operators[number];
+  };
+};
+
 export const getPaths = () => {
   const data = getData();
   const paths = Object.entries(data.paths).flatMap(([route, pathInfo]) =>

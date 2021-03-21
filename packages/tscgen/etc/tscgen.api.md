@@ -180,7 +180,7 @@ export interface IIdentifierType<T extends IEntityBuilder<IEntityBuilderTypes, s
     // (undocumented)
     extract?: ITypePropertyType[];
     // (undocumented)
-    type: 'identifier';
+    type: 'type_identifier';
 }
 
 // @public (undocumented)
@@ -325,7 +325,7 @@ export interface IJsFunctionParamValue<Key extends string = string> {
 // @public (undocumented)
 export interface IJsIdentifierValue {
     // (undocumented)
-    type: 'identifier';
+    type: 'js_identifier';
     // (undocumented)
     value: string;
 }

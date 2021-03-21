@@ -33,28 +33,28 @@ export async function writeApplication(
 
       await createPathForFile(getOutDir(module.pathData.path));
 
-      fs.writeFileSync(getOutDir(module.pathData.path), source);
+      return fs.writeFileSync(getOutDir(module.pathData.path), source);
     }
     const data = app.data as Record<string, InputData[]>;
-    if (data[module.pathData.path]) {
-      const res = await module.getData(data[module.pathData.path], app);
 
-      res.forEach(async (val) => {
-        const newFilePath = getOutDir(
-          module.pathData.paramList.reduce(
-            (acc, param) => acc.replace(`[${param}]`, val.data.params[param]),
-            module.pathData.path as string
-          )
-        );
+    const pathData = data[module.pathData.path] ?? [];
+    const res = await module.getData(pathData, app);
 
-        await createPathForFile(newFilePath);
+    res.forEach(async (val) => {
+      const newFilePath = getOutDir(
+        module.pathData.paramList.reduce(
+          (acc, param) => acc.replace(`[${param}]`, val.data.params[param]),
+          module.pathData.path as string
+        )
+      );
 
-        fs.writeFileSync(
-          newFilePath,
-          combine(...[...(val.imports ?? []), ...Object.values(val.exports)])
-        );
-      });
-    }
+      await createPathForFile(newFilePath);
+
+      fs.writeFileSync(
+        newFilePath,
+        combine(...[...(val.imports ?? []), ...Object.values(val.exports)])
+      );
+    });
   });
 
   await Promise.all(res);

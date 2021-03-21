@@ -142,7 +142,7 @@ export interface IIdentifierType<
     string
   >
 > {
-  type: 'identifier';
+  type: 'type_identifier';
   definition: T;
   extract?: ITypePropertyType[];
 }

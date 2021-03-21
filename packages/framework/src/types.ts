@@ -1,8 +1,10 @@
 import {
   IBaseBuilder,
   IEntityBuilder,
+  IIdentifierType,
   IImportBuilder,
-  IType,
+  IJsIdentifierValue,
+  ILazyType,
   Promiseable,
   Unpromise,
 } from 'tscgen';
@@ -117,6 +119,64 @@ export type RegisteredModule<
   >;
 };
 
+type ApplicationPath<
+  T extends Promise<Application>
+> = Unpromise<T>['modules'][number]['pathData']['path'];
+
+type FindModule<T extends Promise<Application>, Path extends string> = Extract<
+  Unpromise<T>['modules'][number],
+  { pathData: { path: Path } }
+>;
+
+type ModuleExportsType<Module extends RegisteredModule> = Unpromise<
+  ReturnType<Module['getData']>
+>[number]['exports'];
+
+type ModuleInputData<Module extends RegisteredModule> = InputData<
+  NonNullable<Module['data']>,
+  Record<Module['pathData']['paramList'][number], string>
+>;
+
+export type GetCircularReference<CurrPath extends string> = <
+  T extends Promise<Application>
+>() => (
+  module: keyof ModuleExportsType<FindModule<T, CurrPath>>,
+  findOne: (val: ModuleInputData<FindModule<T, CurrPath>>) => boolean
+) => Promise<ICircularReferenceResponse>;
+
+export type GetStaticReference = <
+  T extends RegisteredModule,
+  S extends IJsIdentifierValue | IIdentifierType
+>(
+  regModule: T,
+  module: string,
+  identifier: S['type']
+) => IStaticReferenceResponse<S>;
+
+export type GetGlobalReference = <T extends RegisteredModule>(
+  path: Promise<T>,
+  routes: (keyof ModuleExportsType<T>)[],
+  filterFn: (val: ModuleInputData<T>) => boolean
+) => Promise<IGlobalReferenceResponse<T>>;
+
+export type IGlobalReferenceResponse<T extends RegisteredModule> = {
+  entities: IEntityBuilder[];
+  imports: IImportBuilder[];
+  inputData: ModuleInputData<T>[];
+};
+
+export type ICircularReferenceResponse = {
+  identifier: ILazyType<IIdentifierType>;
+  imports: IImportBuilder[];
+};
+
+export type IStaticReferenceResponse<
+  Type extends IIdentifierType | IJsIdentifierValue = IIdentifierType
+> = {
+  identifier: Type;
+  imports: IImportBuilder[];
+};
+
 type GenerateFunction<
   T extends string,
   Data = unknown
@@ -126,36 +186,9 @@ type GenerateFunction<
         params: Record<ParsedFilePath<T>['paramList'][number], string>;
         data: Data;
         context: {
-          getReference: <T extends Promise<Application>>() => <
-            Path extends Unpromise<T>['modules'][number]['pathData']['path']
-          >(
-            path: Path,
-            route: keyof Unpromise<
-              ReturnType<
-                Extract<
-                  Unpromise<T>['modules'][number],
-                  { pathData: { path: Path } }
-                >['getData']
-              >
-            >[number]['exports'],
-            findOne: (
-              val: InputData<
-                NonNullable<
-                  Extract<Unpromise<T>['modules'][number], {}>['data']
-                >,
-                Record<
-                  Extract<
-                    Unpromise<T>['modules'][number],
-                    { pathData: { path: Path } }
-                  >['pathData']['paramList'][number],
-                  string
-                >
-              >
-            ) => boolean
-          ) => Promise<{
-            type: IType;
-            imports: IImportBuilder[];
-          }>;
+          getCircularReference: GetCircularReference<T>;
+          getGlobalReference: GetGlobalReference;
+          getStaticReference: GetStaticReference;
         };
       }) => Promiseable<{
         imports?: IBaseBuilder<'import'>[];
@@ -163,7 +196,12 @@ type GenerateFunction<
       }>
     ) => Promise<RegisteredModule<T, Exps, Data, false>>
   : <Exps extends Record<string, IEntityBuilder>>(
-      callback: () => Promiseable<{
+      callback: (options: {
+        context: {
+          getGlobalReference: GetGlobalReference;
+          getStaticReference: GetStaticReference;
+        };
+      }) => Promiseable<{
         imports?: IBaseBuilder<'import'>[];
         exports: Exps;
       }>

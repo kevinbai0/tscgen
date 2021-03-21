@@ -1,71 +1,88 @@
-import * as tscgen from 'tscgen';
-import { getReference, register } from 'tscgen-framework';
+import {
+  identifierType,
+  interfaceBuilder,
+  numberType,
+  objectType,
+  stringType,
+  undefinedType,
+  unionType,
+} from 'tscgen';
+import { register } from 'tscgen-framework';
+import { IPath } from '../schema/data';
+import { writeParam } from '../schema/writeParam';
+import { writeRequestBody } from '../schema/writeRequestBody';
+import { writeResponseBody } from '../schema/writeResponseBody';
+import { models } from './models';
 
-export const getPath = __filename;
+export const routes = register('routes/[route].ts')
+  .setInputShape<IPath>()
+  .generate(async ({ data, params, context }) => {
+    const method = data.pathInfo.method;
 
-const outputs = register('Route', 'Routes', 'RoutesData', 'routesData');
+    const pathParams = writeParam(
+      data.pathInfo.parameters,
+      (val) => val.in === 'path'
+    );
+    const queryParams = writeParam(
+      data.pathInfo.parameters,
+      (val) => val.in === 'query'
+    );
 
-export default outputs.generateExports(async () => {
-  const references = await getReference(
-    import('./routes/[route]'),
-    __filename,
-    {}
-  );
-  const { imports, exports } = await references
-    .referenceExports('route')
-    .filter(() => true);
-
-  const pathsData = await references.referenceInputs();
-
-  return {
-    imports,
-    exports: {
-      Route: tscgen
-        .typeAliasBuilder('Route')
-        .markExport()
-        .addUnion(...exports.map((builder) => tscgen.identifierType(builder))),
-      Routes: tscgen
-        .typeAliasBuilder('Routes')
-        .markExport()
-        .addUnion(
-          tscgen.toObjectType([...exports], (value) => {
-            return {
-              key: value.varName,
-              value: tscgen.identifierType(value),
-            };
-          })
-        ),
-      RoutesData: tscgen
-        .typeAliasBuilder('RoutesData')
-        .addUnion(
-          tscgen.objectType({
-            [`[Key in keyof Routes]`]: tscgen.objectType({
-              route: tscgen.rawType(`Routes[Key]['path']`),
-              method: tscgen.rawType(`Routes[Key]['method']`),
-            }),
-          })
-        )
-        .markExport(),
-      get routesData() {
-        return tscgen
-          .variableBuilder('routesData')
-          .markExport()
-          .addTypeAlias(tscgen.identifierType(this.RoutesData))
-          .setAssignment(
-            tscgen.objectValue(
-              pathsData.reduce(
-                (acc, data) => ({
-                  ...acc,
-                  [data.params.route]: tscgen.objectValue({
-                    route: data.data.route,
-                    method: data.data.pathInfo.method,
-                  }),
-                }),
-                {}
-              )
-            )
-          );
+    const requestBody = await writeRequestBody(data.pathInfo.requestBody, {
+      handleReference: async (ref, handler) => {
+        const res = await context.getGlobalReference(
+          models,
+          ['model'],
+          (data) => data.data.name === ref
+        );
+        handler.setType(identifierType(res.entities[0]));
+        handler.addImport(res.imports);
       },
-    },
-  };
-});
+    });
+
+    const requestBodyUnion = requestBody.length
+      ? unionType(...requestBody.flatMap((body) => body.type))
+      : undefinedType();
+
+    const responses = await writeResponseBody(data.pathInfo.responses, {
+      handleReference: async (ref, handler) => {
+        const res = await context.getGlobalReference(
+          models,
+          ['model'],
+          (data) => data.data.name === ref
+        );
+        handler.addImport(res.imports);
+        handler.setType(identifierType(res.entities[0]));
+      },
+    });
+
+    return {
+      imports: requestBody
+        .flatMap((body) => body.imports)
+        .concat(responses.flatMap((val) => val.imports)),
+      exports: {
+        get route() {
+          return interfaceBuilder(params.route)
+            .markExport()
+            .addBody({
+              method: stringType(method),
+              path: stringType(data.route),
+              params: pathParams ?? undefinedType(),
+              query: queryParams ?? undefinedType(),
+              requestBody: requestBodyUnion,
+              responses: unionType(
+                ...responses.map((response) =>
+                  objectType({
+                    status:
+                      response.status === 'default'
+                        ? numberType()
+                        : numberType(Number(response.status)),
+                    data: response.type,
+                  })
+                )
+              ),
+            });
+        },
+      },
+    };
+  });

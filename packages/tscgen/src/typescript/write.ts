@@ -186,7 +186,7 @@ export function writeType(type: IType | undefined): string {
       return writeBooleanLiteralType(type);
     case 'tuple':
       return writeTupleType(type);
-    case 'identifier':
+    case 'type_identifier':
       return writeIdentifierType(type);
     case 'raw_identifier':
       return writeRawType(type);

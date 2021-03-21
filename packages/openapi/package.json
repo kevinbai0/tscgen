@@ -4,7 +4,7 @@
   "license": "ISC",
   "scripts": {
     "lint": "eslint .",
-    "generate": "tscgen && eslint out --fix",
+    "generate": "ts-node src/index.ts && eslint out --fix",
     "build": "tsc --project tsconfig.build.json",
     "build:watch": ""
   },
@@ -16,7 +16,8 @@
     "tscgen-cli": "workspace:*",
     "tscgen-framework": "workspace:*",
     "typescript": "^4.2.3",
-    "openapi-types": "^7.2.3"
+    "openapi-types": "^7.2.3",
+    "ts-node": "^9.1.1"
   },
   "dependencies": {
     "cross-fetch": "~3.0.6",

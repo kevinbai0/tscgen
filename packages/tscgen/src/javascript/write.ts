@@ -73,7 +73,7 @@ export function writeJsValue(value: IJsValue): string {
       return writeJsArray(value);
     }
     switch (value.type) {
-      case 'identifier':
+      case 'js_identifier':
         return writeJsIdentifier(value);
       case 'arrow_function':
         return writeArrowFunction(value);
@@ -121,7 +121,7 @@ export function writeCallFunction(value: IJsFunctionCallValue): string {
   const genericCalls = value.genericCalls
     ? `<${value.genericCalls.map(writeType).join(',')}>`
     : '';
-  return value.value.type === 'identifier'
+  return value.value.type === 'js_identifier'
     ? `${value.value.value}${genericCalls}(${paramValues})`
     : `(${writeArrowFunction(value.value)})${genericCalls}(${paramValues})`;
 }
