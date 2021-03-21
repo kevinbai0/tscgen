@@ -1,8 +1,8 @@
 import { register, registerAll, writeApplication } from 'tscgen-framework';
-import { allRoutes } from './newProject/allRoutes';
-import { endpoints } from './newProject/endpoints';
-import { models } from './newProject/models';
-import { routes } from './newProject/routes';
+import { allRoutes } from './project/allRoutes';
+import { endpoints } from './project/endpoints';
+import { models } from './project/models';
+import { routes } from './project/routes';
 import { getPaths, getSchemas } from './schema/data';
 
 export const createRequestComponent = register('createRequest.ts').setSource(

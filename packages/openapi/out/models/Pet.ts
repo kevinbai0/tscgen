@@ -1,3 +1,3 @@
-import {NewPet} from './NewPet';
+import { NewPet } from './NewPet';
 
-export type Pet = NewPet&{id: number};
+export type Pet = NewPet & { id: number };

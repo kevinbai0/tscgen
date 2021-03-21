@@ -1,2 +1,1 @@
-
-export type NewPet = {name: string;tag?: string};
+export type NewPet = { name: string; tag?: string };
